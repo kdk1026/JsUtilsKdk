@@ -23,8 +23,8 @@ var CommonJS = {
      * @param {(undefined|null|number)} height
      */
     openPopup(url, name, width, height) {
-        var _height = (this.isUndefined(height)) ? screen.height : Number(height);
-        var _width = (this.isUndefined(width)) ? screen.width : Number(width);
+        var _height = (this.Valid.isUndefined(height)) ? screen.height : Number(height);
+        var _width = (this.Valid.isUndefined(width)) ? screen.width : Number(width);
         var _left = (screen.width - width) / 2;
         var _top = (screen.height - height) / 2;
         var _option = '';
@@ -181,8 +181,8 @@ CommonJS.DateTime = {
 		var	_month = (date.getMonth() + 1);
 		var	_day = date.getDate();
 		
-		_month = CommonJS.addZero(_month);
-		_day = CommonJS.addZero(_day);
+		_month = this.addZero(_month);
+		_day = this.addZero(_day);
 			
 		return [_year, _month, _day].join('-'); 
     },
@@ -196,9 +196,9 @@ CommonJS.DateTime = {
 		var	_minute = date.getMinutes();
 		var	_second = date.getSeconds();
 		
-		_hour = CommonJS.addZero(hour);
-		_minute = CommonJS.addZero(minute);
-		_second = CommonJS.addZero(second);
+		_hour = this.addZero(hour);
+		_minute = this.addZero(minute);
+		_second = this.addZero(second);
 		
 		return [_hour, _minute, _second].join(':'); 
     },
@@ -433,7 +433,7 @@ CommonJS.File = {
      * @returns {boolean}}
      */
     isAllowFile(fileObj) {
-        var _ext = this.getFileExt(fileObj);
+        var _ext = CommonJS.File.getFileExt(fileObj);
         var _arrAllowExt = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'hwp', 'odt', 'odp', 'ods', 'jpg', 'jpeg', 'gif', 'png'];
         return _arrAllowExt.includes(_ext);
     },
@@ -443,7 +443,7 @@ CommonJS.File = {
      * @returns {boolean}}
      */
     isAllowDoc(fileObj) {
-        var _ext = this.getFileExt(fileObj);
+        var _ext = CommonJS.File.getFileExt(fileObj);
         var _arrAllowExt = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'hwp', 'odt', 'odp', 'ods'];
         return _arrAllowExt.includes(_ext);
     },
@@ -453,7 +453,7 @@ CommonJS.File = {
      * @returns {boolean}}
      */
     isAllowImg(fileObj) {
-        var _ext = this.getFileExt(fileObj);
+        var _ext = CommonJS.File.getFileExt(fileObj);
         var _arrAllowExt = ['jpg', 'jpeg', 'gif', 'png'];
         return _arrAllowExt.includes(_ext);
     },
@@ -463,10 +463,10 @@ CommonJS.File = {
      * @returns {string}
      */
 	readableFileSize(size) {
-		var _arrDataUnits = ['B', 'kB', 'MB', 'GB', 'TB'];
 		if (size == 0) return '0';
-		var i = Number(Math.floor(Math.log(size) / Math.log(1024)));		
-		return Math.round(size / Math.pow(1024, i)) + ' ' + _arrDataUnits[i];
+		var _arrDataUnits = ['B', 'kB', 'MB', 'GB', 'TB'];
+		var _i = Number(Math.floor(Math.log(size) / Math.log(1024)));		
+		return Math.round(size / Math.pow(1024, _i)) + ' ' + _arrDataUnits[i];
     },
     /**
      * 파일 용량 체크
