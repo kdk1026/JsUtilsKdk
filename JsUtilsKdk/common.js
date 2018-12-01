@@ -181,8 +181,8 @@ CommonJS.DateTime = {
 		var	_month = (date.getMonth() + 1);
 		var	_day = date.getDate();
 		
-		_month = this.addZero(_month);
-		_day = this.addZero(_day);
+		_month = CommonJS.addZero(_month);
+		_day = CommonJS.addZero(_day);
 			
 		return [_year, _month, _day].join('-'); 
     },
@@ -196,9 +196,9 @@ CommonJS.DateTime = {
 		var	_minute = date.getMinutes();
 		var	_second = date.getSeconds();
 		
-		_hour = this.addZero(hour);
-		_minute = this.addZero(minute);
-		_second = this.addZero(second);
+		_hour = CommonJS.addZero(hour);
+		_minute = CommonJS.addZero(minute);
+		_second = CommonJS.addZero(second);
 		
 		return [_hour, _minute, _second].join(':'); 
     },
