@@ -31,7 +31,7 @@ $.extend({
      * 숫자만 입력
      * @param {Element} $element 
      */
-    inputOnlyNum($element) {
+    inputOnlyNum: function($element) {
         $element.on('blur keyup', function(){
             $(this).val( $(this).val().replace(/[^0-9]/gi, '') );
         });
@@ -40,7 +40,7 @@ $.extend({
      * 숫자만 입력 + 세 자리마다 콤마 자동 입력
      * @param {Element} $element 
      */
-    inputOnlyFormatNum($element) {
+    inputOnlyFormatNum: function($element) {
         $element.on('blur keyup', function(){
             var _val = $element.val().replace(/,/g, '').replace(/[^0-9]/gi, '');
             var _re = /(^[+-]?\d+)(\d{3})/;
@@ -56,7 +56,7 @@ $.extend({
      * 영문만 입력
      * @param {Element} $element 
      */
-	inputOnlyEng($element) {
+	inputOnlyEng: function($element) {
 		$element.on('blur keyup', function(){
 			$(this).val( $(this).val().replace(/[^a-zA-Z]/gi, '') );
 		});
@@ -65,7 +65,7 @@ $.extend({
      * 영문 + '_' 만 입력
      * @param {Element} $element 
      */
-	inputOnlyEngUnder($element) {
+	inputOnlyEngUnder: function($element) {
 		$element.on('blur keyup', function(){
 			$(this).val( $(this).val().replace(/[^a-zA-Z_]/gi, '') );
 		});
@@ -74,7 +74,7 @@ $.extend({
      * 영문 + 숫자만 입력
      * @param {Element} $element 
      */
-	inputOnlyEngNum($element) {
+	inputOnlyEngNum: function($element) {
 		$element.on('blur keyup', function(){
 			$(this).val( $(this).val().replace(/[^a-zA-Z0-9]/gi, '') );
 		});
@@ -83,7 +83,7 @@ $.extend({
      * 영문 + SPACE 입력
      * @param {Element} $element 
      */
-	inputOnlyEngBlank($element) {
+	inputOnlyEngBlank: function($element) {
 		$element.on('blur keyup', function(){
 			$(this).val( $(this).val().replace(/[^a-zA-Z\s]/gi, '') );
 		});
@@ -93,7 +93,7 @@ $.extend({
      *  - 한글: 자음, 모음 제외
      * @param {Element} $element 
      */
-	inputOnlyHangul($element) {
+	inputOnlyHangul: function($element) {
 		$element.on('blur keyup', function(){
 			$(this).val( $(this).val().replace(/[^가-힣]/gi, '') );
 		});
@@ -103,7 +103,7 @@ $.extend({
      *  - 한글: 자음, 모음 제외
      * @param {Element} $element 
      */
-	inputOnlyHangulBlank($element) {
+	inputOnlyHangulBlank: function($element) {
 		$element.on('blur keyup', function(){
 			$(this).val( $(this).val().replace(/[^가-힣\s]/gi, '') );
 		});
@@ -113,7 +113,7 @@ $.extend({
      *  - 한글: 자음, 모음 제외
      * @param {Element} $element
      */
-	inputOnlyHanEngNum($element) {
+	inputOnlyHanEngNum: function($element) {
 		$element.on('blur keyup', function(){
 			$(this).val( $(this).val().replace(/[^가-힣a-zA-Z0-9]/gi, '') );
 		});
@@ -123,7 +123,7 @@ $.extend({
      *  - 한글: 자음, 모음 제외
      * @param {Element} $element 
      */
-	inputOnlyHanEngNumBlank($element) {
+	inputOnlyHanEngNumBlank: function($element) {
 		$element.on('blur keyup', function(){
 			$(this).val( $(this).val().replace(/[^가-힣a-zA-Z0-9\s]/gi, '') );
 		});
@@ -143,7 +143,7 @@ $.extend({
 	 * 엔터키 이벤트 발생 시, 다음 포커스로 이동
      * @param {Element} $element 
 	 */
-	enterEventFocus($element) {
+	enterEventFocus: function($element) {
 		$element.keypress(function(e) {
 			if (e.keyCode == 13) {
 				var inputs = $(this).parents("form").eq(0).find(':input:visible');
@@ -156,7 +156,7 @@ $.extend({
      * @param {Element} $element
      * @param {Function} callback
 	 */
-	enterEventCallback($element, callback) {
+	enterEventCallback: function($element, callback) {
 		if (typeof callback === 'function') {
 			$element.keypress(function(e) {
 				if (e.keyCode == 13) {
@@ -173,7 +173,7 @@ $.extend({
      * @param {(undefined|Object)} param
      * @param {(undefined|Function)} callback 
      */
-    ajaxSync(url, header, param, callback) {
+    ajaxSync: function(url, header, param, callback) {
         var _retObj = {};
 
 		$.ajax({
@@ -210,7 +210,7 @@ $.extend({
      * @param {Element} $formElement 
      * @param {(undefined|Function)} callback 
      */
-    ajaxSyncFile(url, header, $formElement, callback) {
+    ajaxSyncFile: function(url, header, $formElement, callback) {
         var _form = $formElement;
         var _data = new FormData(_form);
         var _retObj = {};
@@ -249,7 +249,7 @@ $.extend({
      * @param {(undefined|Object)} param
      * @param {(undefined|Function)} callback 
      */
-    ajaxSyncJson(url, header, param, callback) {
+    ajaxSyncJson: function(url, header, param, callback) {
         var _retObj = {};
 
 		$.ajax({
@@ -284,7 +284,7 @@ $.extend({
      *  - Array 때문에 serialize() 가 안되는 경우
      * @param {Element} $formElement 
      */
-	formSerializeObject($formElement) {
+	formSerializeObject: function($formElement) {
 		var _disabled = $formElement.find(':disabled').removeAttr('disabled');
     	var _obj;
     	var _arr = $formElement.serializeArray();
