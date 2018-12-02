@@ -244,8 +244,8 @@ CommonJS.DateTime = {
 	},
     /**
      * 현재 날짜의 이전/이후 날짜를 반환
-     *  - day가 음수 = 이전 날짜
-     *  - day가 양수 = 이후 날짜
+     *  - month가 음수 = 이전 날짜
+     *  - month가 양수 = 이후 날짜
      * @param {number} month 
      * @returns {Date}
      */
@@ -258,8 +258,8 @@ CommonJS.DateTime = {
 	},
     /**
      * 현재 날짜의 이전/이후 날짜를 반환
-     *  - day가 음수 = 이전 날짜
-     *  - day가 양수 = 이후 날짜
+     *  - year가 음수 = 이전 날짜
+     *  - year가 양수 = 이후 날짜
      * @param {number} year 
      * @returns {Date}
      */
@@ -272,8 +272,8 @@ CommonJS.DateTime = {
 	},
     /**
      * 현재 시간의 이전/이후 시간을 반환
-     *  - day가 음수 = 이전 시간
-     *  - day가 양수 = 이후 시간
+     *  - hours가 음수 = 이전 시간
+     *  - hours가 양수 = 이후 시간
      * @param {number} hours 
      * @returns {Date}
      */
@@ -286,8 +286,8 @@ CommonJS.DateTime = {
 	},
     /**
      * 현재 시간의 이전/이후 시간을 반환
-     *  - day가 음수 = 이전 시간
-     *  - day가 양수 = 이후 시간
+     *  - minutes가 음수 = 이전 시간
+     *  - minutes가 양수 = 이후 시간
      * @param {number} minutes 
      * @returns {Date}
      */
@@ -300,8 +300,8 @@ CommonJS.DateTime = {
 	},
     /**
      * 현재 시간의 이전/이후 시간을 반환
-     *  - day가 음수 = 이전 시간
-     *  - day가 양수 = 이후 시간
+     *  - seconds가 음수 = 이전 시간
+     *  - seconds가 양수 = 이후 시간
      * @param {number} seconds 
      * @returns {Date}
      */
