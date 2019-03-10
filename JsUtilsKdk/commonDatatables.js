@@ -37,12 +37,13 @@ $.extend($.fn.dataTable.defaults, {
  * @param {Element} $tableElement
  * @param {string} url
  * @param {string} type
+ * @param {Object} headers - 요청 헤더가 없을 경우, {}
  * @param {Object} params - 요청 파라미터가 없을 경우, {}
  * @param {Object[]} columns
  * @param {Object[]} columnDefs - 각 컬럼 커스터마이징 없을 경우, []
  * @returns
  */
-function initDataTable($tableElement, url, type, params, columns, columnDefs) {
+function initDataTable($tableElement, url, type, headers, params, columns, columnDefs) {
 	var oTable = $tableElement.DataTable({
 		ordering : true,
 		serverSide : false,
@@ -50,6 +51,7 @@ function initDataTable($tableElement, url, type, params, columns, columnDefs) {
 			"url" : url,
 			"type" : type,
 			"contentType" : "application/x-www-form-urlencoded",
+			"headers": headers,
 			"data" : params
 		},
 		columns : columns,
@@ -69,12 +71,13 @@ function initDataTable($tableElement, url, type, params, columns, columnDefs) {
  * @param {Element} $tableElement
  * @param {string} url
  * @param {string} type
+ * @param {Object} headers - 요청 헤더가 없을 경우, {}
  * @param {Object} params - 요청 파라미터가 없을 경우, {}
  * @param {Object[]} columns
  * @param {Object[]} columnDefs - 각 컬럼 커스터마이징 없을 경우, []
  * @returns
  */
-function initDataTableServerSide($tableElement, url, type, params, columns, columnDefs) {
+function initDataTableServerSide($tableElement, url, type, headers, params, columns, columnDefs) {
 	var oTable = $tableElement.DataTable({
 		ordering : false,
 		serverSide : true,
@@ -82,6 +85,7 @@ function initDataTableServerSide($tableElement, url, type, params, columns, colu
 			"url" : url,
 			"type" : type,
 			"contentType" : "application/x-www-form-urlencoded",
+			"headers": headers,
 			"data" : params
 		},
 		columns : columns,
@@ -108,6 +112,13 @@ function initDataTableServerSide($tableElement, url, type, params, columns, colu
 	-------------------------------
 		thead 의 th 개수와 일치해야 함
 		{ data: "id", className: "dt-center", orderable: true }
+		...
+		...
+		{
+			render: function(data, type, row) {
+				return '<input type="checkbox" name="chk" value="'+row.id+'">';
+			}	
+		}
 
 	-------------------------------
 	- columnDefs 예시
