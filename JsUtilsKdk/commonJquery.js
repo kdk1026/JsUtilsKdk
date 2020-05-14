@@ -279,9 +279,12 @@ $.extend({
         });
         return _retObj;
     },
+
     /**
+     * <pre>
      * form의 데이터를 Object 형태로 반환
-     *  - Array 때문에 serialize() 가 안되는 경우
+     *   - Array 때문에 serialize() 가 안되는 경우 등 사용
+     * </pre>
      * @param {Element} $formElement 
      */
 	formSerializeObject: function($formElement) {

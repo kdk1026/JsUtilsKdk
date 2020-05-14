@@ -168,6 +168,27 @@ CommonJS.Valid = {
 	isId: function(val) {
 		var _re = /^[a-zA-Z](?=.*[a-zA-Z])(?=.*[0-9]).{6,29}$/;
 		return _re.test(val);
+    },
+	/**
+	 * 공백 체크
+	 * @param {string} val
+	 * @returns {boolean}
+	 */
+	checkSpace: function(val) {
+		if (val.search(/\s/) != -1) {
+			return true;
+		} else {
+			return false;
+		}
+	},
+	/**
+	 * 한글만 입력 체크
+	 * @param {string} val
+	 * @returns {boolean}
+	 */
+	isNotHangul: function(val) {
+		var _re = /[a-zA-Z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g;
+		return _re.test(val);
 	}
 }
 
