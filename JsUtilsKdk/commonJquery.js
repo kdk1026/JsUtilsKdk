@@ -279,6 +279,40 @@ $.extend({
         });
         return _retObj;
     },
+    /**
+     * 공통 AJAX Sync 처리
+     *  - 응답: HTML
+     * @param {string} url 
+     * @param {(undefined|Object)} header 
+     * @param {(undefined|Object)} param
+     * @param {Element} $divElement
+     */
+    ajaxSyncHtml: function(url, header, param, $divElement) {
+        var _retObj = {};
+
+		$.ajax({
+            url: url,
+            async: false,
+            cache: false,
+            traditional: true,
+            dataType: 'html',
+            headers: (header == undefined) ? {} : header,
+            data: (param == undefined) ? {} : param,
+			type: 'POST',
+			success: function(result) {
+                $divElement.html(result);
+			},
+			error: function(xhr, status, err) {
+                var _ret = xhr.responseJSON;
+                if ( _ret != null && _ret.replace(/ /gi,'') != '' ) {
+                    _retObj = _ret;
+                } else {
+                    alert('[code] - '+xhr.status+', [error] - '+err);
+                }
+			}
+        });
+    },
+    
 
     /**
      * <pre>
