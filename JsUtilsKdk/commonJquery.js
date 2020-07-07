@@ -220,6 +220,8 @@ $.extend({
             async: false,
             cache: false,
             traditional: true,
+            contentType : false,
+            processData : false,
             headers: (header == undefined) ? {} : header,
             data: _data,
 			type: 'POST',
