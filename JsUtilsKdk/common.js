@@ -586,12 +586,12 @@ CommonJS.Byte = {
         var _nCnt = 0;
 
         for (var i=0; i < val.length; i++) {
-            _char = val.charAt(i);
-            if ( escape(val).length > 4 ) {
-                _nCnt += 3;
-            } else {
-                _nCnt ++;
-            }
+        	_char = val.charCodeAt(i);
+        	if ( _char > 127 ) {
+        		_nCnt += 3;
+        	} else {
+        		_nCnt ++;
+        	}
         }
         return _nCnt;
     },
@@ -605,12 +605,12 @@ CommonJS.Byte = {
         var _nCnt = 0;
 
         for (var i=0; i < val.length; i++) {
-            _char = val.charAt(i);
-            if ( escape(val).length > 4 ) {
-                _nCnt += 2;
-            } else {
-                _nCnt ++;
-            }
+        	_char = val.charCodeAt(i);
+        	if ( _char > 127 ) {
+        		_nCnt += 2;
+        	} else {
+        		_nCnt ++;
+        	}
         }
         return _nCnt;
     }
