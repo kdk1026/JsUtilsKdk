@@ -461,7 +461,7 @@ CommonJS.File = {
     /**
      * 지원 파일 체크 (문서, 이미지)
      * @param {Object}
-     * @returns {boolean}}
+     * @returns {boolean}
      */
     isAllowFile: function(fileObj) {
         var _ext = CommonJS.File.getFileExt(fileObj);
@@ -471,7 +471,7 @@ CommonJS.File = {
     /**
      * 지원 파일 체크 (문서)
      * @param {Object}
-     * @returns {boolean}}
+     * @returns {boolean}
      */
     isAllowDoc: function(fileObj) {
         var _ext = CommonJS.File.getFileExt(fileObj);
@@ -481,12 +481,23 @@ CommonJS.File = {
     /**
      * 지원 파일 체크 (이미지)
      * @param {Object}
-     * @returns {boolean}}
+     * @returns {boolean}
      */
     isAllowImg: function(fileObj) {
         var _ext = CommonJS.File.getFileExt(fileObj);
         var _arrAllowExt = ['jpg', 'jpeg', 'gif', 'png'];
         return _arrAllowExt.includes(_ext);
+    },
+    /**
+     * 지원 파일 체크 (실행 파일)
+     *  - 결과가 true면 정상, false면 업로드 불가
+     * @param {Object} fileObj 
+     * @returns {boolean}
+     */
+    ifRunableFile: function(fileObj) {
+        var _ext = CommonJS.File.getFileExt(fileObj);
+        var extReg = /(bat|bin|cmd|com|cpl|dll|exe|gadget|inf1|ins|isu|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|scr|sct|sh|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf|wsh)$/i;
+        return !extReg.test(_ext);
     },
     /**
      * 파일 용량 단위 구하기
