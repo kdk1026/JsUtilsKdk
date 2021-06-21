@@ -52,6 +52,7 @@ var CommonJS = {
 CommonJS.Valid = {
     /**
      * 공백, 빈 문자열 체크 (undefined == null)
+     *  - if ( !셀렉터.value.trim() ) { ... } 으로 대체 가능 (권장)
      * @param {*} val
      * @returns {boolean}
      */
