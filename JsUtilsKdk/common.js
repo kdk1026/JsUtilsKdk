@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 1.0
+ * @version 2.0
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * 
  * @property {object} CommonJS.Valid
@@ -13,7 +13,7 @@
  * @property {object} CommonJS.Byte
  * @property {object} CommonJS.Escape
  * @property {object} CommonJS.BrowserInfo
- * @property {object} CommonJS.Input
+ * @property {object} CommonJS.Input - 2021.06.21 추가
  * @property {method} prototype
  */
 var CommonJS = {
