@@ -829,6 +829,30 @@ CommonJS.Input = {
         inputElement.addEventListener('keyup', function(e) {
             this.value = e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
         });	
+    },
+    /**
+     * 엔터키 이벤트 발생 시, 해당 엘리먼트 포커스로 이동
+     * @param {Element} inputElement 
+     * @param {Element} focusElement 
+     */
+    enterEventFocus: function(inputElement, focusElement) {
+		inputElement.addEventListener('keypress', function() {
+			if (window.event.keyCode == 13) {
+				focusElement.focus();
+			}
+		});
+    },
+    /**
+     * 엔터키 이벤트 발생 시, 함수 실행
+     * @param {Element} inputElement 
+     * @param {Function} callback 
+     */
+    enterEventCallback: function(inputElement, callback) {
+		inputElement.addEventListener('keypress', function() {
+			if (window.event.keyCode == 13) {
+				callback();
+			}
+		});
     }
 }
 
