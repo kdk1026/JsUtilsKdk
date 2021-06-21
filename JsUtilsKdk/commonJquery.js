@@ -39,20 +39,6 @@ $.extend({
 			}
 		});
 	},
-	/**
-	 * 엔터키 이벤트 발생 시, 함수 실행
-     * @param {Element} $element
-     * @param {Function} callback
-	 */
-	enterEventCallback: function($element, callback) {
-		if (typeof callback === 'function') {
-			$element.keypress(function(e) {
-				if (e.keyCode == 13) {
-                    callback();
-				}
-			});
-		}
-    },
     /**
      * 공통 AJAX Sync 처리
      *  - 요청: default (application/x-www-form-urlencoded; charset=UTF-8')
