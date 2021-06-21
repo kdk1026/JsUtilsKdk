@@ -13,6 +13,7 @@
  * @property {object} CommonJS.Byte
  * @property {object} CommonJS.Escape
  * @property {object} CommonJS.BrowserInfo
+ * @property {object} CommonJS.Input
  * @property {method} prototype
  */
 var CommonJS = {
@@ -728,6 +729,106 @@ CommonJS.BrowserInfo = {
 			iOS: navigator.userAgent.match(/iPhone|iPad|iPod/i) == null ? false : true
         };
         return _ret;
+    }
+}
+
+CommonJS.Input = {
+    /**
+     * 숫자만 입력
+     * @param {Element} inputElement 
+     */
+    onlyNum: function(inputElement) {
+        inputElement.addEventListener('keyup', function(e) {
+            this.value = e.target.value.replace(/[^0-9]/gi, '')
+        });
+    },
+    /**
+     * 숫자만 입력 + 세 자리마다 콤마 자동 입력
+     * @param {Element} inputElement 
+     */
+    onlyFormatNum: function(inputElement) {
+        inputElement.addEventListener('keyup', function(e) {
+            var _val = e.target.value.replace(/,/g, '').replace(/[^0-9]/gi, '');
+            var _re = /(^[+-]?\d+)(\d{3})/;
+            
+            while (_re.test(_val)) {
+                _val = _val.replace(_re, '$1' + ',' + '$2');
+            }
+            
+            this.value = _val;
+        });
+    },
+    /**
+     * 영문만 입력
+     * @param {Element} inputElement 
+     */
+    onlyEng: function(inputElement) {
+        inputElement.addEventListener('keyup', function(e) {
+            this.value = e.target.value.replace(/[^a-zA-Z]/gi, '');
+        });
+    },
+    /**
+     * 영문 + '_' 만 입력
+     * @param {Element} inputElement 
+     */
+    onlyEngUnder: function(inputElement) {
+        inputElement.addEventListener('keyup', function(e) {
+            this.value = e.target.value.replace(/[^a-zA-Z_]/gi, '');
+        });
+    },
+    /**
+     * 영문 + 숫자만 입력
+     * @param {Element} inputElement 
+     */
+    onlyEngNum: function(inputElement) {
+        inputElement.addEventListener('keyup', function(e) {
+            this.value = e.target.value.replace(/[^a-zA-Z0-9]/gi, '');
+        });	
+    },
+    /**
+     * 영문 + SPACE 입력
+     * @param {Element} inputElement 
+     */
+    onlyEngBlank: function(inputElement) {
+        inputElement.addEventListener('keyup', function(e) {
+            this.value = e.target.value.replace(/[^a-zA-Z\s]/gi, '');
+        });
+    },
+    /**
+     * 한글만 입력
+     * @param {Element} inputElement 
+     */
+    onlyHangul: function(inputElement) {
+        inputElement.addEventListener('keyup', function(e) {
+            this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
+        });
+    },
+    /**
+     * 한글 + SPACE 입력
+     * @param {Element} inputElement 
+     */
+    onlyHangulBlank: function(inputElement) {
+        inputElement.addEventListener('keyup', function(e) {
+            this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ\s]/gi, '');
+        });
+    },
+    /**
+     * 한글 + 영문 + 숫자 입력
+     * @param {Element} inputElement 
+     */
+    onlyHanEngNum: function(inputElement) {
+        inputElement.addEventListener('keyup', function(e) {
+            this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/gi, '');
+        });
+    },
+    /**
+     * 한글 입력 막기
+     * @param {Element} inputElement 
+     */
+    blockingHangul: function(inputElement) {
+        inputElement.addEventListener('keyup', function(e) {
+            this.value = e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
+        });	
     }
 }
 
