@@ -194,6 +194,12 @@ CommonJS.Valid = {
 	}
 }
 
+/**
+ * ********************************************************************
+ * CommonJS.DateTime.함수 대신 Moment.js 적극 권장
+ * <참고> https://github.com/kdk1026/node_utils/blob/main/libs/date.js
+ * ********************************************************************
+ */
 CommonJS.DateTime = {
     /**
      * 날짜를 yyyy-MM-dd 형식으로 반환
