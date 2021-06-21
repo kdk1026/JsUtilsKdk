@@ -848,11 +848,13 @@ CommonJS.Input = {
      * @param {Function} callback 
      */
     enterEventCallback: function(inputElement, callback) {
-		inputElement.addEventListener('keypress', function() {
-			if (window.event.keyCode == 13) {
-				callback();
-			}
-		});
+        if (typeof callback === 'function') {
+            inputElement.addEventListener('keypress', function() {
+                if (window.event.keyCode == 13) {
+                    callback();
+                }
+            });
+        }
     }
 }
 
