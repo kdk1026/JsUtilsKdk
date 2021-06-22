@@ -653,24 +653,6 @@ CommonJS.Escape = {
     unescapeHtml: function(val) {
         var _ret = val.replace(/&quot;/gi, '\"').replace(/&amp;/gi, '&').replace(/&lt;/gi, '<').replace(/&gt;/gi, '>');
         return _ret;
-    },
-    /**
-     * JSON Escape 처리
-     * @param {*} val
-     * @returns {string}
-     */
-    escapeJson: function(val) {
-        var _ret = val.replace(/\"/gi, '\\\"').replace(/\\"/gi, '\\\\"').replace('/', '\\/');
-        return _ret;
-    },
-    /**
-     * JSON Unescape 처리
-     * @param {*} val
-     * @returns {string}
-     */
-    unescapeJson: function(val) {
-        var _ret = val.replace(/\\\"/gi, '\"').replace(/\\\\"/gi, '\\"').replace('\\/', '/');
-        return _ret;
     }
 }
 
