@@ -642,7 +642,7 @@ CommonJS.Escape = {
      * @returns {string}
      */
     escapeHtml: function(val) {
-        var _ret = val.replace('\"', '&quot;').replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;');
+        var _ret = val.replace(/\"/gi, '&quot;').replace(/&/gi, '&amp;').replace(/</gi, '&lt;').replace(/>/gi, '&gt;');
         return _ret;
     },
     /**
@@ -651,7 +651,7 @@ CommonJS.Escape = {
      * @returns {string}
      */
     unescapeHtml: function(val) {
-        var _ret = val.replace('&quot;', '\"').replace('&amp;', '&').replace('&lt;', '<').replace('&gt;', '>');
+        var _ret = val.replace(/&quot;/gi, '\"').replace(/&amp;/gi, '&').replace(/&lt;/gi, '<').replace(/&gt;/gi, '>');
         return _ret;
     },
     /**
@@ -660,7 +660,7 @@ CommonJS.Escape = {
      * @returns {string}
      */
     escapeJson: function(val) {
-        var _ret = val.replace('\"', '\\\"').replace('\\"', '\\\\"').replace('/', '\\/');
+        var _ret = val.replace(/\"/gi, '\\\"').replace(/\\"/gi, '\\\\"').replace('/', '\\/');
         return _ret;
     },
     /**
@@ -669,7 +669,7 @@ CommonJS.Escape = {
      * @returns {string}
      */
     unescapeJson: function(val) {
-        var _ret = val.replace('\\\"', '\"').replace('\\\\"', '\\"').replace('\\/', '/');
+        var _ret = val.replace(/\\\"/gi, '\"').replace(/\\\\"/gi, '\\"').replace('\\/', '/');
         return _ret;
     }
 }
