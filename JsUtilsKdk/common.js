@@ -3,7 +3,7 @@
  * @since 2018.12.02
  * @version 2.0
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
- * 
+ *
  * @property {object} CommonJS.Valid
  * @property {object} CommonJS.DateTime
  * @property {object} CommonJS.Format
@@ -16,7 +16,7 @@
  * @property {object} CommonJS.Input - 2021.06.21 추가
  * @property {method} prototype
  */
-var CommonJS = {
+ var CommonJS = {
     /**
      * 팝업창 띄우기
      * @param {string} url
@@ -210,11 +210,11 @@ CommonJS.DateTime = {
 		var _year = date.getFullYear();
 		var	_month = (date.getMonth() + 1);
 		var	_day = date.getDate();
-		
+
 		_month = CommonJS.addZero(_month);
 		_day = CommonJS.addZero(_day);
-			
-		return [_year, _month, _day].join('-'); 
+
+		return [_year, _month, _day].join('-');
     },
     /**
      * 시간을 HH:mm:ss 형식으로 반환
@@ -225,12 +225,12 @@ CommonJS.DateTime = {
 		var _hour = date.getHours();
 		var	_minute = date.getMinutes();
 		var	_second = date.getSeconds();
-		
+
 		_hour = CommonJS.addZero(hour);
 		_minute = CommonJS.addZero(minute);
 		_second = CommonJS.addZero(second);
-		
-		return [_hour, _minute, _second].join(':'); 
+
+		return [_hour, _minute, _second].join(':');
     },
     /**
      * 날짜 형식의 문자열을 Date 객체로 반환
@@ -240,34 +240,34 @@ CommonJS.DateTime = {
 	stringToDate: function(val) {
 		var _date = new Date();
 		val = val.replace(/-|\s|:/gi, '');
-		
+
 		if ( !/^[\d]+$/.test(val) ) {
 			return false;
 		}
-		
+
 		_date.setFullYear(val.substr(0, 4));
 		_date.setMonth(val.substr(4, 2) - 1);
 		_date.setDate(val.substr(6, 2));
-		
+
 		if (val.length == 14) {
 			_date.setHours(val.substr(8, 2));
 			_date.setMinutes(val.substr(10, 2));
 			_date.setSeconds(val.substr(12, 2));
         }
-        
+
 		return _date;
     },
     /**
      * 현재 날짜의 이전/이후 날짜를 반환
      *  - day가 음수 = 이전 날짜
      *  - day가 양수 = 이후 날짜
-     * @param {number} day 
+     * @param {number} day
      * @returns {Date}
      */
 	plusMinusDay: function(day) {
 		var _date = new Date();
 		var _newDate = new Date();
-		
+
 		_newDate.setDate(_date.getDate() + day);
 		return _newDate;
 	},
@@ -275,13 +275,13 @@ CommonJS.DateTime = {
      * 현재 날짜의 이전/이후 날짜를 반환
      *  - month가 음수 = 이전 날짜
      *  - month가 양수 = 이후 날짜
-     * @param {number} month 
+     * @param {number} month
      * @returns {Date}
      */
 	plusMinusMonth: function(month) {
 		var _date = new Date();
 		var _newDate = new Date();
-		
+
 		_newDate.setMonth(_date.getMonth() + month);
 		return _newDate;
 	},
@@ -289,13 +289,13 @@ CommonJS.DateTime = {
      * 현재 날짜의 이전/이후 날짜를 반환
      *  - year가 음수 = 이전 날짜
      *  - year가 양수 = 이후 날짜
-     * @param {number} year 
+     * @param {number} year
      * @returns {Date}
      */
 	plusMinusYear: function(year) {
 		var _date = new Date();
 		var _newDate = new Date();
-		
+
 		_newDate.setFullYear(_date.getFullYear() + year);
 		return _newDate;
 	},
@@ -303,13 +303,13 @@ CommonJS.DateTime = {
      * 현재 시간의 이전/이후 시간을 반환
      *  - hours가 음수 = 이전 시간
      *  - hours가 양수 = 이후 시간
-     * @param {number} hours 
+     * @param {number} hours
      * @returns {Date}
      */
 	plusMinusHour: function(hours) {
 		var _date = new Date();
 		var _newDate = new Date();
-		
+
 		_newDate.setHours(_date.getHours() + hours);
 		return _newDate;
 	},
@@ -317,13 +317,13 @@ CommonJS.DateTime = {
      * 현재 시간의 이전/이후 시간을 반환
      *  - minutes가 음수 = 이전 시간
      *  - minutes가 양수 = 이후 시간
-     * @param {number} minutes 
+     * @param {number} minutes
      * @returns {Date}
      */
 	plusMinusMinute: function(minutes) {
 		var _date = new Date();
 		var _newDate = new Date();
-		
+
 		_newDate.setMinutes(_date.getMinutes() + minutes);
 		return _newDate;
 	},
@@ -331,13 +331,13 @@ CommonJS.DateTime = {
      * 현재 시간의 이전/이후 시간을 반환
      *  - seconds가 음수 = 이전 시간
      *  - seconds가 양수 = 이후 시간
-     * @param {number} seconds 
+     * @param {number} seconds
      * @returns {Date}
      */
 	plusMinusSecond: function(seconds) {
 		var _date = new Date();
 		var _newDate = new Date();
-		
+
 		_newDate.setSeconds(_date.getSeconds() + seconds);
 		return _newDate;
     },
@@ -352,7 +352,7 @@ CommonJS.DateTime = {
     },
     /**
      * 현재 월의 마지막 일자를 반환
-     * @param {Date} date 
+     * @param {Date} date
      */
 	getLastDayOfMonth: function(date) {
 		return new Date(date.getYear(), date.getMonth()+1, 0).getDate();
@@ -432,12 +432,12 @@ CommonJS.File = {
      * document.getElementById('file').addEventListener('change', function() {
      *      CommonJS.File.getFileInfo(this);
      * });
-     * 
+     *
      * [jQuery]
      * $('#file').on('change', function() {
      *      CommonJS.File.getFileInfo(this);
      * });
-     * 
+     *
      * @link https://developer.mozilla.org/en-US/docs/Web/API/File
      */
 	getFileInfo: function(fileElement) {
@@ -447,9 +447,9 @@ CommonJS.File = {
             _fileObj = fileElement.files[0];
 		} else {
             // IE 9 이하
-            var _fso = new ActiveXObject("Scripting.FileSystemObject")						
+            var _fso = new ActiveXObject("Scripting.FileSystemObject")
             var _fsoFile = _fso.getFile(fileElement.value);
-            
+
             _fileObj = {};
             _fileObj.name = _fsoFile.name;
             _fileObj.type = _fsoFile.type;
@@ -499,7 +499,7 @@ CommonJS.File = {
     /**
      * 지원 파일 체크 (실행 파일)
      *  - 결과가 true면 업로드 불가, false면 업로드 가능
-     * @param {Object} fileObj 
+     * @param {Object} fileObj
      * @returns {boolean}
      */
     ifRunableFile: function(fileObj) {
@@ -515,7 +515,7 @@ CommonJS.File = {
 	readableFileSize: function(size) {
 		if (size == 0) return '0';
 		var _arrDataUnits = ['B', 'kB', 'MB', 'GB', 'TB'];
-		var _i = Number(Math.floor(Math.log(size) / Math.log(1024)));		
+		var _i = Number(Math.floor(Math.log(size) / Math.log(1024)));
 		return Math.round(size / Math.pow(1024, _i)) + ' ' + _arrDataUnits[i];
     },
     /**
@@ -534,7 +534,7 @@ CommonJS.File = {
      * @example
      * [JavaScript]
      * CommonJS.File.previewImage(document.getElementById('file'), document.getElementById('img'));
-     * 
+     *
      * [jQuery]
      * CommonJS.File.previewImage($('#file')[0], $('#img')[0]);
      */
@@ -683,7 +683,7 @@ CommonJS.BrowserInfo = {
         var _word;
         var _versionOrType = '';
         var _agent = navigator.userAgent.toLowerCase();
-        
+
         // IE 체크
         if (_agent.match(/msie/) || _agent.match(/trident/) || _agent.match(/edge/)) {
             // IE 10 이하
@@ -742,7 +742,9 @@ CommonJS.BrowserInfo = {
 CommonJS.Input = {
     /**
      * 숫자만 입력
-     * @param {Element} inputElement 
+     * @param {Element} inputElement
+     * @example
+     * CommonJS.Input.onlyNum(document.querySelector(셀렉터));
      */
     onlyNum: function(inputElement) {
         inputElement.addEventListener('keyup', function(e) {
@@ -751,23 +753,27 @@ CommonJS.Input = {
     },
     /**
      * 숫자만 입력 + 세 자리마다 콤마 자동 입력
-     * @param {Element} inputElement 
+     * @param {Element} inputElement
+     * @example
+     * CommonJS.Input.onlyFormatNum(document.querySelector(셀렉터));
      */
     onlyFormatNum: function(inputElement) {
         inputElement.addEventListener('keyup', function(e) {
             var _val = e.target.value.replace(/,/g, '').replace(/[^0-9]/gi, '');
             var _re = /(^[+-]?\d+)(\d{3})/;
-            
+
             while (_re.test(_val)) {
                 _val = _val.replace(_re, '$1' + ',' + '$2');
             }
-            
+
             this.value = _val;
         });
     },
     /**
      * 영문만 입력
-     * @param {Element} inputElement 
+     * @param {Element} inputElement
+     * @example
+     * CommonJS.Input.onlyEng(document.querySelector(셀렉터));
      */
     onlyEng: function(inputElement) {
         inputElement.addEventListener('keyup', function(e) {
@@ -776,7 +782,9 @@ CommonJS.Input = {
     },
     /**
      * 영문 + '_' 만 입력
-     * @param {Element} inputElement 
+     * @param {Element} inputElement
+     * @example
+     * CommonJS.Input.onlyEngUnder(document.querySelector(셀렉터));
      */
     onlyEngUnder: function(inputElement) {
         inputElement.addEventListener('keyup', function(e) {
@@ -785,16 +793,20 @@ CommonJS.Input = {
     },
     /**
      * 영문 + 숫자만 입력
-     * @param {Element} inputElement 
+     * @param {Element} inputElement
+     * @example
+     * CommonJS.Input.onlyEngNum(document.querySelector(셀렉터));
      */
     onlyEngNum: function(inputElement) {
         inputElement.addEventListener('keyup', function(e) {
             this.value = e.target.value.replace(/[^a-zA-Z0-9]/gi, '');
-        });	
+        });
     },
     /**
      * 영문 + SPACE 입력
-     * @param {Element} inputElement 
+     * @param {Element} inputElement
+     * @example
+     * CommonJS.Input.onlyEngBlank(document.querySelector(셀렉터));
      */
     onlyEngBlank: function(inputElement) {
         inputElement.addEventListener('keyup', function(e) {
@@ -803,7 +815,9 @@ CommonJS.Input = {
     },
     /**
      * 한글만 입력
-     * @param {Element} inputElement 
+     * @param {Element} inputElement
+     * @example
+     * CommonJS.Input.onlyHangul(document.querySelector(셀렉터));
      */
     onlyHangul: function(inputElement) {
         inputElement.addEventListener('keyup', function(e) {
@@ -812,7 +826,9 @@ CommonJS.Input = {
     },
     /**
      * 한글 + SPACE 입력
-     * @param {Element} inputElement 
+     * @param {Element} inputElement
+     * @example
+     * CommonJS.Input.onlyHangulBlank(document.querySelector(셀렉터));
      */
     onlyHangulBlank: function(inputElement) {
         inputElement.addEventListener('keyup', function(e) {
@@ -821,7 +837,9 @@ CommonJS.Input = {
     },
     /**
      * 한글 + 영문 + 숫자 입력
-     * @param {Element} inputElement 
+     * @param {Element} inputElement
+     * @example
+     * CommonJS.Input.onlyHanEngNum(document.querySelector(셀렉터));
      */
     onlyHanEngNum: function(inputElement) {
         inputElement.addEventListener('keyup', function(e) {
@@ -830,17 +848,21 @@ CommonJS.Input = {
     },
     /**
      * 한글 입력 막기
-     * @param {Element} inputElement 
+     * @param {Element} inputElement
+     * @example
+     * CommonJS.Input.blockingHangul(document.querySelector(셀렉터));
      */
     blockingHangul: function(inputElement) {
         inputElement.addEventListener('keyup', function(e) {
             this.value = e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
-        });	
+        });
     },
     /**
      * 엔터키 이벤트 발생 시, 해당 엘리먼트 포커스로 이동
-     * @param {Element} inputElement 
-     * @param {Element} focusElement 
+     * @param {Element} inputElement
+     * @param {Element} focusElement
+     * @example
+     * CommonJS.Input.enterEventFocus(document.querySelector(셀렉터), document.querySelector(셀렉터));
      */
     enterEventFocus: function(inputElement, focusElement) {
 		inputElement.addEventListener('keypress', function() {
@@ -851,8 +873,10 @@ CommonJS.Input = {
     },
     /**
      * 엔터키 이벤트 발생 시, 함수 실행
-     * @param {Element} inputElement 
-     * @param {Function} callback 
+     * @param {Element} inputElement
+     * @param {Function} callback
+     * @example
+     * CommonJS.Input.enterEventCallback(document.querySelector(셀렉터), 함수명);
      */
     enterEventCallback: function(inputElement, callback) {
         if (typeof callback === 'function') {
@@ -865,15 +889,17 @@ CommonJS.Input = {
     },
     /**
      * 전화번호 하이픈(-) 자동입력
-     * @param {Element} inputElement 
+     * @param {Element} inputElement
+     * @example
+     * CommonJS.Input.formatHypenPhone(document.querySelector(셀렉터));
      */
     formatHypenPhone: function(inputElement) {
         inputElement.addEventListener('keyup', function(e) {
             var str = inputElement.value;
 			str = str.replace(/[^0-9]/g, '');
-			
+
 			var tmp = '';
-			
+
 			if ( str.substring(0, 2) == 02 ) {
 				// 서울 전화번호일 경우 10자리까지만 나타나고 그 이상의 자리수는 자동삭제
 				if ( str.length < 3 ) {
@@ -948,7 +974,7 @@ String.prototype.endsWith = function(val) {
 }
 /**
  * IE 12(Edge) / Chrome 41 이하에서 includes 사용
- * @param {string} val 
+ * @param {string} val
  */
 String.prototype.includes = function(val) {
 	return this.indexOf(val) != -1;
@@ -956,7 +982,7 @@ String.prototype.includes = function(val) {
 /**
  * IE 14(Edge) / Chrome 47 이하에서 includes 사용 (start는 제외)
  * @param {*} element
- * @returns {boolean} 
+ * @returns {boolean}
  */
 Array.prototype.includes = function(element) {
 	var i = this.length;
