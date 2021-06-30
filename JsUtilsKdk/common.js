@@ -27,8 +27,8 @@
     openPopup: function(url, name, width, height) {
         var _height = (this.Valid.isUndefined(height)) ? screen.height : Number(height);
         var _width = (this.Valid.isUndefined(width)) ? screen.width : Number(width);
-        var _left = (screen.width - width) / 2;
-        var _top = (screen.height - height) / 2;
+        var _left = (screen.width / 2) - (width / 2);
+        var _top = (screen.height / 2) - (height / 2);
         var _option = '';
         _option += 'height='+_height+', width='+_width+', left='+_left+', top='+_top;
         _option += 'menubar=no, status=no';
