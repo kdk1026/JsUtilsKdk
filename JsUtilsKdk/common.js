@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 2.0
+ * @version 2.1
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  *
  * @property {object} CommonJS.Valid
@@ -200,7 +200,32 @@ CommonJS.Valid = {
 	isNotHangul: function(val) {
 		var _re = /[a-zA-Z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g;
 		return _re.test(val);
-	}
+	},
+    /**
+     * 비밀번호 형식 체크 (영문, 숫자, 특수문자 조합 8자 이상)
+     * @param {*} val 
+     * @returns 
+     */
+     isPassword: function(val) {
+        var _re = /^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[^\w\s]).{8,}$/;
+        return _re.test(val);
+    },
+    /**
+     * Object가 비어있는지 체크
+     * @param {Object} param 
+     * @returns 
+     */
+    isEmptyObject: function(param) {
+        return Object.keys(param).length === 0 && param.constructor === Object;
+    },
+    /**
+     * Array가 비어있는지 체크
+     * @param {Array} param 
+     * @returns 
+     */
+    isEmptyArray: function(param) {
+        return Object.keys(param).length === 0 && param.constructor === Array;
+    }
 }
 
 /**
