@@ -126,7 +126,7 @@ $(document).ajaxStop(function() {
 			traditional: true,
 			contentType: false,
 			processData : false,
-			dataType: "json",
+			enctype: 'multipart/form-data',
 			type: method,
 			url: url,
 			data: _param,
