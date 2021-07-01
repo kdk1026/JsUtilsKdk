@@ -53,7 +53,7 @@ $(document).ajaxStop(function() {
      * @param {string} method 
      * @param {string} url 
      * @param {(undefined|Object)} header 
-     *   - callback 있는 경우, 없으면 {}
+     *   - param, callback 없는 경우만 생략 가능 / 없으면 {} 로 넘길 것
      * @param {(undefined|Object)} param 
      * @param {(undefined|Function)} callback 
      * @returns 
@@ -110,7 +110,7 @@ $(document).ajaxStop(function() {
      * @param {string} method 
      * @param {string} url 
      * @param {(undefined|Object)} header  
-     *   - callback 있는 경우, 없으면 {}
+     *   - param, callback 없는 경우만 생략 가능 / 없으면 {} 로 넘길 것
      * @param {Element} $formElement 
      * @param {(undefined|Function)} callback 
      * @returns 
