@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 2.1
+ * @version 2.2
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  *
  * @property {object} CommonJS.Valid
@@ -225,6 +225,15 @@ CommonJS.Valid = {
      */
     isEmptyArray: function(param) {
         return Object.keys(param).length === 0 && param.constructor === Array;
+    },
+    /**
+     * URL 형식 체크
+     * @param {*} val 
+     * @returns 
+     */
+    isUrl: function(val) {
+        var _re = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+        return _re.test(val);
     }
 }
 
