@@ -52,7 +52,9 @@
 CommonJS.Valid = {
     /**
      * 공백, 빈 문자열 체크 (undefined == null)
-     *  - if ( !셀렉터.value.trim() ) { ... } 으로 대체 가능 (권장)
+     *  - 다음 형태로 대체 가능 (권장)
+     *   [JavaScript] if ( !셀렉터.value.trim() ) { ... }
+     *   [jQuery] if ( !셀렉터.val().trim() ) { ... }
      * @param {*} val
      * @returns {boolean}
      */
@@ -135,7 +137,7 @@ CommonJS.Valid = {
             041-충남, 042-대전, 043-충복, 044-세종
             051-부산, 052-울산, 053-대구, 054-경북, 055-경남
             061-전남, 062-광주, 063-전북, 064-제주
-            0505-평생번호, 0507-안심번호
+            0505-평생번호/인터넷 팩스 번호, 0507-안심번호
             070-인터넷 전화
         */
 		var _re = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|505|507|70))-?(\d{3,4})-?(\d{4})$/;
@@ -472,14 +474,22 @@ CommonJS.File = {
      * @returns {Object}
      * @example
      * [JavaScript]
+     * // 파일 로드 전
      * document.getElementById('file').addEventListener('change', function() {
      *      CommonJS.File.getFileInfo(this);
      * });
+     * 
+     * // 파일 로드 후
+     * var fileObj = CommonJS.File.getFileInfo( document.getElementById('file') );
      *
      * [jQuery]
+     * // 파일 로드 전
      * $('#file').on('change', function() {
      *      CommonJS.File.getFileInfo(this);
      * });
+     * 
+     * // 파일 로드 후
+     * var fileObj = CommonJS.File.getFileInfo( $('#file')[0] );
      *
      * @link https://developer.mozilla.org/en-US/docs/Web/API/File
      */
@@ -602,7 +612,22 @@ CommonJS.File = {
                 imgElement.setAttribute("src", document.selection.createRange().text);
             }
         }
-	}
+	},
+    /**
+     * 
+     * @param {Object} fileObj 
+     * @param {Array} arrAllowExt 
+     * @returns 
+     */
+    isAllowCustom: function(fileObj, arrAllowExt) {
+        if ( Array.isArray ) {
+            var _ext = CommonJS.File.getFileExt(fileObj);
+            return arrAllowExt.includes(_ext);
+        } else {
+            console.log('두 번째 인자가 Array가 아님');
+            return false;
+        }
+    }
 }
 
 CommonJS.Cookie = {
@@ -729,7 +754,8 @@ CommonJS.BrowserInfo = {
                 _versionOrType = RegExp.$1 + RegExp.$2;
             }
         } else {
-            if (_agent.match(/chrome/)) _versionOrType = "Chrome";
+            if (_agent.match(/whale/)) _versionOrType = "Whale";
+            else if (_agent.match(/chrome/)) _versionOrType = "Chrome";
             else if (_agent.match(/opera/)) _versionOrType = "Opera";
             else if (_agent.match(/firefox/)) _versionOrType = "Firefox";
             else if (_agent.match(/safari/)) _versionOrType = "Safari";
@@ -764,6 +790,12 @@ CommonJS.BrowserInfo = {
     }
 }
 
+/**
+ * ********************************************************************
+ * JavaScript인 경우, IE 9 이하 버림
+ *   - IE 9이하 대응 참고 : CommonJS.File.previewImage
+ * ********************************************************************
+ */
 CommonJS.Input = {
     /**
      * 숫자만 입력
