@@ -744,12 +744,12 @@ CommonJS.Escape = {
 CommonJS.BrowserInfo = {
     /**
      * 브라우저 종류 및 버전 체크
-     * @returns {string}
+     * @returns {Object}}
      */
     checkTypeVersion: function() {
         var _agent = navigator.userAgent.toLowerCase();
         var _re = '';
-        
+
         var browser = {
             name: null,
             version: null
