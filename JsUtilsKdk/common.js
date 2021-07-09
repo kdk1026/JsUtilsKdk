@@ -5,10 +5,12 @@
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  *
  * @property {object} CommonJS.Valid
+ * @property {object} CommonJS.TypeValid - 2021.07.10 추가 (CommonJS.Valid 에서 분리함)
  * @property {object} CommonJS.DateTime
  * @property {object} CommonJS.Format
  * @property {object} CommonJS.JSON
  * @property {object} CommonJS.File
+ * @property {object} CommonJS.FileValid - 2021.07.10 추가 (CommonJS.File 에서 분리함)
  * @property {object} CommonJS.Cookie
  * @property {object} CommonJS.Byte
  * @property {object} CommonJS.Escape
@@ -94,12 +96,52 @@ CommonJS.Valid = {
         var _re = /[`~!@#$%^&*()-_=+{}|;:'\",.<>?]+$/;
         return _re.test(val);
     },
+	/**
+	 * 공백 체크
+	 * @param {string} val
+	 * @returns {boolean}
+	 */
+	checkSpace: function(val) {
+		if (val.search(/\s/) != -1) {
+			return true;
+		} else {
+			return false;
+		}
+	},
+	/**
+	 * 한글만 입력 체크
+	 * @param {string} val
+	 * @returns {boolean}
+	 */
+	isNotHangul: function(val) {
+		var _re = /[a-zA-Z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g;
+		return _re.test(val);
+	},
+    /**
+     * Object가 비어있는지 체크
+     * @param {Object} param 
+     * @returns 
+     */
+    isEmptyObject: function(param) {
+        return Object.keys(param).length === 0 && param.constructor === Object;
+    },
+    /**
+     * Array가 비어있는지 체크
+     * @param {Array} param 
+     * @returns 
+     */
+    isEmptyArray: function(param) {
+        return Object.keys(param).length === 0 && param.constructor === Array;
+    }
+}
+
+CommonJS.TypeValid = {
     /**
      * 날짜 형식 체크 (YYYYMMDD, YYYY-MM-DD)
      * @param {string} val1
      * @returns {boolean}
      */
-	isDate: function(val) {
+     isDate: function(val) {
 		var _re = /^[0-9]{4}-?(0[1-9]|1[012])-?(0[1-9]|1[0-9]|2[0-9]|3[01])+$/;
 		return _re.test(val);
     },
@@ -189,27 +231,6 @@ CommonJS.Valid = {
 		var _re = /^[a-zA-Z](?=.*[a-zA-Z])(?=.*[0-9]).{6,29}$/;
 		return _re.test(val);
     },
-	/**
-	 * 공백 체크
-	 * @param {string} val
-	 * @returns {boolean}
-	 */
-	checkSpace: function(val) {
-		if (val.search(/\s/) != -1) {
-			return true;
-		} else {
-			return false;
-		}
-	},
-	/**
-	 * 한글만 입력 체크
-	 * @param {string} val
-	 * @returns {boolean}
-	 */
-	isNotHangul: function(val) {
-		var _re = /[a-zA-Z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g;
-		return _re.test(val);
-	},
     /**
      * 비밀번호 형식 체크 (영문, 숫자, 특수문자 조합 8자 이상)
      * @param {*} val 
@@ -220,27 +241,11 @@ CommonJS.Valid = {
         return _re.test(val);
     },
     /**
-     * Object가 비어있는지 체크
-     * @param {Object} param 
-     * @returns 
-     */
-    isEmptyObject: function(param) {
-        return Object.keys(param).length === 0 && param.constructor === Object;
-    },
-    /**
-     * Array가 비어있는지 체크
-     * @param {Array} param 
-     * @returns 
-     */
-    isEmptyArray: function(param) {
-        return Object.keys(param).length === 0 && param.constructor === Array;
-    },
-    /**
      * URL 형식 체크
      * @param {*} val 
      * @returns 
      */
-    isUrl: function(val) {
+     isUrl: function(val) {
         var _re = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
         return _re.test(val);
     }
@@ -529,11 +534,58 @@ CommonJS.File = {
 		return _fileName.substring(_fileName.lastIndexOf(".")+1);
     },
     /**
+     * 파일 용량 단위 구하기
+     * @param {number} size
+     * @returns {string}
+     */
+	readableFileSize: function(size) {
+		if (size == 0) return '0';
+		var _arrDataUnits = ['B', 'kB', 'MB', 'GB', 'TB'];
+		var _i = Number(Math.floor(Math.log(size) / Math.log(1024)));
+		return Math.round(size / Math.pow(1024, _i)) + ' ' + _arrDataUnits[_i];
+    },
+    /**
+     * 이미지 미리보기
+     * @param {Element} fileElement
+     * @param {Element} imgElement
+     * @example
+     * [JavaScript]
+     * CommonJS.File.previewImage(document.getElementById('file'), document.getElementById('img'));
+     *
+     * [jQuery]
+     * CommonJS.File.previewImage($('#file')[0], $('#img')[0]);
+     */
+	previewImage: function(fileElement, imgElement) {
+        if (window.addEventListener) {
+            fileElement.addEventListener('change', fnSrc);
+        } else {
+            fileElement.attachEvent('onchange', fnSrc);
+        }
+
+        function fnSrc(e) {
+            if (window.FileReader) {
+                // IE 10 이상
+                var _reader = new FileReader();
+                _reader.onload = function(e) {
+                    imgElement.src = e.target.result;
+                }
+                _reader.readAsDataURL(e.target.files[0]);
+            } else {
+                // IE 9 이하
+                fileElement.select();
+                imgElement.setAttribute("src", document.selection.createRange().text);
+            }
+        }
+	}
+}
+
+CommonJS.FileValid = {
+    /**
      * 지원 파일 체크 (문서, 이미지)
      * @param {Object}
      * @returns {boolean}
      */
-    isAllowFile: function(fileObj) {
+     isAllowFile: function(fileObj) {
         var _ext = CommonJS.File.getFileExt(fileObj);
         var _arrAllowExt = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'hwp', 'odt', 'odp', 'ods', 'jpg', 'jpeg', 'gif', 'png'];
         return _arrAllowExt.includes(_ext);
@@ -570,65 +622,12 @@ CommonJS.File = {
         return extReg.test(_ext);
     },
     /**
-     * 파일 용량 단위 구하기
-     * @param {number} size
-     * @returns {string}
-     */
-	readableFileSize: function(size) {
-		if (size == 0) return '0';
-		var _arrDataUnits = ['B', 'kB', 'MB', 'GB', 'TB'];
-		var _i = Number(Math.floor(Math.log(size) / Math.log(1024)));
-		return Math.round(size / Math.pow(1024, _i)) + ' ' + _arrDataUnits[_i];
-    },
-    /**
-     * 파일 용량 체크
-     * @param {Object} fileObj
-     * @param {number} maxSize - byte 단위 (예: 1MB = 1024 x 1024 x 1)
-     * @returns {boolean}
-     */
-    isFileMaxSize: function(fileObj, maxSize) {
-        return (Number(fileObj.size) > Number(maxSize));
-    },
-    /**
-     * 이미지 미리보기
-     * @param {Element} fileElement
-     * @param {Element} imgElement
-     * @example
-     * [JavaScript]
-     * CommonJS.File.previewImage(document.getElementById('file'), document.getElementById('img'));
-     *
-     * [jQuery]
-     * CommonJS.File.previewImage($('#file')[0], $('#img')[0]);
-     */
-	previewImage: function(fileElement, imgElement) {
-        if (window.addEventListener) {
-            fileElement.addEventListener('change', fnSrc);
-        } else {
-            fileElement.attachEvent('onchange', fnSrc);
-        }
-
-        function fnSrc(e) {
-            if (window.FileReader) {
-                // IE 10 이상
-                var _reader = new FileReader();
-                _reader.onload = function(e) {
-                    imgElement.src = e.target.result;
-                }
-                _reader.readAsDataURL(e.target.files[0]);
-            } else {
-                // IE 9 이하
-                fileElement.select();
-                imgElement.setAttribute("src", document.selection.createRange().text);
-            }
-        }
-	},
-    /**
      * 지원 파일 체크 (커스텀)
      * @param {Object} fileObj 
      * @param {Array} arrAllowExt 
      * @returns 
      */
-    isAllowCustom: function(fileObj, arrAllowExt) {
+     isAllowCustom: function(fileObj, arrAllowExt) {
         if ( Array.isArray ) {
             var _ext = CommonJS.File.getFileExt(fileObj);
             return arrAllowExt.includes(_ext);
@@ -636,6 +635,15 @@ CommonJS.File = {
             console.log('두 번째 인자가 Array가 아님');
             return false;
         }
+    },
+    /**
+     * 파일 용량 체크
+     * @param {Object} fileObj
+     * @param {number} maxSize - byte 단위 (예: 1MB = 1024 x 1024 x 1)
+     * @returns {boolean}
+     */
+     isFileMaxSize: function(fileObj, maxSize) {
+        return (Number(fileObj.size) > Number(maxSize));
     }
 }
 
