@@ -743,42 +743,65 @@ CommonJS.Escape = {
 
 CommonJS.BrowserInfo = {
     /**
-     * IE 버전, 브라우저 종류 체크
+     * 브라우저 종류 및 버전 체크
      * @returns {string}
      */
     checkTypeVersion: function() {
-        var _word;
-        var _versionOrType = '';
         var _agent = navigator.userAgent.toLowerCase();
+        var _re = '';
+        
+        var browser = {
+            name: null,
+            version: null
+        };
 
         // IE 체크
-        if (_agent.match(/msie/) || _agent.match(/trident/) || _agent.match(/edge/)) {
-            // IE 10 이하
+        // - IE 12에 해당하는 초장기 Edge 체크 의미 없어져서 제외시킴
+        if (_agent.match(/msie/) || _agent.match(/trident/) ) {
+            browser.name = "IE";
+
             if (_agent.match(/msie/)) {
-                _word = 'msie';
+                // IE 10 이하
+                _re = /msie (\S+)/;
+                browser.version = _re.exec(_agent)[1];
+                browser.version = browser.version.replace(";", "");
             } else {
                 // IE 11
                 if (_agent.match(/trident/)) {
-                    _word = "trident/.*rv:";
+                    _re = /rv:(\S+)/;
+                    browser.version = _re.exec(_agent)[1];
                 }
-                // IE 12 (Edge)
-                else if (_agent.match(/edge/)) {
-                    _word = "edge/";
-                }
-            }
-            var _re = new RegExp(_word + "([0-9]{1,})(\\.{0,}[0-9]{0,1})");
-            if (_re.exec(_agent) != null) {
-                _versionOrType = RegExp.$1 + RegExp.$2;
             }
         } else {
-            if (_agent.match(/whale/)) _versionOrType = "Whale";
-            else if (_agent.match(/chrome/)) _versionOrType = "Chrome";
-            else if (_agent.match(/opera/)) _versionOrType = "Opera";
-            else if (_agent.match(/firefox/)) _versionOrType = "Firefox";
-            else if (_agent.match(/safari/)) _versionOrType = "Safari";
+            if (_agent.match(/whale/)) {
+                _re = /whale\/(\S+)/;
+                browser.name = 'Whale';
+            }
+            else if (_agent.match(/edg/)) {
+                _re = /edg\/(\S+)/;
+                browser.name = 'Edge';
+            }
+            else if (_agent.match(/chrome/)) {
+                _re = /chrome\/(\S+)/;
+                browser.name = 'Chrome';
+            }
+            else if (_agent.match(/opera/)) {
+                _re = /opera\/(\S+)/;
+                browser.name = 'Opera';
+            }
+            else if (_agent.match(/firefox/)) {
+                _re = /firefox\/(\S+)/;
+                browser.name = 'Firefox';
+            }
+            else if (_agent.match(/safari/)) {
+                _re = /safari\/(\S+)/;
+                browser.name = 'Safari';
+            }
+
+            browser.version = _re.exec(_agent)[1];
         }
 
-        return _versionOrType;
+        return browser;
     },
     /**
      * 모바일 브라우저 여부 체크
