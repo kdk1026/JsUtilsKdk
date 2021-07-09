@@ -1225,41 +1225,43 @@ CommonJS.Input = {
 
 //--------------------------------------------------------------------
 // prototype
+// - 현 시점에 IE는 의미 없고, 제한된 인트라넷 환경에서 주석 해제 후 사용
+// - 성능이 떨어질까봐 Default는 주석 처리 함
 //--------------------------------------------------------------------
 /**
  * IE 12(Edge) / Chrome 41 이하에서 startsWith 사용
  * @param {string} val
  * @returns {boolean}
  */
-String.prototype.startsWith = function(val) {
-	return this.substring(0, val.length) === val;
-}
+// String.prototype.startsWith = function(val) {
+// 	return this.substring(0, val.length) === val;
+// }
 /**
  * IE 12(Edge) / Chrome 41 이하에서 endsWith 사용
  * @param {string} val
  * @returns {boolean}
  */
-String.prototype.endsWith = function(val) {
-	return this.substring(this.length - val.length, this.length) === val;
-}
+// String.prototype.endsWith = function(val) {
+// 	return this.substring(this.length - val.length, this.length) === val;
+// }
 /**
  * IE 12(Edge) / Chrome 41 이하에서 includes 사용
  * @param {string} val
  */
-String.prototype.includes = function(val) {
-	return this.indexOf(val) != -1;
-}
+// String.prototype.includes = function(val) {
+// 	return this.indexOf(val) != -1;
+// }
 /**
  * IE 14(Edge) / Chrome 47 이하에서 includes 사용 (start는 제외)
  * @param {*} element
  * @returns {boolean}
  */
-Array.prototype.includes = function(element) {
-	var i = this.length;
-	while (i--) {
-		if (this[i] === element) {
-			return true;
-		}
-	}
-	return false;
-}
+// Array.prototype.includes = function(element) {
+// 	var i = this.length;
+// 	while (i--) {
+// 		if (this[i] === element) {
+// 			return true;
+// 		}
+// 	}
+// 	return false;
+// }
