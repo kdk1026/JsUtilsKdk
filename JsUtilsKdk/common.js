@@ -23,6 +23,8 @@
      * @param {(undefined|null|blank|string)} name
      * @param {(undefined|null|number)} width
      * @param {(undefined|null|number)} height
+     * @example
+     * CommonJS.openPopup('http://www.naver.com', 'pop', 500, 500);
      */
     openPopup: function(url, name, width, height) {
         var _height = (this.Valid.isUndefined(height)) ? screen.height : Number(height);
@@ -40,6 +42,8 @@
      * 10 이하의 숫자에 0을 붙여서 반환
      * @param {number} num
      * @returns {string}
+     * @example
+     * CommonJS.addZero(3);
      */
     addZero: function(num) {
         if (num < 10) {
@@ -57,6 +61,8 @@ CommonJS.Valid = {
      *   [jQuery] if ( !셀렉터.val().trim() ) { ... }
      * @param {*} val
      * @returns {boolean}
+     * @example
+     * CommonJS.Valid.isBlank( '' );
      */
     isBlank: function(val) {
         return (val == null || val.replace(/ /gi,'') == '');
@@ -65,6 +71,7 @@ CommonJS.Valid = {
      * undefined 체크 ('undefined' 포함)
      * @param {*} val
      * @returns {boolean}
+     * 
      */
     isUndefined: function(val) {
         return (val == undefined || val === 'undefined');
@@ -475,8 +482,9 @@ CommonJS.File = {
      * @example
      * [JavaScript]
      * // 파일 로드 전
+     * var fileObj;
      * document.getElementById('file').addEventListener('change', function() {
-     *      CommonJS.File.getFileInfo(this);
+     *      fileObj = CommonJS.File.getFileInfo(this);
      * });
      * 
      * // 파일 로드 후
@@ -484,8 +492,9 @@ CommonJS.File = {
      *
      * [jQuery]
      * // 파일 로드 전
+     * var fileObj;
      * $('#file').on('change', function() {
-     *      CommonJS.File.getFileInfo(this);
+     *      fileObj = CommonJS.File.getFileInfo(this);
      * });
      * 
      * // 파일 로드 후
@@ -643,7 +652,7 @@ CommonJS.Cookie = {
 		document.cookie = name +'='+ escape(value) +'; path=/; expires='+ _date.toGMTString() +';';
     },
     /**
-     * 쿠키 얻기
+     * 쿠키 값 얻기
      * @param {string} name
      * @returns {*}
      */
