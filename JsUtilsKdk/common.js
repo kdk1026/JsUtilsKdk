@@ -782,7 +782,7 @@ CommonJS.BrowserInfo = {
                 _re = /edg\/(\S+)/;
                 browser.name = 'Edge';      // Chromium 기반
             }
-            
+
             else if (_agent.match(/opr/)) {
                 // opera 에서 opr 로 변경됨....
                 _re = /opr\/(\S+)/;
@@ -800,8 +800,13 @@ CommonJS.BrowserInfo = {
                 _re = /safari\/(\S+)/;
                 browser.name = 'Safari';
             }
+            else {
+                console.log( _agent );
+            }
 
-            browser.version = _re.exec(_agent)[1];
+            if ( browser.name != null ) {
+                browser.version = _re.exec(_agent)[1];
+            }
         }
 
         return browser;
