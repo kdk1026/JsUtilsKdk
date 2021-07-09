@@ -775,19 +775,22 @@ CommonJS.BrowserInfo = {
         } else {
             if (_agent.match(/whale/)) {
                 _re = /whale\/(\S+)/;
-                browser.name = 'Whale';
+                browser.name = 'Whale';     // Chromium 기반
             }
             else if (_agent.match(/edg/)) {
+                // edge 에서 edg 로 변경됨....
                 _re = /edg\/(\S+)/;
-                browser.name = 'Edge';
+                browser.name = 'Edge';      // Chromium 기반
+            }
+            
+            else if (_agent.match(/opr/)) {
+                // opera 에서 opr 로 변경됨....
+                _re = /opr\/(\S+)/;
+                browser.name = 'Opera';     // Chromium 기반
             }
             else if (_agent.match(/chrome/)) {
                 _re = /chrome\/(\S+)/;
-                browser.name = 'Chrome';
-            }
-            else if (_agent.match(/opera/)) {
-                _re = /opera\/(\S+)/;
-                browser.name = 'Opera';
+                browser.name = 'Chrome';    // Chromium 기반
             }
             else if (_agent.match(/firefox/)) {
                 _re = /firefox\/(\S+)/;
