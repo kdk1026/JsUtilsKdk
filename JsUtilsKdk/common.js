@@ -666,7 +666,7 @@ CommonJS.Cookie = {
      */
 	getCookie: function(name) {
         var _value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-        return _value? _value[2] : null;
+        return _value ? unescape(_value[2]) : null;
     },
     /**
      * 쿠키 삭제
