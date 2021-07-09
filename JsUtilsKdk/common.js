@@ -614,7 +614,7 @@ CommonJS.File = {
         }
 	},
     /**
-     * 
+     * 지원 파일 체크 (커스텀)
      * @param {Object} fileObj 
      * @param {Array} arrAllowExt 
      * @returns 
