@@ -5,9 +5,9 @@
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  *
  * @property {object} CommonJS.Valid
- * @property {object} CommonJS.TypeValid - 2021.07.10 추가 (CommonJS.Valid 에서 분리함)
  * @property {object} CommonJS.DateTime
  * @property {object} CommonJS.Format
+ * @property {object} CommonJS.FormatValid - 2021.07.10 추가 (CommonJS.Valid 에서 분리함)
  * @property {object} CommonJS.JSON
  * @property {object} CommonJS.File
  * @property {object} CommonJS.FileValid - 2021.07.10 추가 (CommonJS.File 에서 분리함)
@@ -132,122 +132,6 @@ CommonJS.Valid = {
      */
     isEmptyArray: function(param) {
         return Object.keys(param).length === 0 && param.constructor === Array;
-    }
-}
-
-CommonJS.TypeValid = {
-    /**
-     * 날짜 형식 체크 (YYYYMMDD, YYYY-MM-DD)
-     * @param {string} val1
-     * @returns {boolean}
-     */
-     isDate: function(val) {
-		var _re = /^[0-9]{4}-?(0[1-9]|1[012])-?(0[1-9]|1[0-9]|2[0-9]|3[01])+$/;
-		return _re.test(val);
-    },
-    /**
-     * 시간 형식 체크 (HH24MI, HH24:MI, HH24MISS, HH24:MI:SS)
-     * @param {string} val1
-     * @returns {boolean}
-     */
-    isTime: function(val) {
-        var _re = /^([1-9]|[01][0-9]|2[0-3]):?([0-5][0-9])?(:?([0-5][0-9]))+$/;
-        return _re.test(val);
-    },
-    /**
-     * 이메일 형식 체크
-     * @param {string} val1
-     * @param {(undefined|null|string)} val2
-     * @returns {boolean}
-     */
-	isEmail: function(val1, val2) {
-        var _val = val1;
-        if ( !this.isBlank(val2) ) {
-            _val = val1 +'@'+ val2;
-        }
-		var _re = /^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})+$/;
-		return _re.test(_val);
-    },
-    /**
-     * 전화번호 형식 체크
-     * @param {string} val1
-     * @param {(undefined|null|string)} val2
-     * @param {(undefined|null|string)} val3
-     * @returns {boolean}
-     */
-	isPhoneNumber: function(val1, val2, val3) {
-        var _val = val1;
-        if ( !this.isBlank(val2) && !this.isBlank(val3) ) {
-            _val = val1 +'-'+ val2 +'-'+ val3;
-        }
-        /*
-            02-서울
-            031-경기, 032-인천, 033-강원
-            041-충남, 042-대전, 043-충복, 044-세종
-            051-부산, 052-울산, 053-대구, 054-경북, 055-경남
-            061-전남, 062-광주, 063-전북, 064-제주
-            0505-평생번호/인터넷 팩스 번호, 0507-안심번호
-            070-인터넷 전화
-        */
-		var _re = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|505|507|70))-?(\d{3,4})-?(\d{4})$/;
-		return _re.test(_val);
-    },
-    /**
-     * 휴대폰 번호 형식 체크
-     * @param {string} val1
-     * @param {(undefined|null|string)} val2
-     * @param {(undefined|null|string)} val3
-     * @returns {boolean}
-     */
-	isCellPhoneNumber: function(val1, val2, val3) {
-        var _val = val1;
-        if ( !this.isBlank(val2) && !this.isBlank(val3) ) {
-            _val = val1 +'-'+ val2 +'-'+ val3;
-        }
-		var _re = /^(01[016789])-?(\d{3,4})-?(\d{4})+$/;
-		return _re.test(_val);
-    },
-    /**
-     * 사업자등록번호 형식 체크
-     * @param {string} val1
-     * @param {(undefined|null|string)} val2
-     * @param {(undefined|null|string)} val3
-     * @returns {boolean}
-     */
-	isBusinessRegNumber: function(val1, val2, val3) {
-        var _val = val1;
-        if ( !this.isBlank(val2) && !this.isBlank(val3) ) {
-            _val = val1 +'-'+ val2 +'-'+ val3;
-        }
-		var _re = /^[(\d{3})-?(\d{2})-?(\d{5})+$]/;
-		return _re.test(_val);
-    },
-    /**
-     * 아이디 형식 체크 (첫 글자 영문, 7자 이상 30자 이내)
-     * @param {string} val
-     * @returns {boolean}
-     */
-	isId: function(val) {
-		var _re = /^[a-zA-Z](?=.*[a-zA-Z])(?=.*[0-9]).{6,29}$/;
-		return _re.test(val);
-    },
-    /**
-     * 비밀번호 형식 체크 (영문, 숫자, 특수문자 조합 8자 이상)
-     * @param {*} val 
-     * @returns 
-     */
-     isPassword: function(val) {
-        var _re = /^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[^\w\s]).{8,}$/;
-        return _re.test(val);
-    },
-    /**
-     * URL 형식 체크
-     * @param {*} val 
-     * @returns 
-     */
-     isUrl: function(val) {
-        var _re = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-        return _re.test(val);
     }
 }
 
@@ -442,13 +326,129 @@ CommonJS.Format = {
         return (num + '').replace(/([0-9]{4})(0[1-9]|1[012])(0[1-9]|1[0-9]|2[0-9]|3[01])/,'$1-$2-$3');
     },
     /**
-     * 특정 문자 제거
+     * 특수 문자 제거
      * @param {string}} val
      * @returns {string}
      */
     removeSpecial: function(val) {
         var _re = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
         return val.replace(_re, '');
+    }
+}
+
+CommonJS.FormatValid = {
+    /**
+     * 날짜 형식 체크 (YYYYMMDD, YYYY-MM-DD)
+     * @param {string} val1
+     * @returns {boolean}
+     */
+     isDate: function(val) {
+		var _re = /^[0-9]{4}-?(0[1-9]|1[012])-?(0[1-9]|1[0-9]|2[0-9]|3[01])+$/;
+		return _re.test(val);
+    },
+    /**
+     * 시간 형식 체크 (HH24MI, HH24:MI, HH24MISS, HH24:MI:SS)
+     * @param {string} val1
+     * @returns {boolean}
+     */
+    isTime: function(val) {
+        var _re = /^([1-9]|[01][0-9]|2[0-3]):?([0-5][0-9])?(:?([0-5][0-9]))+$/;
+        return _re.test(val);
+    },
+    /**
+     * 이메일 형식 체크
+     * @param {string} val1
+     * @param {(undefined|null|string)} val2
+     * @returns {boolean}
+     */
+	isEmail: function(val1, val2) {
+        var _val = val1;
+        if ( !this.isBlank(val2) ) {
+            _val = val1 +'@'+ val2;
+        }
+		var _re = /^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})+$/;
+		return _re.test(_val);
+    },
+    /**
+     * 전화번호 형식 체크
+     * @param {string} val1
+     * @param {(undefined|null|string)} val2
+     * @param {(undefined|null|string)} val3
+     * @returns {boolean}
+     */
+	isPhoneNumber: function(val1, val2, val3) {
+        var _val = val1;
+        if ( !this.isBlank(val2) && !this.isBlank(val3) ) {
+            _val = val1 +'-'+ val2 +'-'+ val3;
+        }
+        /*
+            02-서울
+            031-경기, 032-인천, 033-강원
+            041-충남, 042-대전, 043-충복, 044-세종
+            051-부산, 052-울산, 053-대구, 054-경북, 055-경남
+            061-전남, 062-광주, 063-전북, 064-제주
+            0505-평생번호/인터넷 팩스 번호, 0507-안심번호
+            070-인터넷 전화
+        */
+		var _re = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|505|507|70))-?(\d{3,4})-?(\d{4})$/;
+		return _re.test(_val);
+    },
+    /**
+     * 휴대폰 번호 형식 체크
+     * @param {string} val1
+     * @param {(undefined|null|string)} val2
+     * @param {(undefined|null|string)} val3
+     * @returns {boolean}
+     */
+	isCellPhoneNumber: function(val1, val2, val3) {
+        var _val = val1;
+        if ( !this.isBlank(val2) && !this.isBlank(val3) ) {
+            _val = val1 +'-'+ val2 +'-'+ val3;
+        }
+		var _re = /^(01[016789])-?(\d{3,4})-?(\d{4})+$/;
+		return _re.test(_val);
+    },
+    /**
+     * 사업자등록번호 형식 체크
+     * @param {string} val1
+     * @param {(undefined|null|string)} val2
+     * @param {(undefined|null|string)} val3
+     * @returns {boolean}
+     */
+	isBusinessRegNumber: function(val1, val2, val3) {
+        var _val = val1;
+        if ( !this.isBlank(val2) && !this.isBlank(val3) ) {
+            _val = val1 +'-'+ val2 +'-'+ val3;
+        }
+		var _re = /^[(\d{3})-?(\d{2})-?(\d{5})+$]/;
+		return _re.test(_val);
+    },
+    /**
+     * 아이디 형식 체크 (첫 글자 영문, 7자 이상 30자 이내)
+     * @param {string} val
+     * @returns {boolean}
+     */
+	isId: function(val) {
+		var _re = /^[a-zA-Z](?=.*[a-zA-Z])(?=.*[0-9]).{6,29}$/;
+		return _re.test(val);
+    },
+    /**
+     * 비밀번호 형식 체크 (영문, 숫자, 특수문자 조합 8자 이상)
+     * @param {*} val 
+     * @returns 
+     */
+     isPassword: function(val) {
+        var _re = /^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[^\w\s]).{8,}$/;
+        return _re.test(val);
+    },
+    /**
+     * URL 형식 체크
+     * @param {*} val 
+     * @returns 
+     */
+     isUrl: function(val) {
+        var _re = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+        return _re.test(val);
     }
 }
 
