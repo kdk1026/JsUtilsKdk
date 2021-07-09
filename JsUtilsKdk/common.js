@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 2.2
+ * @version 2.3
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  *
  * @property {object} CommonJS.Valid
@@ -769,21 +769,45 @@ CommonJS.Input = {
      * 숫자만 입력
      * @param {Element} inputElement
      * @example
-     * CommonJS.Input.onlyNum(document.querySelector(셀렉터));
+     * [JavaScript]
+     * CommonJS.Input.onlyNum( document.querySelector(셀렉터) );
+     * 
+     * [jQuery]
+     * CommonJS.Input.onlyNum( $(셀렉터) );
      */
     onlyNum: function(inputElement) {
-        inputElement.addEventListener('keyup', function(e) {
-            this.value = e.target.value.replace(/[^0-9]/gi, '')
-        });
+        if ( inputElement.length === undefined ) {
+            inputElement.addEventListener('keyup', function(e) {
+                this.value = e.target.value.replace(/[^0-9]/gi, '');
+            });
+        } else {
+			$(document).on('keyup', inputElement, function(e) {
+				inputElement.val( e.target.value.replace(/[^0-9]/gi, '') );
+			});
+        }
     },
     /**
      * 숫자만 입력 + 세 자리마다 콤마 자동 입력
      * @param {Element} inputElement
      * @example
-     * CommonJS.Input.onlyFormatNum(document.querySelector(셀렉터));
+     * [JavaScript]
+     * CommonJS.Input.onlyFormatNum( document.querySelector(셀렉터) );
+     * 
+     * [jQuery]
+     * CommonJS.Input.onlyFormatNum( $(셀렉터) );
      */
     onlyFormatNum: function(inputElement) {
-        inputElement.addEventListener('keyup', function(e) {
+        if ( inputElement.length === undefined ) {
+            inputElement.addEventListener('keyup', function(e) {    
+                this.value = fnTemp(e);
+            });
+        } else {
+            $(document).on('keyup', inputElement, function(e) {
+                inputElement.val( fnTemp(e) );
+            });
+        }
+
+        function fnTemp(e) {
             var _val = e.target.value.replace(/,/g, '').replace(/[^0-9]/gi, '');
             var _re = /(^[+-]?\d+)(\d{3})/;
 
@@ -791,190 +815,362 @@ CommonJS.Input = {
                 _val = _val.replace(_re, '$1' + ',' + '$2');
             }
 
-            this.value = _val;
-        });
+            return _val;
+        }
     },
     /**
      * 영문만 입력
      * @param {Element} inputElement
      * @example
-     * CommonJS.Input.onlyEng(document.querySelector(셀렉터));
+     * [JavaScript]
+     * CommonJS.Input.onlyEng( document.querySelector(셀렉터) );
+     * 
+     * [jQuery]
+     * CommonJS.Input.onlyEng( $(셀렉터) );
      */
     onlyEng: function(inputElement) {
-        inputElement.addEventListener('keyup', function(e) {
-            this.value = e.target.value.replace(/[^a-zA-Z]/gi, '');
-        });
+        if ( inputElement.length === undefined ) {
+            inputElement.addEventListener('keyup', function(e) {
+                this.value = e.target.value.replace(/[^a-zA-Z]/gi, '');
+            });
+        } else {
+			$(document).on('keyup', inputElement, function(e) {
+				inputElement.val( e.target.value.replace(/[^a-zA-Z]/gi, '') );
+			});
+        }
     },
     /**
      * 영문 + '_' 만 입력
      * @param {Element} inputElement
      * @example
-     * CommonJS.Input.onlyEngUnder(document.querySelector(셀렉터));
+     * [JavaScript]
+     * CommonJS.Input.onlyEngUnder( document.querySelector(셀렉터) );
+     * 
+     * [jQuery]
+     * CommonJS.Input.onlyEngUnder( $(셀렉터) );
      */
     onlyEngUnder: function(inputElement) {
-        inputElement.addEventListener('keyup', function(e) {
-            this.value = e.target.value.replace(/[^a-zA-Z_]/gi, '');
-        });
+        if ( inputElement.length === undefined ) {
+            inputElement.addEventListener('keyup', function(e) {
+                this.value = e.target.value.replace(/[^a-zA-Z_]/gi, '');
+            });
+        } else {
+			$(document).on('keyup', inputElement, function(e) {
+				inputElement.val( e.target.value.replace(/[^a-zA-Z_]/gi, '') );
+			});
+        }
     },
     /**
      * 영문 + 숫자만 입력
      * @param {Element} inputElement
      * @example
-     * CommonJS.Input.onlyEngNum(document.querySelector(셀렉터));
+     * [JavaScript]
+     * CommonJS.Input.onlyEngNum( document.querySelector(셀렉터) );
+     * 
+     * [jQuery]
+     * CommonJS.Input.onlyEngNum( $(셀렉터) );
      */
     onlyEngNum: function(inputElement) {
-        inputElement.addEventListener('keyup', function(e) {
-            this.value = e.target.value.replace(/[^a-zA-Z0-9]/gi, '');
-        });
+        if ( inputElement.length === undefined ) {
+            inputElement.addEventListener('keyup', function(e) {
+                this.value = e.target.value.replace(/[^a-zA-Z0-9]/gi, '');
+            });
+        } else {
+			$(document).on('keyup', inputElement, function(e) {
+				inputElement.val( e.target.value.replace(/[^a-zA-Z0-9]/gi, '') );
+			});
+        }
     },
     /**
      * 영문 + SPACE 입력
      * @param {Element} inputElement
      * @example
-     * CommonJS.Input.onlyEngBlank(document.querySelector(셀렉터));
+     * [JavaScript]
+     * CommonJS.Input.onlyEngBlank( document.querySelector(셀렉터) );
+     * 
+     * [jQuery]
+     * CommonJS.Input.onlyEngBlank( $(셀렉터) );
      */
     onlyEngBlank: function(inputElement) {
-        inputElement.addEventListener('keyup', function(e) {
-            this.value = e.target.value.replace(/[^a-zA-Z\s]/gi, '');
-        });
+        if ( inputElement.length === undefined ) {
+            inputElement.addEventListener('keyup', function(e) {
+                this.value = e.target.value.replace(/[^a-zA-Z\s]/gi, '');
+            });
+        } else {
+			$(document).on('keyup', inputElement, function(e) {
+				inputElement.val( e.target.value.replace(/[^a-zA-Z\s]/gi, '') );
+			});
+        }
     },
     /**
      * 한글만 입력
      * @param {Element} inputElement
      * @example
-     * CommonJS.Input.onlyHangul(document.querySelector(셀렉터));
+     * [JavaScript]
+     * CommonJS.Input.onlyHangul( document.querySelector(셀렉터) );
+     * 
+     * [jQuery]
+     * CommonJS.Input.onlyHangul( $(셀렉터) );
      */
     onlyHangul: function(inputElement) {
-        inputElement.addEventListener('keyup', function(e) {
-            this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
-        });
+        if ( inputElement.length === undefined ) {
+            inputElement.addEventListener('keyup', function(e) {
+                this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
+            });
+        } else {
+			$(document).on('keyup', inputElement, function(e) {
+				inputElement.val( e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '') );
+			});
+        }
     },
     /**
      * 한글 + SPACE 입력
      * @param {Element} inputElement
      * @example
-     * CommonJS.Input.onlyHangulBlank(document.querySelector(셀렉터));
+     * [JavaScript]
+     * CommonJS.Input.onlyHangulBlank( document.querySelector(셀렉터) );
+     * 
+     * [jQuery]
+     * CommonJS.Input.onlyHangulBlank( $(셀렉터) );
      */
     onlyHangulBlank: function(inputElement) {
-        inputElement.addEventListener('keyup', function(e) {
-            this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ\s]/gi, '');
-        });
+        if ( inputElement.length === undefined ) {
+            inputElement.addEventListener('keyup', function(e) {
+                this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ\s]/gi, '');
+            });
+        } else {
+			$(document).on('keyup', inputElement, function(e) {
+				inputElement.val( e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ\s]/gi, '') );
+			});
+        }
     },
     /**
      * 한글 + 영문 + 숫자 입력
      * @param {Element} inputElement
      * @example
-     * CommonJS.Input.onlyHanEngNum(document.querySelector(셀렉터));
+     * [JavaScript]
+     * CommonJS.Input.onlyHanEngNum( document.querySelector(셀렉터) );
+     * 
+     * [jQuery]
+     * CommonJS.Input.onlyHanEngNum( $(셀렉터) );
      */
     onlyHanEngNum: function(inputElement) {
-        inputElement.addEventListener('keyup', function(e) {
-            this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/gi, '');
-        });
+        if ( inputElement.length === undefined ) {
+            inputElement.addEventListener('keyup', function(e) {
+                this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/gi, '');
+            });
+        } else {
+			$(document).on('keyup', inputElement, function(e) {
+				inputElement.val( e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/gi, '') );
+			});
+        }
     },
     /**
      * 한글 입력 막기
      * @param {Element} inputElement
      * @example
-     * CommonJS.Input.blockingHangul(document.querySelector(셀렉터));
+     * [JavaScript]
+     * CommonJS.Input.blockingHangul( document.querySelector(셀렉터) );
+     * 
+     * [jQuery]
+     * CommonJS.Input.blockingHangul( $(셀렉터) );
      */
     blockingHangul: function(inputElement) {
-        inputElement.addEventListener('keyup', function(e) {
-            this.value = e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
-        });
+        if ( inputElement.length === undefined ) {
+            inputElement.addEventListener('keyup', function(e) {
+                this.value = e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
+            });
+        } else {
+			$(document).on('keyup', inputElement, function(e) {
+				inputElement.val( e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '') );
+			});
+        }
     },
     /**
      * 엔터키 이벤트 발생 시, 해당 엘리먼트 포커스로 이동
      * @param {Element} inputElement
      * @param {Element} focusElement
      * @example
-     * CommonJS.Input.enterEventFocus(document.querySelector(셀렉터), document.querySelector(셀렉터));
+     * [JavaScript]
+     * CommonJS.Input.enterEventFocus( document.querySelector(셀렉터), document.querySelector(셀렉터) );
+     * 
+     * [jQuery]
+     * CommonJS.Input.enterEventFocus( $(셀렉터), $(셀렉터) );
      */
     enterEventFocus: function(inputElement, focusElement) {
-		inputElement.addEventListener('keypress', function() {
-			if (window.event.keyCode == 13) {
-				focusElement.focus();
-			}
-		});
+        if ( inputElement.length === undefined ) {
+            inputElement.addEventListener('keypress', function(e) {
+                fnTemp(e);
+            });
+        } else {
+			$(document).on('keypress', inputElement, function(e) {
+                fnTemp(e);
+			});
+        }
+
+        function fnTemp(e) {
+            if (e.keyCode == 13) {
+                focusElement.focus();
+            }
+        }
     },
     /**
      * 엔터키 이벤트 발생 시, 함수 실행
      * @param {Element} inputElement
      * @param {Function} callback
      * @example
-     * CommonJS.Input.enterEventCallback(document.querySelector(셀렉터), 함수명);
+     * [JavaScript]
+     * CommonJS.Input.enterEventCallback( document.querySelector(셀렉터), 함수명 );
+     * 
+     * [jQuery]
+     * CommonJS.Input.onlyEngUnder( $(셀렉터), 함수명 );
      */
     enterEventCallback: function(inputElement, callback) {
         if (typeof callback === 'function') {
-            inputElement.addEventListener('keypress', function() {
-                if (window.event.keyCode == 13) {
-                    callback();
-                }
-            });
+            if ( inputElement.length === undefined ) {
+                inputElement.addEventListener('keypress', function(e) {
+                    fnTemp(e);
+                });
+            } else {
+                $(document).on('keypress', inputElement, function(e) {
+                    fnTemp(e);
+                });
+            }
+        }
+
+        function fnTemp(e) {
+            if (e.keyCode == 13) {
+                callback();
+            }
         }
     },
     /**
      * 전화번호 하이픈(-) 자동입력
      * @param {Element} inputElement
      * @example
-     * CommonJS.Input.formatHypenPhone(document.querySelector(셀렉터));
+     * [JavaScript]
+     * CommonJS.Input.formatHypenPhone( document.querySelector(셀렉터) );
+     * 
+     * [jQuery]
+     * CommonJS.Input.formatHypenPhone( $(셀렉터) );
      */
     formatHypenPhone: function(inputElement) {
-        inputElement.addEventListener('keyup', function(e) {
-            var str = inputElement.value;
-			str = str.replace(/[^0-9]/g, '');
+        if ( inputElement.length === undefined ) {
+            inputElement.addEventListener('keyup', function(e) {
+                fnTemp(e, inputElement);
+            });
+        } else {
+			$(document).on('keyup', inputElement, function(e) {
+				fnTemp(e, inputElement);
+			});
+        }
 
-			var tmp = '';
-
-			if ( str.substring(0, 2) == 02 ) {
-				// 서울 전화번호일 경우 10자리까지만 나타나고 그 이상의 자리수는 자동삭제
-				if ( str.length < 3 ) {
-					this.value = str;
-				} else if ( str.length < 6 ) {
-					tmp += str.substr(0, 2);
-					tmp += '-';
-					tmp += str.substr(2);
-					this.value = tmp;
-				} else if ( str.length < 10 ) {
-					tmp += str.substr(0, 2);
-					tmp += '-';
-					tmp += str.substr(2, 3);
-					tmp += '-';
-					tmp += str.substr(5);
-					this.value = tmp;
-				} else {
-					tmp += str.substr(0, 2);
-					tmp += '-';
-					tmp += str.substr(2, 4);
-					tmp += '-';
-					tmp += str.substr(6, 4);
-					this.value = tmp;
-				}
+        function fnTemp(e, inputElement) {
+			var _type;
+			if ( inputElement.length === undefined ) {
+				_type = 0;
 			} else {
-				// 핸드폰 및 다른 지역 전화번호 일 경우
-				if ( str.length < 4 ) {
-					this.value = str;
-				} else if ( str.length < 7 ) {
-					tmp += str.substr(0, 3);
-					tmp += '-';
-					tmp += str.substr(3);
-					this.value = tmp;
-				} else if ( str.length < 11 ) {
-					tmp += str.substr(0, 3);
-					tmp += '-';
-					tmp += str.substr(3, 3);
-					tmp += '-';
-					tmp += str.substr(6);
-					this.value = tmp;
-				} else {
-					tmp += str.substr(0, 3);
-					tmp += '-';
-					tmp += str.substr(3, 4);
-					tmp += '-';
-					tmp += str.substr(7);
-					this.value = tmp;
-				}
+				_type = 1;
 			}
-        });
+			
+            var _str;
+			if ( _type === 0 ) {
+				_str = inputElement.value;
+			} else {
+				_str = inputElement.val();
+			}
+			
+            _str = _str.replace(/[^0-9]/g, '');
+    
+            var tmp = '';
+
+            if ( _str.substring(0, 2) == 02 ) {
+                // 서울 전화번호일 경우 10자리까지만 나타나고 그 이상의 자리수는 자동삭제
+                if ( _str.length < 3 ) {
+					if ( _type === 0 ) {
+						inputElement.value = _str;
+					} else {
+						inputElement.val( _str );
+					}
+                } else if ( _str.length < 6 ) {
+                    tmp += _str.substr(0, 2);
+                    tmp += '-';
+                    tmp += _str.substr(2);
+                    
+					if ( _type === 0 ) {
+						inputElement.value = tmp;
+					} else {
+						inputElement.val( tmp );
+					}
+                } else if ( _str.length < 10 ) {
+                    tmp += _str.substr(0, 2);
+                    tmp += '-';
+                    tmp += _str.substr(2, 3);
+                    tmp += '-';
+                    tmp += _str.substr(5);
+                    
+					if ( _type === 0 ) {
+						inputElement.value = tmp;
+					} else {
+						inputElement.val( tmp );
+					}
+                } else {
+                    tmp += _str.substr(0, 2);
+                    tmp += '-';
+                    tmp += _str.substr(2, 4);
+                    tmp += '-';
+                    
+					if ( _type === 0 ) {
+						inputElement.value = tmp;
+					} else {
+						inputElement.val( tmp );
+					}
+                }
+            } else {
+                // 핸드폰 및 다른 지역 전화번호 일 경우
+                if ( _str.length < 4 ) {
+					if ( _type === 0 ) {
+						inputElement.value = _str;
+					} else {
+						inputElement.val( _str );
+					}
+                } else if ( _str.length < 7 ) {
+                    tmp += _str.substr(0, 3);
+                    tmp += '-';
+                    tmp += _str.substr(3);
+					
+					if ( _type === 0 ) {
+						inputElement.value = tmp;
+					} else {
+						inputElement.val( tmp );
+					}
+                } else if ( _str.length < 11 ) {
+                    tmp += _str.substr(0, 3);
+                    tmp += '-';
+                    tmp += _str.substr(3, 3);
+                    tmp += '-';
+                    tmp += _str.substr(6);
+					
+					if ( _type === 0 ) {
+						inputElement.value = tmp;
+					} else {
+						inputElement.val( tmp );
+					}
+                } else {
+                    tmp += _str.substr(0, 3);
+                    tmp += '-';
+                    tmp += _str.substr(3, 4);
+                    tmp += '-';
+                    tmp += _str.substr(7);
+					
+					if ( _type === 0 ) {
+						inputElement.value = tmp;
+					} else {
+						inputElement.val( tmp );
+					}
+                }
+            }
+        }
     }
 }
 
