@@ -773,6 +773,8 @@ CommonJS.BrowserInfo = {
                 }
             }
         } else {
+            // Chromium 기반이면 Chrome 체크 위에 선언, 아래에 있으면 Chrome 으로 체크됨
+            
             if (_agent.match(/whale/)) {
                 _re = /whale\/(\S+)/;
                 browser.name = 'Whale';     // Chromium 기반
@@ -791,8 +793,6 @@ CommonJS.BrowserInfo = {
             else if (_agent.match(/chrome/)) {
                 _re = /chrome\/(\S+)/;
                 browser.name = 'Chrome';    // Chromium 기반
-
-                // Chromium 기반이면 Chrome 체크 위에 선언, 아래에 있으면 Chrome 으로 체크됨
             }
             else if (_agent.match(/firefox/)) {
                 _re = /firefox\/(\S+)/;
