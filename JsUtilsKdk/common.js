@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 2.4
+ * @version 2.5
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  *
  * @property {object} CommonJS.Text - 2021.07.10 추가 (CommonJS 에서 addZero 분리하고, 추가)
@@ -20,6 +20,7 @@
  * @property {object} CommonJS.SearchEngine - 2021.07.10 추가
  * @property {object} CommonJS.SnsShare - 2021.07.10 추가
  * @property {object} CommonJS.Mobile - 2021.07.10 추가
+ * @property {object} CommonJS.Map - 2021.07.11 추가
  * @property {method} prototype
  */
  var CommonJS = {
@@ -1594,6 +1595,17 @@ CommonJS.SnsShare = {
     }
 }
 
+/**
+ * ********************************************************************
+ * WebView 메소드 호출 - 프로젝트별로 JS 파일 생성하여 진행
+ *      <Android>
+ *          window.[WebViewBridge].[WebViewMethod](인자);
+ *      </Android>
+ *      <iOS>
+ *          webkit.messageHandlers.[WebViewBridge].postMessage(인자);
+ *      </iOS>
+ * ********************************************************************
+ */
 CommonJS.Mobile = {
     /**
      * SMS 문자 보내기
@@ -1629,6 +1641,141 @@ CommonJS.Mobile = {
         } else {
             console.log('모바일 플랫폼에서만 사용 가능합니다.');
         }
+    },
+    /**
+     * 카메라 실행
+     *   - (일반적인) accept, capture 속성이 없는 경우 : 카메라, 캠코더, 파일
+     *   - accept="image/*" : 작업 선택 - 카메라, 내 파일, 파일
+     *   - accept="audio/*" : 작업 선택 - 음성 녹음, 내 파일, 파일
+     * @param {Element} fileElement 
+     * @param {Element} imgElement 
+     * @example
+     * CommonJS.runCamera( document.querySelector('#file'), document.querySelector('#img') );
+     */
+    runCamera: function(fileElement, imgElement) {
+        fileElement.addEventListener('change', function(e) {
+            if ( CommonJS.BrowserInfo.isMobile() ) {
+                var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
+
+                this.setAttribute('accept', 'image/*');
+                this.setAttribute('capture', 'camera');
+                
+                imgElement.setAttribute("src", _fileUrl);
+                this.removeAttribute('capture');
+            } else {
+                // 카메라 실행이 목적이므로 실행 가능하더라도 실행 시키지 않음
+                console.log('모바일 플랫폼에서만 사용 가능합니다.');
+            }
+        });
+    },
+    /**
+     * 음성 녹음 실행
+     * @param {Element} fileElement
+     * @param {Element} audioElement 
+     */
+    runMicroPhone: function(fileElement, audioElement) {
+        fileElement.addEventListener('change', function(e) {
+            if ( CommonJS.BrowserInfo.isMobile() ) {
+                var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
+
+                this.setAttribute('accept', 'audio/*');
+                this.setAttribute('capture', 'microphone');
+
+                audioElement.setAttribute("src", _fileUrl);
+                this.removeAttribute('capture');
+
+            } else {
+                // 음성 녹음 실행이 목적이므로 실행 가능하더라도 실행 시키지 않음
+                console.log('모바일 플랫폼에서만 사용 가능합니다.');
+            }
+        });
+    }
+},
+
+/**
+ * ********************************************************************
+ * GoogleMap - Geocoding 유료
+ *   > https://cloud.google.com/maps-platform/pricing?hl=ko
+ * ********************************************************************
+ */
+CommonJS.Map = {
+    /**
+     * 해당 주소로 카카오 지도 표시
+     * @param {Element} mapElement 
+     * @param {string} addr 
+     * @example
+     * CommonJS.Map.searchKakaoMap( document.querySelector('#map'), '경기도 성남시 삼평동 대왕판교로645번길 16' );
+     * 
+     * @link https://apis.map.kakao.com/web/sample/addr2coord/
+     */
+    searchKakaoMap: function(mapElement, addr) {
+		var container = mapElement;
+		var options = {
+			center: new kakao.maps.LatLng(33.450701, 126.570667),
+			level: 3
+		};
+
+        // 지도를 생성합니다  
+		var map = new kakao.maps.Map(container, options);
+
+        // 주소-좌표 변환 객체를 생성합니다
+		var geocoder = new kakao.maps.services.Geocoder();
+
+		// 주소로 좌표를 검색합니다
+		geocoder.addressSearch(addr, function(result, status) {
+			// 정상적으로 검색이 완료됐으면 
+			if (status === kakao.maps.services.Status.OK) {
+				var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+				
+				// 결과값으로 받은 위치를 마커로 표시합니다
+				var marker = new kakao.maps.Marker({
+					map: map,
+					position: coords
+				});
+				
+				// 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+				map.setCenter(coords);
+			}
+		});
+    },
+    /**
+     * 해당 주소로 네이버 지도 표시
+     * @param {string} mapElementId 
+     * @param {string} addr
+     * @example
+     * CommonJS.Map.searchNaverMap('map', '제주특별자치도 제주시 첨단로 242');
+     * 
+     * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-2-Getting-Started.html
+     * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-Geocoder-Geocoding.html
+     * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-3-geocoder-geocoding.example.html
+     * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-2-Marker.html
+     */
+    searchNaverMap: function(mapElementId, addr) {
+        var mapOptions = {
+            center: new naver.maps.LatLng(37.3595704, 127.105399),
+            zoom: 15
+        };
+        
+        var map = new naver.maps.Map(mapElementId, mapOptions);
+
+        // Geocoder를 활용한 주소와 좌표 검색 API 호출하기
+        naver.maps.Service.geocode({ query: '제주특별자치도 제주시 첨단로 242' }, function(status, response) {
+            if (status === naver.maps.Service.Status.ERROR) {
+                return alert('Something wrong!');
+            }
+        
+            // 성공 시의 response 처리
+            var item = response.v2.addresses[0],
+                point = new naver.maps.Point(item.x, item.y);
+                
+            map.setCenter(point);
+            
+            // 원하는 위치에 마커 올리기
+            var marker = new naver.maps.Marker({
+                position: new naver.maps.LatLng(item.y, item.x),
+                map: map
+            });
+        });
     }
 }
 
