@@ -1547,10 +1547,14 @@ CommonJS.SnsShare = {
      * @param {string} btnTitle
      * @example
      * CommonJS.SnsShare.shareKakao(apiKey, webUrl, mobileWebUrl, title, imageUrl, btnTitle);
+     * 
+     * @link https://developers.kakao.com/docs/latest/ko/getting-started/sdk-js
+     * @link https://developers.kakao.com/docs/latest/ko/message/js-link
      */
     shareKakao: function(apiKey, webUrl, mobileWebUrl, title, imageUrl, btnTitle) {
         Kakao.init(apiKey);
         Kakao.Link.createDefaultButton({
+            container: '#CONTAINER_ID',
             objectType: 'feed',
             content: {
                 title: title,
