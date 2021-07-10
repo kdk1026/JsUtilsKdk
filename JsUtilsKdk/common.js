@@ -1,9 +1,10 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 2.3
+ * @version 2.4
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  *
+ * @property {object} CommonJS.Text - 2021.07.10 추가 (CommonJS 에서 addZero 분리하고, 추가)
  * @property {object} CommonJS.Valid
  * @property {object} CommonJS.DateTime
  * @property {object} CommonJS.Format
@@ -16,6 +17,9 @@
  * @property {object} CommonJS.Escape
  * @property {object} CommonJS.BrowserInfo
  * @property {object} CommonJS.Input - 2021.06.21 추가
+ * @property {object} CommonJS.SearchEngine - 2021.07.10 추가
+ * @property {object} CommonJS.SnsShare - 2021.07.10 추가
+ * @property {object} CommonJS.Mobile - 2021.07.10 추가
  * @property {method} prototype
  */
  var CommonJS = {
@@ -41,19 +45,151 @@
         window.open(url, name, _option);
     },
     /**
+     * F12 버튼 막기 및 우클릭 막기 (추가 : 드래그 방지, 선택 방지)
+     *  - keyCode 는 deprecated 되었으므로 code 활용
+     *    > https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code
+     * @example
+     * CommonJS.blockSourceView();
+     */
+    blockSourceView: function() {
+        // F12 버튼 막기
+        document.onkeydown = function(e) {
+            if ( e.code === 'F12' ) {
+                e.preventDefault();
+                e.returnValue = false;
+            }
+        };
+
+        // 우클릭 방지
+        document.oncontextmenu = function() {
+            return false;
+        };
+
+        // 드래그 방지
+        document.ondragstart = new Function('return false');
+
+        // 선택 방지
+        document.onselectstart = new Function('return false');
+    },
+    /**
+     * 현재 위치정보 출력
+     * @example
+     * CommonJS.getLocation(fnLocationSuc, fnLocationErr);
+     * 
+     * function fnLocationSuc(position) {
+     *      console.log(position.coords);
+     *      console.log(position.coords.latitude);  // 위도
+     *      console.log(position.coords.longitude); // 경도
+     * }
+     * 
+     * function fnLocationErr(error) {
+     *      console.log(error);
+     * }
+     */
+     getLocation: function(onSuccess, onError) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(onSuccess, onError);
+        } else {
+            console.log('이 브라우저에서는 Geolocation이 지원되지 않습니다.');
+        }
+    },
+    /**
+     * 스크립트 후킹
+     *   - beforeFuncNm 에서 return false;를 반환 하면 funcNm 를 실행 하지 않음
+     * @param {string} beforeFuncNm - 특정 함수가 실행 되기전 실행할 함수
+     * @param {string} funcNm - 실행할 특정 함수
+     * @param {undefined|?} parent - 함수의 위치
+     * @example
+     * CommonJS.scriptHook(fnValid, fnSubmit);
+     */
+    scriptHook: function(beforeFuncNm, funcNm, parent) {
+        if (typeof parent == 'undefined') parent = window;
+        for (var i in parent) {
+            if (parent[i] === funcNm) {
+                parent[i] = function() {
+                    var Return = beforeFuncNm();
+                    if(Return === false) return;
+                    return funcNm.apply(this, arguments);
+                }
+            }
+        }
+    }
+    /*
+    // TODO : 퍼블을 해야 테스트를 해야하므로.... 적합한 환경 접하면 테스트하는 걸로....
+    scrollPaging: function(divElement, pageNum) {
+        divElement.scroll(function() {
+            var _innerHeight = this.innerHeight();
+            var _scroll = this.scrollTop() + this.innerHeight(); 
+            var _height = this.scrollHeight; 
+
+            if ( _scroll >= _height ) {
+                pageNum ++;
+
+                console.log('pageNum is : ', pageNum);
+            }
+
+            return pageNum;
+        });
+    }
+    */
+};
+
+CommonJS.Text = {
+    /**
      * 10 이하의 숫자에 0을 붙여서 반환
      * @param {number} num
      * @returns {string}
      * @example
-     * CommonJS.addZero(3);
+     * CommonJS.Text.addZero(3);
      */
-    addZero: function(num) {
+     addZero: function(num) {
         if (num < 10) {
             num = '0' + num;
         }
         return num;
+    },
+    /**
+     * 문자열이 Blank / Undefined 이면 defaultStr 반환
+     * @param {string} string 
+     * @param {string} defaultStr 
+     * @returns 
+     * @example
+     * CommonJS.Text.defaultString('', '치환');
+     */
+    defaultString: function(string, defaultStr) {
+        if ( CommonJS.Valid.isBlank(string) || CommonJS.Valid.isUndefined(string) ) {
+            return defaultStr;
+        } else {
+            return string;
+        }
+    },
+    /**
+     * 클립보드 복사하기
+     *   - IE 10 이하 고려 안함
+     * @param {undefined|Element} textElement 
+     * @param {undefined|string} string 
+     * @example
+     * 클릭 이벤트 시에만 동작 (onload 시에는 불가)
+     * 
+     * CommonJS.Text.copyToClipBoard( document.querySelector(셀렉터) );
+     * CommonJS.Text.copyToClipBoard( null, '복사할 내용' );
+     */
+    copyToClipBoard: function(textElement, string) {
+        if ( textElement != null ) {
+            textElement.select();
+            document.execCommand("Copy");
+        } else {
+            const _t = document.createElement("textarea");
+            document.body.appendChild(_t);
+            _t.value = string;
+            _t.select();
+            document.execCommand("Copy");
+            document.body.removeChild(_t);
+        }
+
+        console.log('클립보드에 복사 되었습니다.');
     }
-};
+}
 
 CommonJS.Valid = {
     /**
@@ -64,7 +200,6 @@ CommonJS.Valid = {
      * @param {*} val
      * @returns {boolean}
      * @example
-     * CommonJS.Valid.isBlank( '' );
      */
     isBlank: function(val) {
         return (val == null || val.replace(/ /gi,'') == '');
@@ -73,7 +208,6 @@ CommonJS.Valid = {
      * undefined 체크 ('undefined' 포함)
      * @param {*} val
      * @returns {boolean}
-     * 
      */
     isUndefined: function(val) {
         return (val == undefined || val === 'undefined');
@@ -152,8 +286,8 @@ CommonJS.DateTime = {
 		var	_month = (date.getMonth() + 1);
 		var	_day = date.getDate();
 
-		_month = CommonJS.addZero(_month);
-		_day = CommonJS.addZero(_day);
+		_month = CommonJS.Text.addZero(_month);
+		_day = CommonJS.Text.addZero(_day);
 
 		return [_year, _month, _day].join('-');
     },
@@ -167,9 +301,9 @@ CommonJS.DateTime = {
 		var	_minute = date.getMinutes();
 		var	_second = date.getSeconds();
 
-		_hour = CommonJS.addZero(hour);
-		_minute = CommonJS.addZero(minute);
-		_second = CommonJS.addZero(second);
+		_hour = CommonJS.Text.addZero(hour);
+		_minute = CommonJS.Text.addZero(minute);
+		_second = CommonJS.Text.addZero(second);
 
 		return [_hour, _minute, _second].join(':');
     },
@@ -363,7 +497,7 @@ CommonJS.FormatValid = {
      */
 	isEmail: function(val1, val2) {
         var _val = val1;
-        if ( !this.isBlank(val2) ) {
+        if ( !CommonJS.Valid.isBlank(val2) ) {
             _val = val1 +'@'+ val2;
         }
 		var _re = /^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})+$/;
@@ -378,7 +512,7 @@ CommonJS.FormatValid = {
      */
 	isPhoneNumber: function(val1, val2, val3) {
         var _val = val1;
-        if ( !this.isBlank(val2) && !this.isBlank(val3) ) {
+        if ( !CommonJS.Valid.isBlank(val2) && !CommonJS.Valid.isBlank(val3) ) {
             _val = val1 +'-'+ val2 +'-'+ val3;
         }
         /*
@@ -402,7 +536,7 @@ CommonJS.FormatValid = {
      */
 	isCellPhoneNumber: function(val1, val2, val3) {
         var _val = val1;
-        if ( !this.isBlank(val2) && !this.isBlank(val3) ) {
+        if ( !CommonJS.Valid.isBlank(val2) && !CommonJS.Valid.isBlank(val3) ) {
             _val = val1 +'-'+ val2 +'-'+ val3;
         }
 		var _re = /^(01[016789])-?(\d{3,4})-?(\d{4})+$/;
@@ -417,7 +551,7 @@ CommonJS.FormatValid = {
      */
 	isBusinessRegNumber: function(val1, val2, val3) {
         var _val = val1;
-        if ( !this.isBlank(val2) && !this.isBlank(val3) ) {
+        if ( !CommonJS.Valid.isBlank(val2) && !CommonJS.Valid.isBlank(val3) ) {
             _val = val1 +'-'+ val2 +'-'+ val3;
         }
 		var _re = /^[(\d{3})-?(\d{2})-?(\d{5})+$]/;
@@ -576,7 +710,51 @@ CommonJS.File = {
                 imgElement.setAttribute("src", document.selection.createRange().text);
             }
         }
-	}
+	},
+    /**
+     * 동영상 미리보기
+     * @param {Element} fileElement 
+     * @param {Element} videoElement
+     * @example
+     * <video id="myVideo" width="300" height="300" autoplay controls></video>
+     * 
+     * [JavaScript]
+     * CommonJS.File.previewVideo(document.querySelector('#file'), document.querySelector('#myVideo'));
+     * 
+     * [jQuery]
+     * CommonJS.File.previewVideo($('#file')[0], $('#myVideo')[0]);
+     * 
+     * <참고 - 버튼 클릭 이벤트 시, 일시 정지>
+     *      document.querySelector('#myVideo').pause();
+     */
+    previewVideo: function(fileElement, videoElement) {
+        fileElement.addEventListener('change', function(e) {
+            var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
+            videoElement.setAttribute('src', _fileUrl);
+        });
+    },
+    /**
+     * 음악 미리듣기
+     * @param {Element} fileElement 
+     * @param {Element} audioElement 
+     * @example
+     * <audio id="myAudio" autoplay controls></audio>
+     * 
+     * [JavaScript]
+     * CommonJS.File.previewVideo(document.querySelector('#file'), document.querySelector('#myAudio'));
+     * 
+     * [jQuery]
+     * CommonJS.File.previewVideo($('#file')[0], $('#myAudio')[0]);
+     * 
+     * <참고 - 버튼 클릭 이벤트 시, 일시 정지>
+     *      document.querySelector('#myAudio').pause();
+     */
+    preListenAudio: function(fileElement, audioElement) {
+        fileElement.addEventListener('change', function(e) {
+            var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
+            audioElement.setAttribute('src', _fileUrl);
+        });
+    }
 }
 
 CommonJS.FileValid = {
@@ -842,8 +1020,8 @@ CommonJS.BrowserInfo = {
 
 /**
  * ********************************************************************
- * JavaScript인 경우, IE 9 이하 버림
- *   - IE 9이하 대응 참고 : CommonJS.File.previewImage
+ * JavaScript인 경우, IE 9 이하 고려 안함
+ *   - IE 9 이하 대응 참고 : CommonJS.File.previewImage
  * ********************************************************************
  */
 CommonJS.Input = {
@@ -1256,10 +1434,204 @@ CommonJS.Input = {
     }
 }
 
+/**
+ * ********************************************************************
+ * 현 시점에는 사용안할 듯 하지만... 사용하던 시절도 있어서 축가함
+ * ********************************************************************
+ */
+CommonJS.SearchEngine = {
+    makeNewForm: function(searchKeyword) {
+        var _newForm = document.createElement('form');
+        _newForm.name = 'form';
+        _newForm.method = 'get';
+        _newForm.action = '';
+        _newForm.target = '_blank';
+
+        var _input = document.createElement('input');
+        _input.setAttribute('type', 'hidden');
+        _input.setAttribute('name', 'temp');
+        _input.setAttribute('value', searchKeyword);
+
+        _newForm.appendChild(_input);
+
+        return _newForm;
+    },
+    /**
+     * 구글 검색
+     * @param {string} searchKeyword 
+     * @example
+     * CommonJS.SearchEngine.searchGoogle('나무위키');
+     */
+    searchGoogle: function(searchKeyword) {
+        var _newForm = this.makeNewForm(searchKeyword);
+        _newForm.action = 'https://www.google.com/search';
+
+        var _field = _newForm.querySelector('input[name="temp"]');
+        _field.setAttribute('name', 'q');
+
+        document.body.appendChild(_newForm);
+        _newForm.submit();
+        document.body.removeChild(_newForm);
+    },
+    /**
+     * 네이버 검색
+     * @param {string} searchKeyword
+     * @example
+     * CommonJS.SearchEngine.searchNaver('나무위키');
+     */
+    searchNaver: function(searchKeyword) {
+        var _newForm = this.makeNewForm(searchKeyword);
+        _newForm.action = 'https://search.naver.com/search.naver';
+
+        var _field = _newForm.querySelector('input[name="temp"]');
+        _field.setAttribute('name', 'query');
+
+        document.body.appendChild(_newForm);
+        _newForm.submit();
+        document.body.removeChild(_newForm);
+    },
+    /**
+     * 다음 검색
+     * @param {string} searchKeyword
+     * @example
+     * CommonJS.SearchEngine.searchDaum('나무위키');
+     */
+    searchDaum: function(searchKeyword) {
+        var _newForm = this.makeNewForm(searchKeyword);
+        _newForm.action = 'https://search.daum.net/search';
+
+        var _field = _newForm.querySelector('input[name="temp"]');
+        _field.setAttribute('name', 'q');
+
+        document.body.appendChild(_newForm);
+        _newForm.submit();
+        document.body.removeChild(_newForm);
+    }
+}
+
+/**
+ * ********************************************************************
+ * TODO : SNS를 안해서 테스트 안해봄... shareKakao 만 프로젝트에서 해봄
+ * ********************************************************************
+ */
+CommonJS.SnsShare = {
+    /**
+     * Facebook 공유
+     * @param {string} url 
+     * @example
+     * CommonJS.SnsShare.shareFacebook(url);
+     */
+    shareFacebook: function(url) {
+        window.open(
+            'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url)
+        );
+    },
+    /**
+     * Twitter 공유
+     * @param {string} url 
+     * @example
+     * CommonJS.SnsShare.shareTwitter(url);
+     */
+    shareTwitter: function(url) {
+        window.open(
+            'https://twitter.com/intent/tweet?url=' + encodeURIComponent(url)
+        );
+    },
+    /**
+     * Kakao 공유
+     * @param {string} apiKey 
+     * @param {string} webUrl
+     * @param {string} mobileWebUrl
+     * @param {string} title - 공유 미리보기 제목
+     * @param {string} imageUrl - 공유 미리보기 썸네일
+     * @param {string} btnTitle
+     * @example
+     * CommonJS.SnsShare.shareKakao(apiKey, webUrl, mobileWebUrl, title, imageUrl, btnTitle);
+     */
+    shareKakao: function(apiKey, webUrl, mobileWebUrl, title, imageUrl, btnTitle) {
+        Kakao.init(apiKey);
+        Kakao.Link.createDefaultButton({
+            objectType: 'feed',
+            content: {
+                title: title,
+                imageUrl: imageUrl,
+                link: {
+                    webUrl: webUrl,
+                    mobileWebUrl: mobileWebUrl
+                } 
+            },
+            buttons: [
+                {
+                    title: btnTitle, 
+                    link: {
+                        webUrl: webUrl,
+                        mobileWebUrl: mobileWebUrl
+                    } 
+                }
+            ]
+        });
+    },
+    /**
+     * Kakao Story 공유
+     * @param {string} apiKey 
+     * @param {string} url 
+     * @param {string} title 
+     * @example
+     * CommonJS.SnsShare.shareKakaoStory(apiKey, url, title);
+     */
+    shareKakaoStory: function(apiKey, url, title) {
+        Kakao.init(apiKey);
+        Kakao.Story.share(
+            {
+                url: url,
+                text: title
+            }
+        );
+    }
+}
+
+CommonJS.Mobile = {
+    /**
+     * SMS 문자 보내기
+     *   - 연락처, 문자 내용 설정된 상태로 문자 보내기 화면으로 이동 시킴
+     * @param {string|number} telNo 
+     * @param {string} content 
+     * @example
+     * CommonJS.Mobile.sendSMS('010-9924-3732', '테스트');
+     */
+    sendSMS: function(telNo, content) {
+        if ( CommonJS.BrowserInfo.isMobile() ) {
+            if ( CommonJS.FormatValid.isCellPhoneNumber(telNo) ) {
+                var _mobileOs = CommonJS.BrowserInfo.isMobileOs().iOS ? 'ios' : 'android';
+
+                location.href = 'sms:' + telNo +(_mobileOs == 'ios' ? '&' : '?') + 'body='+ encodeURIComponent(content);
+            }
+        } else {
+            console.log('모바일 플랫폼에서만 사용 가능합니다.');
+        }
+    },
+    /**
+     * 전화 걸기
+     *   - 연락처 설정된 상태로 전화 걸기 화면으로 이동 시킴
+     * @param {string|number} telNo
+     * @example
+     * CommonJS.Mobile.makeAcall('010-9924-3732');
+     */
+    makeAcall: function(telNo) {
+        if ( CommonJS.BrowserInfo.isMobile() ) {
+            if ( CommonJS.FormatValid.isCellPhoneNumber(telNo) ) {
+                location.href = 'tel:' + telNo;
+            }
+        } else {
+            console.log('모바일 플랫폼에서만 사용 가능합니다.');
+        }
+    }
+}
+
 //--------------------------------------------------------------------
 // prototype
-// - 현 시점에 IE는 의미 없고, 제한된 인트라넷 환경에서 주석 해제 후 사용
-// - 성능이 떨어질까봐 Default는 주석 처리 함
+// - 지원 함수 보다는 성능이 떨어지지 않을까? 하여 Default는 주석 처리해놓음
+// - 제한된 인트라넷 환경에서 브라우저 버전 때문에 지원 안하는 경우, 주석 해제 후 사용
 //--------------------------------------------------------------------
 /**
  * IE 12(Edge) / Chrome 41 이하에서 startsWith 사용
