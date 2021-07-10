@@ -1597,7 +1597,7 @@ CommonJS.SnsShare = {
 
 /**
  * ********************************************************************
- * WebView 메소드 호출 - 프로젝트별로 JS 파일 생성하여 진행
+ * JavaScript에서 WebView 에 값 전달 - 프로젝트별로 JS 파일 생성하여 진행
  *      <Android>
  *          window.[WebViewBridge].[WebViewMethod](인자);
  *      </Android>
