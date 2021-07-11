@@ -1,9 +1,11 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 2.5
+ * @version 2.6
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
+ * @description 버전업 기준 : 수정 / 함수 추가
  *
+ * @property {object} CommonJS
  * @property {object} CommonJS.Text - 2021.07.10 추가 (CommonJS 에서 addZero 분리하고, 추가)
  * @property {object} CommonJS.Valid
  * @property {object} CommonJS.DateTime
@@ -114,6 +116,43 @@
                 }
             }
         }
+    },
+    /**
+     * 인자로 받은 Object를 병합한 Object 반환
+     * @param  {...any} sources 
+     * @returns
+     * @example
+     * CommonJS.mergeObject(obj1, obj2, obj3);
+     */
+    mergeObject: function(...sources) {
+        var _newObj = {};
+        return Object.assign(_newObj, ...sources);
+    },
+    /**
+     * 해당 영역안의 내용만 프린트 출력 (주로 div, textarea)
+     * @param {Element}} Element 
+     * @example
+     * [JavaScript]
+     * CommonJS.printTheArea( document.querySelector(셀렉터) );
+     * 
+     * [jQuery]
+     * CommonJS.printTheArea( $(셀렉터) );
+     */
+    printTheArea: function(Element) {
+        var _win = null;
+        _win = window.open();
+        self.focus();
+        _win.document.open();
+
+        if ( Element.length === undefined ) {
+            _win.document.write(Element.innerHTML);
+        } else {
+            _win.document.write(Element.html());
+        }
+
+        _win.document.close;
+        _win.print();
+        _win.close();
     }
     /*
     // TODO : 퍼블을 해야 테스트를 해야하므로.... 적합한 환경 접하면 테스트하는 걸로....
@@ -755,6 +794,112 @@ CommonJS.File = {
             var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
             audioElement.setAttribute('src', _fileUrl);
         });
+    },
+    /**
+     * 파일 다운로드
+     * @param {Element} Element 
+     * @param {undefined|string} fileName 
+     * @returns
+     * @example
+     * CommonJS.File.downloadFile(셀렉터);
+     * CommonJS.File.downloadFile(셀렉터, 파일명);
+     * 
+     * 셀렉터에 따라 [JavaScript][jQuery] 구분
+     */
+    downloadFile: function(Element, fileName) {
+        var _a = document.createElement("a");
+		var _downFileNm;
+        var _tagNmae = Element.nodeName;
+
+        if ( Element.nodeName === undefined ) {
+            _tagNmae = Element.prop('tagName');
+        }
+
+        var _srcArr = ['VIDEO', 'AUDIO', 'IMG'];
+		if ( _srcArr.includes(_tagNmae) ) {
+			var _src;
+            if ( Element.length === undefined ) {
+                _src = Element.getAttribute('src');
+            } else {
+                _src = Element.attr('src');
+            }
+
+			_downFileNm = fileName;
+			if ( fileName == undefined ) {
+				var _fileExt = _src.substring(_src.lastIndexOf(".")+1);
+				var _temp = _src.substring(0, _src.lastIndexOf("."));
+				var _fileName = _temp.substring(_src.lastIndexOf("/")+1);
+				_downFileNm = _fileName + '.' + _fileExt;
+			}
+
+			_a.href = _src;
+		} else {
+			var _alertMsg = '';
+			_alertMsg += '파일 다운로드는\n('+ 'video, audio, img, textarea, input[type="text"]' +')';
+			_alertMsg += '\n만 가능합니다.';
+
+			var _srcArr = ['TEXTAREA', 'INPUT', 'DIV'];
+			if ( !_srcArr.includes(_tagNmae) ) {
+				alert(_alertMsg);
+				return false;
+			} else {
+				if ( 'INPUT' === _tagNmae ) {
+                    var _type;
+                    if ( Element.length === undefined ) {
+                        _type = Element.getAttribute('type');
+                    } else {
+                        _type = Element.attr('type');
+                    }
+
+					if ( 'text' !== _type ) {
+						alert(_alertMsg);
+						return false;
+					}
+				}
+			}
+
+			_downFileNm = fileName;
+			if ( fileName == undefined ) {
+				_downFileNm = 'output.html';
+
+				if ( 'INPUT' === _tagNmae ) {
+					_downFileNm = 'output.text';
+				}
+			}
+
+			if ( 'DIV' !== _tagNmae ) {
+				var _mimeType = 'text/html';
+				if ( 'INPUT' === _tagNmae ) {
+					_mimeType = 'text/plain';
+				}
+
+                var _blob;
+                if ( Element.length === undefined ) {
+                    _blob = new Blob([Element.value], {type: _mimeType});
+                } else {
+                    _blob = new Blob([Element.val()], {type: _mimeType});
+                }
+
+				var _url = window.URL.createObjectURL(_blob);
+				_a.href = _url;
+			} else {
+                var _blob;
+                if ( Element.length === undefined ) {
+                    _blob = new Blob([Element.innerHTML], {type: 'text/html'});
+                } else {
+                    _blob = new Blob([Element.html()], {type: 'text/html'});
+                }
+
+				var _url = window.URL.createObjectURL(_blob);
+				_a.href = _url;
+			}
+        }
+
+		_a.download = _downFileNm;
+		_a.target = '_blank';
+
+		_a.click();
+		_a.remove();
     }
 }
 
@@ -1597,13 +1742,16 @@ CommonJS.SnsShare = {
 
 /**
  * ********************************************************************
- * JavaScript에서 WebView 에 값 전달 - 프로젝트별로 JS 파일 생성하여 진행
+ * JavaScript 에서 WebView 에 값 전달 - 프로젝트별로 JS 파일 생성하여 진행
  *      <Android>
  *          window.[WebViewBridge].[WebViewMethod](인자);
  *      </Android>
  *      <iOS>
  *          webkit.messageHandlers.[WebViewBridge].postMessage(인자);
  *      </iOS>
+ * 
+ * WebView 에서 JavaScript 에 값 전달
+ *   - JavaScript 에 특이사항은 없음 / 항상 보내는 입장에서만 특이사항이 발생
  * ********************************************************************
  */
 CommonJS.Mobile = {
@@ -1650,16 +1798,20 @@ CommonJS.Mobile = {
      * @param {Element} fileElement 
      * @param {Element} imgElement 
      * @example
-     * CommonJS.runCamera( document.querySelector('#file'), document.querySelector('#img') );
+     * [JavaScript]
+     * CommonJS.Mobile.runCamera( document.querySelector('#file'), document.querySelector('#img') );
+     * 
+     * [jQuery]
+     * CommonJS.Mobile.runCamera( $('#file')[0], $('#img')[0] );
      */
     runCamera: function(fileElement, imgElement) {
+        fileElement.setAttribute('accept', 'image/*');
+        fileElement.setAttribute('capture', 'camera');
+
         fileElement.addEventListener('change', function(e) {
             if ( CommonJS.BrowserInfo.isMobile() ) {
                 var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
 
-                this.setAttribute('accept', 'image/*');
-                this.setAttribute('capture', 'camera');
-                
                 imgElement.setAttribute("src", _fileUrl);
                 this.removeAttribute('capture');
             } else {
@@ -1671,15 +1823,21 @@ CommonJS.Mobile = {
     /**
      * 음성 녹음 실행
      * @param {Element} fileElement
-     * @param {Element} audioElement 
+     * @param {Element} audioElement
+     * @example
+     * [JavaScript]
+     * CommonJS.Mobile.runCamera( document.querySelector('#file'), document.querySelector('#audio') );
+     * 
+     * [jQuery]
+     * CommonJS.Mobile.runCamera( $('#file')[0], $('#audio')[0] );
      */
     runMicroPhone: function(fileElement, audioElement) {
+        fileElement.setAttribute('accept', 'audio/*');
+        fileElement.setAttribute('capture', 'microphone');
+
         fileElement.addEventListener('change', function(e) {
             if ( CommonJS.BrowserInfo.isMobile() ) {
                 var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
-
-                this.setAttribute('accept', 'audio/*');
-                this.setAttribute('capture', 'microphone');
 
                 audioElement.setAttribute("src", _fileUrl);
                 this.removeAttribute('capture');
@@ -1689,6 +1847,52 @@ CommonJS.Mobile = {
                 console.log('모바일 플랫폼에서만 사용 가능합니다.');
             }
         });
+    },
+    /**
+     * 안드로이드 앱링크 or 딥링크 URL 생성
+     * @param {string} host 
+     * @param {string} scheme 
+     * @param {string} package 
+     * @returns
+     * @example
+     * CommonJS.Mobile.makeAndroidAppLinkUrl('instagram.com', 'https', 'com.instagram.android');
+     * 
+     * 링크 생성 하더라도 작동하려면 다음 설정 필수
+     * AndroidManifest.xml
+     *  <intent-filter>
+     *      <action android:name="android.intent.action.VIEW" />
+     *      <category android:name="android.intent.category.DEFAULT" />
+     *      <category android:name="android.intent.category.BROWSABLE" />
+     * 
+     *      <data android:host="호스트" android:scheme="스키마" />
+     *  </intent-filter>
+     */ 
+    makeAndroidAppLinkUrl: function(host, scheme, package) {
+        return 'intent://'+ host + '/#Intent;package='+ package +';scheme='+ scheme +';end';
+    },
+    /**
+     * 앱링크 or 딥링크 실행
+     * @param {string} androidUrl 
+     * @param {string} iosUrl 
+     * @param {string} iosAppStoreUrl 
+     * @example
+     * CommonJS.Mobile.runAppLinkUrl(androidUrl, iosUrl, iosAppStoreUrl);
+     */
+    runAppLinkUrl: function(androidUrl, iosUrl, iosAppStoreUrl) {
+        if ( CommonJS.BrowserInfo.isMobile() ) {
+            if ( CommonJS.BrowserInfo.isMobileOs().iOS ) {
+                // 1초 이후 반응이 없으면 앱스토어로 이동
+                setTimeout(function() {
+                    window.open(iosAppStoreUrl);
+                }, 1000);
+
+                location.href = iosUrl;
+            } else {
+                location.href = androidUrl;
+            }
+        } else {
+            console.log('모바일 플랫폼에서만 사용 가능합니다.');
+        }
     }
 },
 
