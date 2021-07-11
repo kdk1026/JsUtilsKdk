@@ -980,6 +980,166 @@ CommonJS.File = {
 
 		_a.click();
 		_a.remove();
+    },
+    /**
+     * 엑셀 파일 다운로드
+     *   - 파일이 손상되지만 무시하면 열림
+     *   - exportExcelBySheetJS 적극 권장
+     * @param {string} fileName 
+     * @param {string} sheetName 
+     * @param {string} sheetHtml
+     * @example
+     * [JavaScript]
+     * CommonJS.File.exportExcel( '엑셀파일명.xls', '시트', document.querySelector('#tb1').outerHTML );
+     * 
+     * [jQuery]
+     * CommonJS.File.exportExcel( '엑셀파일명.xls', '시트', $('#tb1').clone().wrapAll('<div/>').parent().html() );
+     */
+     exportExcel: function(fileName, sheetName, sheetHtml) {
+        // 파일 체크
+        var _fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
+        if ( 'xls' !== _fileExt ) {
+            alert('xls 파일만 가능합니다.');
+            return false;
+        }
+
+        var _dataType = 'data:application/vnd.ms-excel';
+        var _html = '';
+        _html += '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+        _html +=    '<head>';
+        _html +=        '<meta http-equiv="content-type" content="'+ _dataType +'; charset=UTF-8">';
+        _html +=        '<xml>';
+        _html +=            '<x:ExcelWorkbook>';
+        _html +=                '<x:ExcelWorksheets>';
+        _html +=                    '<x:ExcelWorksheet>';
+        _html +=                        '<x:Name>' + sheetName + '</x:Name>';
+        _html +=                        '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions>';
+        _html +=                    '</x:ExcelWorksheet>';
+        _html +=                '</x:ExcelWorksheets>'; 
+        _html +=        '</xml>';
+        _html +=    '</head>';
+        _html +=    '<body>';
+        _html += sheetHtml;
+        _html += '</html>';
+
+        var _ua = window.navigator.userAgent;
+        var _blob = new Blob([_html], {type: "application/csv;charset=utf-8;"});
+
+        if ((_ua.indexOf("MSIE ") > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) && window.navigator.msSaveBlob) {
+            // ie이고 msSaveBlob 기능을 지원하는 경우
+            navigator.msSaveBlob(_blob, fileName);
+        } else {
+            // ie가 아닌 경우 (바로 다운이 되지 않기 때문에 클릭 버튼을 만들어 클릭을 임의로 수행하도록 처리)
+            var _anchor = window.document.createElement('a');
+            _anchor.href = window.URL.createObjectURL(_blob);
+            _anchor.download = fileName;
+            document.body.appendChild(_anchor);
+            _anchor.click();
+
+            // 클릭(다운) 후 요소 제거
+            document.body.removeChild(_anchor);
+        }
+    },
+    /**
+     * 엑셀 파일 다운로드
+     * @param {string} fileName 
+     * @param {string} sheetName 
+     * @param {Element} sheetElement 
+     * @returns
+     * @example
+     * [JavaScript]
+     * CommonJS.File.exportExcelBySheetJS( '엑셀파일명.xlsx', '시트', document.querySelector('#tb1') );
+     * 
+     * [jQuery]
+     * CommonJS.File.exportExcelBySheetJS( '엑셀파일명.xlsx', '시트', $('#tb1') );
+     * 
+     * @link https://mesonia.tistory.com/m/110
+     * @link https://sheetjs.com/demo/table.html
+     * @link https://github.com/SheetJS/sheetjs/tree/master/dist
+     * 
+     * @description
+     * xlsx.full.min.js 만 있으면 됨
+     */
+    exportExcelBySheetJS: function(fileName, sheetName, sheetElement) {
+        // jQuery Element 지원 안함
+        if ( sheetElement.length != undefined ) {
+            var id = sheetElement.attr('id');
+            sheetElement = document.querySelector('#'+id);
+        }
+
+        // 파일 체크
+		var _arrAllowExt = ['xls', 'xlsx', 'ods'];
+        var _fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
+
+		if ( !_arrAllowExt.includes(_fileExt) ) {
+			alert('xls, xlsx, ods 만 가능합니다.');
+			return false;
+		}
+
+		var _type = 'xlsx';
+		if ( 'ods' === _fileExt ) _type = 'ods';
+		if ( 'xls' === _fileExt ) _type = 'biff8';
+		
+		var _wb = XLSX.utils.table_to_book(sheetElement, {sheet: sheetName});
+		var _fn = undefined;
+		
+		XLSX.writeFile(_wb, _fn || fileName);
+    },
+    /**
+     * PDF 파일 다운로드
+     * @param {string} fileName 
+     * @param {Element} pdfElement 
+     * @returns 
+     * @example
+     * [JavaScript]
+     * CommonJS.File.exportPdf( '테스트.pdf', document.querySelector('#pdfDiv') );
+     * 
+     * [jQuery]
+     * CommonJS.File.exportPdf( '테스트.pdf', $('#pdfDiv')[0] );
+     * 
+     * @link https://chichi-story.tistory.com/10
+     * @link https://html2canvas.hertzen.com/
+     * @link https://parall.ax/products/jspdf
+     * 
+     * @description
+     * html2canvas.min.js, jspdf.min.js
+     */
+    exportPdf: function(fileName, pdfElement) {
+		// 파일 체크
+		var _fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
+
+		if ( _fileExt != 'pdf' ) {
+			alert('pdf만 가능합니다.');
+			return false;
+		}
+
+		html2canvas(pdfElement).then(function(canvas) { //저장 영역 div id
+			// 캔버스를 이미지로 변환
+			var imgData = canvas.toDataURL('image/png');
+
+			var imgWidth = 190; // 이미지 가로 길이(mm) / A4 기준 210mm
+			var pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
+			var imgHeight = canvas.height * imgWidth / canvas.width;
+			var heightLeft = imgHeight;
+			var margin = 10; // 출력 페이지 여백설정
+			var doc = new jsPDF('p', 'mm');
+			var position = 0;
+
+			// 첫 페이지 출력
+			doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+	    	heightLeft -= pageHeight;
+
+			// 한 페이지 이상일 경우 루프 돌면서 출력
+			while (heightLeft >= 20) {
+				position = heightLeft - imgHeight;
+				doc.addPage();
+				doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+				heightLeft -= pageHeight;
+			}
+
+			// 파일 저장
+			doc.save(fileName);
+		});
     }
 }
 
