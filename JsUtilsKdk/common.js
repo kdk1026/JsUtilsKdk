@@ -240,6 +240,7 @@ CommonJS.Valid = {
      * @param {*} val
      * @returns {boolean}
      * @example
+     * CommonJS.Valid.isBlank(val);
      */
     isBlank: function(val) {
         return (val == null || val.replace(/ /gi,'') == '');
@@ -248,6 +249,8 @@ CommonJS.Valid = {
      * undefined 체크 ('undefined' 포함)
      * @param {*} val
      * @returns {boolean}
+     * @example
+     * CommonJS.Valid.isUndefined(val);
      */
     isUndefined: function(val) {
         return (val == undefined || val === 'undefined');
@@ -256,6 +259,8 @@ CommonJS.Valid = {
      * 숫자 체크
      * @param {*} val
      * @returns {boolean}
+     * @example
+     * CommonJS.Valid.isNumber(val);
      */
     isNumber: function(val) {
         var _re = /^[0-9]+$/;
@@ -265,6 +270,8 @@ CommonJS.Valid = {
      * 특수문자 체크
      * @param {*} val
      * @returns {boolean}
+     * @example
+     * CommonJS.Valid.isSpecial(val);
      */
     isSpecial: function(val) {
         var _re = /[`~!@#$%^&*()-_=+{}|;:'\",.<>?]+$/;
@@ -274,6 +281,8 @@ CommonJS.Valid = {
 	 * 공백 체크
 	 * @param {string} val
 	 * @returns {boolean}
+     * @example
+     * CommonJS.Valid.checkSpace(val);
 	 */
 	checkSpace: function(val) {
 		if (val.search(/\s/) != -1) {
@@ -286,6 +295,8 @@ CommonJS.Valid = {
 	 * 한글만 입력 체크
 	 * @param {string} val
 	 * @returns {boolean}
+     * @example
+     * CommonJS.Valid.isNotHangul(val);
 	 */
 	isNotHangul: function(val) {
 		var _re = /[a-zA-Z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g;
@@ -295,6 +306,8 @@ CommonJS.Valid = {
      * Object가 비어있는지 체크
      * @param {Object} param 
      * @returns 
+     * @example
+     * CommonJS.Valid.isEmptyObject(val);
      */
     isEmptyObject: function(param) {
         return Object.keys(param).length === 0 && param.constructor === Object;
@@ -303,6 +316,8 @@ CommonJS.Valid = {
      * Array가 비어있는지 체크
      * @param {Array} param 
      * @returns 
+     * @example
+     * CommonJS.Valid.isEmptyArray(val);
      */
     isEmptyArray: function(param) {
         return Object.keys(param).length === 0 && param.constructor === Array;
@@ -320,6 +335,8 @@ CommonJS.DateTime = {
      * 날짜를 yyyy-MM-dd 형식으로 반환
      * @param {Date} date
      * @returns {string}
+     * @example
+     * CommonJS.DateTime.dateToString(date);
      */
 	dateToString: function(date) {
 		var _year = date.getFullYear();
@@ -335,6 +352,8 @@ CommonJS.DateTime = {
      * 시간을 HH:mm:ss 형식으로 반환
      * @param {Date} date
      * @returns {string}
+     * @example
+     * CommonJS.DateTime.timeToString(date);
      */
 	timeToString: function(date) {
 		var _hour = date.getHours();
@@ -351,6 +370,8 @@ CommonJS.DateTime = {
      * 날짜 형식의 문자열을 Date 객체로 반환
      * @param {string} val
      * @returns {Date}
+     * @example
+     * CommonJS.DateTime.stringToDate(val);
      */
 	stringToDate: function(val) {
 		var _date = new Date();
@@ -378,6 +399,8 @@ CommonJS.DateTime = {
      *  - day가 양수 = 이후 날짜
      * @param {number} day
      * @returns {Date}
+     * @example
+     * CommonJS.DateTime.plusMinusDay(day);
      */
 	plusMinusDay: function(day) {
 		var _date = new Date();
@@ -392,6 +415,8 @@ CommonJS.DateTime = {
      *  - month가 양수 = 이후 날짜
      * @param {number} month
      * @returns {Date}
+     * @example
+     * CommonJS.DateTime.plusMinusMonth(month);
      */
 	plusMinusMonth: function(month) {
 		var _date = new Date();
@@ -406,6 +431,8 @@ CommonJS.DateTime = {
      *  - year가 양수 = 이후 날짜
      * @param {number} year
      * @returns {Date}
+     * @example
+     * CommonJS.DateTime.plusMinusYear(year);
      */
 	plusMinusYear: function(year) {
 		var _date = new Date();
@@ -420,6 +447,8 @@ CommonJS.DateTime = {
      *  - hours가 양수 = 이후 시간
      * @param {number} hours
      * @returns {Date}
+     * @example
+     * CommonJS.DateTime.plusMinusHour(hours);
      */
 	plusMinusHour: function(hours) {
 		var _date = new Date();
@@ -434,6 +463,8 @@ CommonJS.DateTime = {
      *  - minutes가 양수 = 이후 시간
      * @param {number} minutes
      * @returns {Date}
+     * @example
+     * CommonJS.DateTime.plusMinusMinute(minutes);
      */
 	plusMinusMinute: function(minutes) {
 		var _date = new Date();
@@ -448,6 +479,8 @@ CommonJS.DateTime = {
      *  - seconds가 양수 = 이후 시간
      * @param {number} seconds
      * @returns {Date}
+     * @example
+     * CommonJS.DateTime.plusMinusSecond(seconds);
      */
 	plusMinusSecond: function(seconds) {
 		var _date = new Date();
@@ -460,6 +493,8 @@ CommonJS.DateTime = {
      * 한글 요일 구하기
      * @param {Date} date
      * @returns {string}
+     * @example
+     * CommonJS.DateTime.getKorDayOfWeek(date);
      */
 	getKorDayOfWeek: function(date) {
 		var _week = new Array('일', '월', '화', '수', '목', '금', '토');
@@ -468,6 +503,8 @@ CommonJS.DateTime = {
     /**
      * 현재 월의 마지막 일자를 반환
      * @param {Date} date
+     * @example
+     * CommonJS.DateTime.getLastDayOfMonth(date);
      */
 	getLastDayOfMonth: function(date) {
 		return new Date(date.getYear(), date.getMonth()+1, 0).getDate();
@@ -479,6 +516,8 @@ CommonJS.Format = {
      * 숫자 금액 형식 변환 (세자리 콤마)
      * @param {number} num
      * @returns {string}
+     * @example
+     * CommonJS.Format.formatNumber(num);
      */
     formatNumber: function(num) {
         return (num + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,');
@@ -487,6 +526,8 @@ CommonJS.Format = {
      * 전화번호, 휴대폰 번호 형식 변환
      * @param {number} num
      * @returns {string}
+     * @example
+     * CommonJS.Format.addHyphenPhoneNumber(num);
      */
     addHyphenPhoneNumber: function(num) {
         return (num + '').replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,'$1-$2-$3');
@@ -495,6 +536,8 @@ CommonJS.Format = {
      * 날짜 형식 변환
      * @param {number} num
      * @returns {string}
+     * @example
+     * CommonJS.Format.addHyphenDate(num);
      */
     addHyphenDate: function(num) {
         return (num + '').replace(/([0-9]{4})(0[1-9]|1[012])(0[1-9]|1[0-9]|2[0-9]|3[01])/,'$1-$2-$3');
@@ -503,6 +546,8 @@ CommonJS.Format = {
      * 특수 문자 제거
      * @param {string}} val
      * @returns {string}
+     * @example
+     * CommonJS.Format.removeSpecial(val);
      */
     removeSpecial: function(val) {
         var _re = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
@@ -515,6 +560,8 @@ CommonJS.FormatValid = {
      * 날짜 형식 체크 (YYYYMMDD, YYYY-MM-DD)
      * @param {string} val1
      * @returns {boolean}
+     * @example
+     * CommonJS.FormatValid.isDate(val);
      */
      isDate: function(val) {
 		var _re = /^[0-9]{4}-?(0[1-9]|1[012])-?(0[1-9]|1[0-9]|2[0-9]|3[01])+$/;
@@ -524,6 +571,8 @@ CommonJS.FormatValid = {
      * 시간 형식 체크 (HH24MI, HH24:MI, HH24MISS, HH24:MI:SS)
      * @param {string} val1
      * @returns {boolean}
+     * @example
+     * CommonJS.FormatValid.isTime(val);
      */
     isTime: function(val) {
         var _re = /^([1-9]|[01][0-9]|2[0-3]):?([0-5][0-9])?(:?([0-5][0-9]))+$/;
@@ -534,6 +583,9 @@ CommonJS.FormatValid = {
      * @param {string} val1
      * @param {(undefined|null|string)} val2
      * @returns {boolean}
+     * @example
+     * CommonJS.FormatValid.isEmail(val1);
+     * CommonJS.FormatValid.isEmail(val1, val2);
      */
 	isEmail: function(val1, val2) {
         var _val = val1;
@@ -549,6 +601,9 @@ CommonJS.FormatValid = {
      * @param {(undefined|null|string)} val2
      * @param {(undefined|null|string)} val3
      * @returns {boolean}
+     * @example
+     * CommonJS.FormatValid.isPhoneNumber(val1);
+     * CommonJS.FormatValid.isPhoneNumber(val1, val2, val3);
      */
 	isPhoneNumber: function(val1, val2, val3) {
         var _val = val1;
@@ -573,6 +628,9 @@ CommonJS.FormatValid = {
      * @param {(undefined|null|string)} val2
      * @param {(undefined|null|string)} val3
      * @returns {boolean}
+     * @example
+     * CommonJS.FormatValid.isCellPhoneNumber(val1);
+     * CommonJS.FormatValid.isCellPhoneNumber(val1, val2, val3);
      */
 	isCellPhoneNumber: function(val1, val2, val3) {
         var _val = val1;
@@ -588,6 +646,9 @@ CommonJS.FormatValid = {
      * @param {(undefined|null|string)} val2
      * @param {(undefined|null|string)} val3
      * @returns {boolean}
+     * @example
+     * CommonJS.FormatValid.isBusinessRegNumber(val1);
+     * CommonJS.FormatValid.isBusinessRegNumber(val1, val2, val3);
      */
 	isBusinessRegNumber: function(val1, val2, val3) {
         var _val = val1;
@@ -601,6 +662,8 @@ CommonJS.FormatValid = {
      * 아이디 형식 체크 (첫 글자 영문, 7자 이상 30자 이내)
      * @param {string} val
      * @returns {boolean}
+     * @example
+     * CommonJS.FormatValid.isId(val);
      */
 	isId: function(val) {
 		var _re = /^[a-zA-Z](?=.*[a-zA-Z])(?=.*[0-9]).{6,29}$/;
@@ -610,6 +673,8 @@ CommonJS.FormatValid = {
      * 비밀번호 형식 체크 (영문, 숫자, 특수문자 조합 8자 이상)
      * @param {*} val 
      * @returns 
+     * @example
+     * CommonJS.FormatValid.isPassword(val);
      */
      isPassword: function(val) {
         var _re = /^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[^\w\s]).{8,}$/;
@@ -619,6 +684,8 @@ CommonJS.FormatValid = {
      * URL 형식 체크
      * @param {*} val 
      * @returns 
+     * @example
+     * CommonJS.FormatValid.isUrl(val);
      */
      isUrl: function(val) {
         var _re = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
@@ -631,6 +698,8 @@ CommonJS.JSON = {
      * JSON String을 Object로 변환
      * @param {string} jsonStr
      * @returns {Object}
+     * @example
+     * CommonJS.JSON.jsonToObject(jsonStr);
      */
     jsonToObject: function(jsonStr) {
         return JSON.parse(jsonStr);
@@ -639,6 +708,8 @@ CommonJS.JSON = {
      * Object를 JSON String으로 변환
      * @param {Object} obj
      * @returns {string}
+     * @example
+     * CommonJS.JSON.objectToJsonString(obj);
      */
     objectToJsonString: function(obj) {
         return JSON.stringify(obj);
@@ -647,6 +718,8 @@ CommonJS.JSON = {
      * Object를 Tree 구조의 JSON String으로 변환
      * @param {Object} obj
      * @returns {string}
+     * @example
+     * CommonJS.JSON.objectToJsonStringPretty(obj);
      */
     objectToJsonStringPretty: function(obj) {
         return JSON.stringify(obj, null, 2);
@@ -702,6 +775,8 @@ CommonJS.File = {
      * 파일 확장자 가져오기
      * @param {Object}
      * @returns {string}
+     * @example
+     * CommonJS.File.getFileExt(fileObj);
      */
 	getFileExt: function(fileObj) {
 		var _fileName = fileObj.name;
@@ -711,6 +786,8 @@ CommonJS.File = {
      * 파일 용량 단위 구하기
      * @param {number} size
      * @returns {string}
+     * @example
+     * CommonJS.File.readableFileSize(size);
      */
 	readableFileSize: function(size) {
 		if (size == 0) return '0';
@@ -908,6 +985,8 @@ CommonJS.FileValid = {
      * 지원 파일 체크 (문서, 이미지)
      * @param {Object}
      * @returns {boolean}
+     * @example
+     * CommonJS.FileValid.isAllowFile(fileObj);
      */
      isAllowFile: function(fileObj) {
         var _ext = CommonJS.File.getFileExt(fileObj);
@@ -918,6 +997,8 @@ CommonJS.FileValid = {
      * 지원 파일 체크 (문서)
      * @param {Object}
      * @returns {boolean}
+     * @example
+     * CommonJS.FileValid.isAllowDoc(fileObj);
      */
     isAllowDoc: function(fileObj) {
         var _ext = CommonJS.File.getFileExt(fileObj);
@@ -928,6 +1009,8 @@ CommonJS.FileValid = {
      * 지원 파일 체크 (이미지)
      * @param {Object}
      * @returns {boolean}
+     * @example
+     * CommonJS.FileValid.isAllowImg(fileObj);
      */
     isAllowImg: function(fileObj) {
         var _ext = CommonJS.File.getFileExt(fileObj);
@@ -939,6 +1022,8 @@ CommonJS.FileValid = {
      *  - 결과가 true면 업로드 불가, false면 업로드 가능
      * @param {Object} fileObj
      * @returns {boolean}
+     * @example
+     * CommonJS.FileValid.ifRunableFile(fileObj);
      */
     ifRunableFile: function(fileObj) {
         var _ext = CommonJS.File.getFileExt(fileObj);
@@ -950,6 +1035,8 @@ CommonJS.FileValid = {
      * @param {Object} fileObj 
      * @param {Array} arrAllowExt 
      * @returns 
+     * @example
+     * CommonJS.FileValid.isAllowCustom(fileObj, arrAllowExt);
      */
      isAllowCustom: function(fileObj, arrAllowExt) {
         if ( Array.isArray ) {
@@ -965,6 +1052,8 @@ CommonJS.FileValid = {
      * @param {Object} fileObj
      * @param {number} maxSize - byte 단위 (예: 1MB = 1024 x 1024 x 1)
      * @returns {boolean}
+     * @example
+     * CommonJS.FileValid.isFileMaxSize(fileObj, maxSize);
      */
      isFileMaxSize: function(fileObj, maxSize) {
         return (Number(fileObj.size) > Number(maxSize));
@@ -977,6 +1066,8 @@ CommonJS.Cookie = {
      * @param {string} name
      * @param {*} value
      * @param {number} expireDay
+     * @example
+     * CommonJS.Cookie.setCookie(name, value, expireDay);
      */
 	setCookie: function(name, value, expireDay) {
 		var _date = new Date();
@@ -987,6 +1078,8 @@ CommonJS.Cookie = {
      * 쿠키 값 얻기
      * @param {string} name
      * @returns {*}
+     * @example
+     * CommonJS.Cookie.getCookie(name);
      */
 	getCookie: function(name) {
         var _value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
@@ -995,6 +1088,8 @@ CommonJS.Cookie = {
     /**
      * 쿠키 삭제
      * @param {string} name
+     * @example
+     * CommonJS.Cookie.deleteCookie(name);
      */
 	deleteCookie: function(name) {
 		var _date = new Date();
@@ -1008,6 +1103,8 @@ CommonJS.Byte = {
      * Byte 길이 구하기 (UTF8)
      * @param {*} val
      * @returns {number}
+     * @example
+     * CommonJS.Byte.getByteLengthUtf8(val);
      */
     getByteLengthUtf8: function(val) {
         var _char = '';
@@ -1027,6 +1124,8 @@ CommonJS.Byte = {
      * Byte 길이 구하기 (EUC_KR)
      * @param {*} val
      * @returns {number}
+     * @example
+     * CommonJS.Byte.getByteLengthEucKr(val);
      */
     getByteLengthEucKr: function(val) {
         var _char = '';
@@ -1049,6 +1148,8 @@ CommonJS.Escape = {
      * HTML Escape 처리
      * @param {*} val
      * @returns {string}
+     * @example
+     * CommonJS.Escape.escapeHtml(val);
      */
     escapeHtml: function(val) {
         var _ret = val.replace(/\"/gi, '&quot;').replace(/&/gi, '&amp;').replace(/</gi, '&lt;').replace(/>/gi, '&gt;');
@@ -1058,6 +1159,8 @@ CommonJS.Escape = {
      * HTML Unescape 처리
      * @param {*} val
      * @returns {string}
+     * @example
+     * CommonJS.Escape.unescapeHtml(val);
      */
     unescapeHtml: function(val) {
         var _ret = val.replace(/&quot;/gi, '\"').replace(/&amp;/gi, '&').replace(/&lt;/gi, '<').replace(/&gt;/gi, '>');
@@ -1068,7 +1171,9 @@ CommonJS.Escape = {
 CommonJS.BrowserInfo = {
     /**
      * 브라우저 종류 및 버전 체크
-     * @returns {Object}}
+     * @returns {Object}
+     * @example
+     * CommonJS.BrowserInfo.checkTypeVersion();
      */
     checkTypeVersion: function() {
         var _agent = navigator.userAgent.toLowerCase();
@@ -1140,6 +1245,8 @@ CommonJS.BrowserInfo = {
     /**
      * 모바일 브라우저 여부 체크
      * @returns {boolean}
+     * @example
+     * CommonJS.BrowserInfo.isMobile();
      */
     isMobile: function() {
         var _filter = 'win16|win32|win64|mac';
@@ -1154,6 +1261,8 @@ CommonJS.BrowserInfo = {
     /**
      * Android, iOS 여부 체크
      * @returns {boolean}
+     * @example
+     * CommonJS.BrowserInfo.isMobileOs();
      */
     isMobileOs: function() {
         var _ret = {
@@ -1586,6 +1695,11 @@ CommonJS.Input = {
  * ********************************************************************
  */
 CommonJS.SearchEngine = {
+    /**
+     * searchGoogle, searchNaver, searchDaum 에서 사용할 form 생성
+     * @param {string} searchKeyword 
+     * @returns 
+     */
     makeNewForm: function(searchKeyword) {
         var _newForm = document.createElement('form');
         _newForm.name = 'form';
@@ -1752,6 +1866,8 @@ CommonJS.SnsShare = {
  * 
  * WebView 에서 JavaScript 에 값 전달
  *   - JavaScript 에 특이사항은 없음 / 항상 보내는 입장에서만 특이사항이 발생
+ * 
+ * 프로젝트에 따라 정석인 JavascriptBridge 대신 다른 방식으로 값 주고 받을 수 있음
  * ********************************************************************
  */
 CommonJS.Mobile = {
@@ -1792,9 +1908,11 @@ CommonJS.Mobile = {
     },
     /**
      * 카메라 실행
-     *   - (일반적인) accept, capture 속성이 없는 경우 : 카메라, 캠코더, 파일
-     *   - accept="image/*" : 작업 선택 - 카메라, 내 파일, 파일
-     *   - accept="audio/*" : 작업 선택 - 음성 녹음, 내 파일, 파일
+     *   - (일반적인) accept, capture 속성이 없는 경우
+     *          : 카메라, 캠코더, 파일
+     *   - accept 속성만 있는 경우
+     *          accept="image/*" : 작업 선택 - 카메라, 내 파일, 파일
+     *          accept="audio/*" : 작업 선택 - 음성 녹음, 내 파일, 파일
      * @param {Element} fileElement 
      * @param {Element} imgElement 
      * @example
@@ -1822,6 +1940,7 @@ CommonJS.Mobile = {
     },
     /**
      * 음성 녹음 실행
+     *   - runCamera 참고
      * @param {Element} fileElement
      * @param {Element} audioElement
      * @example
