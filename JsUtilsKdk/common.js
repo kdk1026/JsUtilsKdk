@@ -23,6 +23,7 @@
  * @property {object} CommonJS.SnsShare - 2021.07.10 추가
  * @property {object} CommonJS.Mobile - 2021.07.10 추가
  * @property {object} CommonJS.Map - 2021.07.11 추가
+ * @property {object} CommonJS.Editor - 2021.07.11 추가 (설명 위주로만 정리)
  * @property {method} prototype
  */
  var CommonJS = {
@@ -2262,6 +2263,69 @@ CommonJS.Map = {
                 map: map
             });
         });
+    }
+}
+
+CommonJS.Editor = {
+    /**
+     * CK Editor
+     * @param {Element} targetElement 
+     * @link https://ckeditor.com/ckeditor-5/online-builder/
+     * @link https://ckeditor.com/docs/ckeditor5/latest/framework/guides/deep-dive/upload-adapter.html#implementing-a-custom-upload-adapter
+     * 
+     * @example
+     * [부분 유료]
+     * 'Commercial feature' 플러그인만 사용 안하면 무료로 가능
+     * 
+     * [이미지 업로드 처리]
+     * The complete implementation - URL만 변경
+     * 
+     * <파일 생성 후, import>
+     * ckeditor_custom_upload.js
+     * 
+     * [이미지 업로드 Backend 처리]
+     * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/CkEditorUploadController.java
+     */
+    ckeditor: function(targetElement) {
+        // 다운로드 경로\ckeditor5\sample\index.html 참고
+        // html 모드는 어뜨카지?
+    },
+    /**
+     * Summernote
+     * @param {Element} targetElement 
+     * @link https://summernote.org/getting-started/#requires-html5-doctype
+     * @link https://summernote.org/getting-started/#without-bootstrap
+     * @link https://summernote.org/deep-dive/#custom-toolbar-popover
+     * 
+     * @description
+     * Oops! jQuery 필수 (JQuery Lite 에서도 이상이 없을려나?)
+     * 
+     * @example
+     * [이미지 업로드 처리]
+     * onImageUpload
+     * 
+     * <파일 생성 후, import>
+     * summernote_custom_upload.js
+     */
+    summernote: function(targetElement) {
+
+    },
+    /**
+     * Toast Editor
+     * @param {Element} targetElement 
+     * @link https://ui.toast.com/tui-editor
+     * 
+     * @description
+     * NHN에서 만든 오픈소스 에디터 / Markdown 기반 지원 / npm 환경 최적화
+     * 
+     * @example
+     * [다운로드]
+     * CDN 에서 각각 다른 이름으로 저장
+     * 
+     * [이미지 업로드 처리]
+     * 흠... URL 찾지 못함... 추후...
+     */
+    toastEditor: function(targetElement) {
     }
 }
 
