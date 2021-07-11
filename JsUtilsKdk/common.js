@@ -878,10 +878,13 @@ CommonJS.File = {
      * @param {undefined|string} fileName 
      * @returns
      * @example
-     * CommonJS.File.downloadFile(셀렉터);
-     * CommonJS.File.downloadFile(셀렉터, 파일명);
+     * [JavaScript]
+     * CommonJS.File.downloadFile( document.querySelector(셀렉터) );
+     * CommonJS.File.downloadFile( document.querySelector(셀렉터), 파일명 );
      * 
-     * 셀렉터에 따라 [JavaScript][jQuery] 구분
+     * [jQuery]
+     * CommonJS.File.downloadFile( $(셀렉터) );
+     * CommonJS.File.downloadFile( $(셀렉터), 파일명 );
      */
     downloadFile: function(Element, fileName) {
         var _a = document.createElement("a");
