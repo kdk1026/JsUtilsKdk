@@ -2501,7 +2501,7 @@ CommonJS.Http = {
 
             if ( _classType === 'Array' ) {
                 _contentType = "application/json; charset=utf-8";
-                _params = JSON.stringify(param);
+                _params = this.JSON.objectToJsonString(param);
             }
         }
 
