@@ -2461,7 +2461,10 @@ CommonJS.Editor = {
 CommonJS.Http = {
     /**
      * 공통 JavaScript Ajax 처리
-     *   - jQuery 사용하는 경우에는 jQuery Ajax 사용할 것
+     *   - jQuery 사용하는 경우에는 jQuery Ajax 사용할 것 (commonJquery.js 링크 참고)
+     * 
+     * @link https://github.com/kdk1026/JsUtilsKdk/blob/master/JsUtilsKdk/commonJquery.js
+     * 
      * @param {boolean} isAsync 
      * @param {string} method 
      * @param {string} url 
