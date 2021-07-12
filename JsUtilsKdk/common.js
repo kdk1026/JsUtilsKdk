@@ -2485,7 +2485,7 @@ CommonJS.Http = {
         var _contentType = "application/x-www-form-urlencoded; charset=utf-8";
         var  _params = (param == undefined) ? {} : param;
 
-        if ( param != null ) {
+        if ( !CommonJS.Valid.isBlank(param) ) {
             if ( method.toLowerCase() === 'get' ) {
                 url = url + '?' + _params;
             }
@@ -2512,7 +2512,7 @@ CommonJS.Http = {
             _xmlHttp.setRequestHeader(key, header[key]);
         }
 
-        if ( param != null && 'FORM' === param.nodeName ) {
+        if ( !CommonJS.Valid.isBlank(param) && 'FORM' === param.nodeName ) {
             var _formData = new FormData(param);
              _xmlHttp.send(_formData);
         } else {
@@ -2536,7 +2536,7 @@ CommonJS.Http = {
                 }
             }
         } else {
-            if ( (callback == undefined) || (typeof callback != 'function') ) {
+            if ( (CommonJS.Valid.isUndefined(callback)) || (typeof callback != 'function') ) {
                 try {
                     _retData = CommonJS.JSON.jsonToObject(_responseStr);
                 } catch (error) {
