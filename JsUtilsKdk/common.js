@@ -2513,8 +2513,11 @@ CommonJS.Http = {
         }
 
         if ( param != null && 'FORM' === param.nodeName ) {
-            // 흠... 설정하면 오류남
-            //_xmlHttp.setRequestHeader('Content-type', 'multipart/form-data');
+            /*
+                흠... 설정하면 오류남
+                _xmlHttp.setRequestHeader('Content-type', 'multipart/form-data');
+                _xmlHttp.setRequestHeader('Content-type', '');
+            */
 
             var _formData = new FormData(param);
              _xmlHttp.send(_formData);
