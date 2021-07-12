@@ -2530,13 +2530,26 @@ CommonJS.Http = {
 
         if (isAsync) {
             _xmlHttp.onload = function() {
-                callback( JSON.parse(_xmlHttp.response) );
+                try {
+                    callback( JSON.parse(_xmlHttp.response) );
+                } catch (error) {
+                    callback( _xmlHttp.response );
+                }
             }
         } else {
             if ( (callback == undefined) || (typeof callback != 'function') ) {
-                _retData = JSON.parse(_xmlHttp.response);
+                try {
+                    _retData = JSON.parse(_xmlHttp.response);
+                } catch (error) {
+                    _retData = _xmlHttp.response;
+                }
+                
             } else {
-                callback( JSON.parse(_xmlHttp.response) );
+                try {
+                    callback( JSON.parse(_xmlHttp.response) );
+                } catch (error) {
+                    callback( _xmlHttp.response );
+                }
             }
         }
 
