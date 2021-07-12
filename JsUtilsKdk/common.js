@@ -2531,27 +2531,29 @@ CommonJS.Http = {
             }
         }
 
+        var _responseStr = _xmlHttp.response;
+
         if (isAsync) {
             _xmlHttp.onload = function() {
                 try {
-                    callback( this.JSON.jsonToObject(_xmlHttp.response) );
+                    callback( this.JSON.jsonToObject(_responseStr) );
                 } catch (error) {
-                    callback( _xmlHttp.response );
+                    callback(_responseStr);
                 }
             }
         } else {
             if ( (callback == undefined) || (typeof callback != 'function') ) {
                 try {
-                    _retData = this.JSON.jsonToObject(_xmlHttp.response);
+                    _retData = this.JSON.jsonToObject(_responseStr);
                 } catch (error) {
-                    _retData = _xmlHttp.response;
+                    _retData = _responseStr;
                 }
                 
             } else {
                 try {
-                    callback( this.JSON.jsonToObject(_xmlHttp.response) );
+                    callback( this.JSON.jsonToObject(_responseStr) );
                 } catch (error) {
-                    callback( _xmlHttp.response );
+                    callback(_responseStr);
                 }
             }
         }
