@@ -2531,7 +2531,7 @@ CommonJS.Http = {
         if (isAsync) {
             _xmlHttp.onload = function() {
                 try {
-                    callback( JSON.parse(_xmlHttp.response) );
+                    callback( CommonJS.JSON.jsonToObject(_xmlHttp.response) );
                 } catch (error) {
                     callback( _xmlHttp.response );
                 }
@@ -2539,14 +2539,14 @@ CommonJS.Http = {
         } else {
             if ( (callback == undefined) || (typeof callback != 'function') ) {
                 try {
-                    _retData = JSON.parse(_xmlHttp.response);
+                    _retData = CommonJS.JSON.jsonToObject(_xmlHttp.response);
                 } catch (error) {
                     _retData = _xmlHttp.response;
                 }
                 
             } else {
                 try {
-                    callback( JSON.parse(_xmlHttp.response) );
+                    callback( CommonJS.JSON.jsonToObject(_xmlHttp.response) );
                 } catch (error) {
                     callback( _xmlHttp.response );
                 }
