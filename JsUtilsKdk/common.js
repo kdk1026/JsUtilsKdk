@@ -2273,14 +2273,14 @@ CommonJS.Editor = {
      * CK Editor
      * @param {Element} targetElement 
      * @link https://ckeditor.com/ckeditor-5/online-builder/
-     * @link https://ckeditor.com/docs/ckeditor5/latest/framework/guides/deep-dive/upload-adapter.html#implementing-a-custom-upload-adapter
      * 
      * @example
      * [부분 유료]
      * 'Commercial feature' 플러그인만 사용 안하면 무료로 가능
      * 
      * [이미지 업로드 처리]
-     * The complete implementation - URL만 변경
+     * @link https://ckeditor.com/docs/ckeditor5/latest/framework/guides/deep-dive/upload-adapter.html#implementing-a-custom-upload-adapter
+     *   - The complete implementation - URL만 변경
      * 
      * <파일 생성 후, import>
      * ckeditor_custom_upload.js
@@ -2297,7 +2297,6 @@ CommonJS.Editor = {
      * @param {Element} targetElement 
      * @link https://summernote.org/getting-started/#requires-html5-doctype
      * @link https://summernote.org/getting-started/#without-bootstrap
-     * @link https://summernote.org/deep-dive/#custom-toolbar-popover
      * 
      * @description
      * Oops! jQuery 필수 (JQuery Lite 에서도 이상이 없을려나?)
@@ -2315,7 +2314,8 @@ CommonJS.Editor = {
      * 
      * @example
      * [이미지 업로드 처리]
-     * onImageUpload - 하단 참고
+     * @link https://summernote.org/deep-dive/#custom-toolbar-popover
+     *   - onImageUpload - 하단 참고
      * 
      * [이미지 업로드 Backend 처리]
      * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/SummernoteUploadController.java
@@ -2362,13 +2362,57 @@ CommonJS.Editor = {
      * NHN에서 만든 오픈소스 에디터 / Markdown 기반 지원 / npm 환경 최적화
      * 
      * @example
-     * [다운로드]
-     * CDN 에서 각각 다른 이름으로 저장
+     * [CDN 다운로드]
+     *   - https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js
+     *   - https://uicdn.toast.com/editor/latest/toastui-editor.min.css
+     * 
+     * [Editor is not defined]
+     * @link https://velog.io/@khw970421/Toast-UI-%EC%82%AC%EC%9A%A9%EB%B2%95-%EA%B8%B0%EB%B3%B8%EB%B2%95
+     *   - new Editor -> new toastui.Editor
      * 
      * [이미지 업로드 처리]
-     * 흠... URL 찾지 못함... 추후...
+     * @link https://velog.io/@unani92/Vue-toast-ui-editor-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0
+     * @link https://nhn.github.io/tui.editor/latest/ToastUIEditorCore#addHook
+     *   - addImageBlobHook - 하단 참고
+     * @link https://kodepaper.tistory.com/31
+     * 
+     * @description
+     * jQuery 필수 아니라서 사용 안할려고 구글링 하면서 아주 발악을... fetch 아직은 너무도 어색한 그대...
      */
     toastEditor: function(targetElement) {
+        /*
+                hooks: {
+                    addImageBlobHook: function (blob, callback) {
+                        fnImageUpload(blob, function(data) {
+                            const imgUrl = data;
+                            callback(imgUrl);
+                        });
+                    }
+                }
+
+        async function fnImageUpload(blob, callback) {
+            const _param = new FormData();
+            _param.append("upload", blob);
+
+            let imgUrl = null;
+            let result;
+
+            await fetch('http://127.0.0.1:8080/toast/img_upload', {
+                method: 'post',
+                body: _param
+            })
+            .then( (res) => {
+                return res.json();
+            })
+            .then((json) => {
+                imgUrl = json.url;
+                callback(imgUrl);
+            });
+        }
+
+        jQuery 사용 시, summernote 와 동일하되 다음 옵션만 추가하면 됨
+            async: false
+        */
     }
 }
 
