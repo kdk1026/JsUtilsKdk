@@ -2211,6 +2211,7 @@ CommonJS.Mobile = {
 
                 location.href = iosUrl;
             } else {
+                // 안드로이드는 설치되어 있지 않으면 자동으로 마켓으로 이동
                 location.href = androidUrl;
             }
         } else {
@@ -2459,7 +2460,8 @@ CommonJS.Editor = {
 
 CommonJS.Http = {
     /**
-     * 
+     * 공통 JavaScript Ajax 처리
+     *   - jQuery 사용하는 경우에는 jQuery Ajax 사용할 것
      * @param {boolean} isAsync 
      * @param {string} method 
      * @param {string} url 
@@ -2469,6 +2471,10 @@ CommonJS.Http = {
      *   - form인 경우에만 Element로 넘길 것
      * @param {(undefined|Function)} callback 
      * @returns 
+     * @example
+     * CommonJS.Http.commonHttpRequest(isAsync, method, url, header, param, callback);
+     * 
+     * @link https://202psj.tistory.com/1647
      */
     commonHttpRequest: function(isAsync, method, url, header, param, callback) {
         var _retData = {};
@@ -2476,11 +2482,18 @@ CommonJS.Http = {
         var _contentType = "application/x-www-form-urlencoded; charset=utf-8";
         var  _params = (param == undefined) ? {} : param;
 
+        if ( param != null ) {
+            if ( method.toLowerCase() === 'get' ) {
+                url = url + '?' + _params;
+            }
+        }
+
         if (typeof param == 'object') {
             var _classType = CommonJS.getClassType(param);
 
             if ( _classType === 'Object' ) {
-                _params = Object.entries(param).map(e => e.join('=')).join('&');
+                // serialize() 는 jQuery 만 지원
+                _params = CommonJS.objectToQueryString(param).replace('?', '');
             }
 
             if ( _classType === 'Array' ) {
@@ -2489,28 +2502,25 @@ CommonJS.Http = {
             }
         }
 
-        if ( param != null ) {
-            if ( method.toLowerCase() === 'get' ) {
-                url = url + '?' + _params;
-            }
-        }
-
         var _xmlHttp = new XMLHttpRequest();
 
         _xmlHttp.open(method, url, isAsync);
-
-        _xmlHttp.setRequestHeader('Content-type', _contentType);
 
         for (key in header) {
             _xmlHttp.setRequestHeader(key, header[key]);
         }
 
         if ( param != null && 'FORM' === param.nodeName ) {
+            // 흠... 설정하면 오류남
+            //_xmlHttp.setRequestHeader('Content-type', 'multipart/form-data');
+
             var _formData = new FormData(param);
              _xmlHttp.send(_formData);
         } else {
-            if ( _param != null ) {
-                _xmlHttp.send(queryString);
+            _xmlHttp.setRequestHeader('Content-type', _contentType);
+            
+            if ( !CommonJS.Valid.isEmptyObject(_params) ) {
+                _xmlHttp.send(_params);
             } else {
                 _xmlHttp.send(null);
             }
