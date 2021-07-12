@@ -137,7 +137,7 @@
      */
     mergeArray: function(arr, ...sources) {
         return arr.concat(...sources);
-    }
+    },
     /**
      * 해당 영역안의 내용만 프린트 출력 (주로 div, textarea)
      * @param {Element}} Element 
