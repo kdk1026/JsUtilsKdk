@@ -2506,7 +2506,6 @@ CommonJS.Http = {
         }
 
         var _xmlHttp = new XMLHttpRequest();
-
         _xmlHttp.open(method, url, isAsync);
 
         for (key in header) {
