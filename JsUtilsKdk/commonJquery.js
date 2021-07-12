@@ -30,13 +30,15 @@ $(document).ajaxStop(function() {
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 2.0
+ * @version 2.1
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 jQuery 확장
  */
  $.extend({
 	/**
 	 * 엔터키 이벤트 발생 시, 다음 포커스로 이동
      * @param {Element} $element 
+	 * @example
+	 * $.enterEventFocus($element);
 	 */
 	enterEventFocus: function($element) {
 		$element.keypress(function(e) {
@@ -57,6 +59,8 @@ $(document).ajaxStop(function() {
      * @param {(undefined|Object)} param 
      * @param {(undefined|Function)} callback 
      * @returns 
+	 * @example
+	 * $.commonAjax(isAsync, method, url, header, param, callback);
      */
 	commonAjax: function(isAsync, method, url, header, param, callback) {
 		let _retData = {};
@@ -114,6 +118,8 @@ $(document).ajaxStop(function() {
      * @param {Element} $formElement 
      * @param {(undefined|Function)} callback 
      * @returns 
+	 * @example
+	 * $.commonAjaxFile(isAsync, method, url, header, $formElement, callback);
      */
 	commonAjaxFile: function(isAsync, method, url, header, $formElement, callback) {
 		let _retData = {};
@@ -155,6 +161,8 @@ $(document).ajaxStop(function() {
      *   - Array 때문에 serialize() 가 안되는 경우 등 사용
      * </pre>
      * @param {Element} $formElement 
+	 * @example
+	 * $.formSerializeObject($formElement);
      */
 	formSerializeObject: function($formElement) {
 		var _disabled = $formElement.find(':disabled').removeAttr('disabled');
