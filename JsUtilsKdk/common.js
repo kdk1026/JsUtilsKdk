@@ -134,6 +134,8 @@
      * @param {Array} arr 
      * @param  {...any} sources 
      * @returns 
+     * @example
+     * CommonJS.mergeArray(arr1, arr2, arr3);
      */
     mergeArray: function(arr, ...sources) {
         return arr.concat(...sources);
@@ -168,6 +170,8 @@
      * Object를 QueryString 으로 반환
      * @param {Object} obj 
      * @returns 
+     * @example
+     * CommonJS.objectToQueryString(obj);
      */
     objectToQueryString: function(obj) {
         var _queryString = Object.entries(obj).map(e => e.join('=')).join('&');
