@@ -2307,6 +2307,8 @@ CommonJS.Editor = {
      *   - 폴더 : font, lang, plugin
      *   - 파일 : summernote-lite.min.css, summernote-lite.min.js, summernote-lite.min.js.map
      * 
+     *      ※ Bootstrap 환경에서는 summernote.min.css, summernote.min.js, summernote.min.js.map
+     * 
      * @example
      * [추가 옵션]
      * lang: "ko-KR",
