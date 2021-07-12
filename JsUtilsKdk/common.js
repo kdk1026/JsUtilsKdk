@@ -130,6 +130,15 @@
         return Object.assign(_newObj, ...sources);
     },
     /**
+     * 인자로 받은 Array를 병합한 Array 반환
+     * @param {Array} arr 
+     * @param  {...any} sources 
+     * @returns 
+     */
+    mergeArray: function(arr, ...sources) {
+        return arr.concat(...sources);
+    }
+    /**
      * 해당 영역안의 내용만 프린트 출력 (주로 div, textarea)
      * @param {Element}} Element 
      * @example
