@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 2.6
+ * @version 2.7
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가
  *
@@ -328,7 +328,9 @@ CommonJS.Valid = {
 /**
  * ********************************************************************
  * CommonJS.DateTime.함수 대신 Moment.js 적극 권장
- * <참고> https://github.com/kdk1026/node_utils/blob/main/libs/date.js
+ * 
+ * @link https://momentjs.com/
+ * @link https://github.com/kdk1026/node_utils/blob/main/libs/date.js
  * ********************************************************************
  */
 CommonJS.DateTime = {
@@ -785,7 +787,7 @@ CommonJS.File = {
     },
     /**
      * 파일 용량 단위 구하기
-     * @param {number} size
+     * @param {number} size - 바이트
      * @returns {string}
      * @example
      * CommonJS.File.readableFileSize(size);
@@ -2246,7 +2248,7 @@ CommonJS.Map = {
         var map = new naver.maps.Map(mapElementId, mapOptions);
 
         // Geocoder를 활용한 주소와 좌표 검색 API 호출하기
-        naver.maps.Service.geocode({ query: '제주특별자치도 제주시 첨단로 242' }, function(status, response) {
+        naver.maps.Service.geocode({ query: addr }, function(status, response) {
             if (status === naver.maps.Service.Status.ERROR) {
                 return alert('Something wrong!');
             }
@@ -2301,14 +2303,53 @@ CommonJS.Editor = {
      * Oops! jQuery 필수 (JQuery Lite 에서도 이상이 없을려나?)
      * 
      * @example
-     * [이미지 업로드 처리]
-     * onImageUpload
+     * [복사]
+     *   - 폴더 : font, lang, plugin
+     *   - 파일 : summernote-lite.min.css, summernote-lite.min.js, summernote-lite.min.js.map
      * 
-     * <파일 생성 후, import>
-     * summernote_custom_upload.js
+     * @example
+     * [추가 옵션]
+     * lang: "ko-KR",
+     * 
+     * @example
+     * [이미지 업로드 처리]
+     * onImageUpload - 하단 참고
+     * 
+     * [이미지 업로드 Backend 처리]
+     * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/SummernoteUploadController.java
      */
     summernote: function(targetElement) {
+       /*
+            ...
+                callbacks: {
+                    onImageUpload: function(files) {
+                        fnImageUpload( files[0], this );
+                    }
+                }
+            });
 
+        function fnImageUpload(file, editor) {
+            const _param = new FormData();
+            _param.append("upload", file);
+
+            $.ajax({
+                cache: false,
+                traditional: true,
+                contentType: false,
+			    processData : false,
+                enctype: 'multipart/form-data',
+                type: 'post',
+                url: 'http://127.0.0.1:8080/summernote/img_upload',
+                data: _param,
+                success: function(result) {
+                    $(editor).summernote('insertImage', result.url);
+                },
+                error: function(xhr, status, err) {
+                    alert("code = "+ xhr.status + " message = " + xhr.responseText + " error = " + err);
+                }
+            });
+        }
+       */
     },
     /**
      * Toast Editor
