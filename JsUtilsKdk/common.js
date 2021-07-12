@@ -236,7 +236,7 @@ CommonJS.Text = {
      * CommonJS.Text.defaultString('', '치환');
      */
     defaultString: function(string, defaultStr) {
-        if ( CommonJS.Valid.isBlank(string) || CommonJS.Valid.isUndefined(string) ) {
+        if ( this.Valid.isBlank(string) || this.Valid.isUndefined(string) ) {
             return defaultStr;
         } else {
             return string;
@@ -384,8 +384,8 @@ CommonJS.DateTime = {
 		var	_month = (date.getMonth() + 1);
 		var	_day = date.getDate();
 
-		_month = CommonJS.Text.addZero(_month);
-		_day = CommonJS.Text.addZero(_day);
+		_month = this.Text.addZero(_month);
+		_day = this.Text.addZero(_day);
 
 		return [_year, _month, _day].join('-');
     },
@@ -401,9 +401,9 @@ CommonJS.DateTime = {
 		var	_minute = date.getMinutes();
 		var	_second = date.getSeconds();
 
-		_hour = CommonJS.Text.addZero(hour);
-		_minute = CommonJS.Text.addZero(minute);
-		_second = CommonJS.Text.addZero(second);
+		_hour = this.Text.addZero(hour);
+		_minute = this.Text.addZero(minute);
+		_second = this.Text.addZero(second);
 
 		return [_hour, _minute, _second].join(':');
     },
@@ -648,7 +648,7 @@ CommonJS.FormatValid = {
      */
 	isPhoneNumber: function(val1, val2, val3) {
         var _val = val1;
-        if ( !CommonJS.Valid.isBlank(val2) && !CommonJS.Valid.isBlank(val3) ) {
+        if ( !this.Valid.isBlank(val2) && !this.Valid.isBlank(val3) ) {
             _val = val1 +'-'+ val2 +'-'+ val3;
         }
         /*
@@ -675,7 +675,7 @@ CommonJS.FormatValid = {
      */
 	isCellPhoneNumber: function(val1, val2, val3) {
         var _val = val1;
-        if ( !CommonJS.Valid.isBlank(val2) && !CommonJS.Valid.isBlank(val3) ) {
+        if ( !this.Valid.isBlank(val2) && !this.Valid.isBlank(val3) ) {
             _val = val1 +'-'+ val2 +'-'+ val3;
         }
 		var _re = /^(01[016789])-?(\d{3,4})-?(\d{4})+$/;
@@ -693,7 +693,7 @@ CommonJS.FormatValid = {
      */
 	isBusinessRegNumber: function(val1, val2, val3) {
         var _val = val1;
-        if ( !CommonJS.Valid.isBlank(val2) && !CommonJS.Valid.isBlank(val3) ) {
+        if ( !this.Valid.isBlank(val2) && !this.Valid.isBlank(val3) ) {
             _val = val1 +'-'+ val2 +'-'+ val3;
         }
 		var _re = /^[(\d{3})-?(\d{2})-?(\d{5})+$]/;
@@ -1193,7 +1193,7 @@ CommonJS.FileValid = {
      * CommonJS.FileValid.isAllowFile(fileObj);
      */
      isAllowFile: function(fileObj) {
-        var _ext = CommonJS.File.getFileExt(fileObj);
+        var _ext = this.File.getFileExt(fileObj);
         var _arrAllowExt = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'hwp', 'odt', 'odp', 'ods', 'jpg', 'jpeg', 'gif', 'png'];
         return _arrAllowExt.includes(_ext);
     },
@@ -1205,7 +1205,7 @@ CommonJS.FileValid = {
      * CommonJS.FileValid.isAllowDoc(fileObj);
      */
     isAllowDoc: function(fileObj) {
-        var _ext = CommonJS.File.getFileExt(fileObj);
+        var _ext = this.File.getFileExt(fileObj);
         var _arrAllowExt = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'hwp', 'odt', 'odp', 'ods'];
         return _arrAllowExt.includes(_ext);
     },
@@ -1217,7 +1217,7 @@ CommonJS.FileValid = {
      * CommonJS.FileValid.isAllowImg(fileObj);
      */
     isAllowImg: function(fileObj) {
-        var _ext = CommonJS.File.getFileExt(fileObj);
+        var _ext = this.File.getFileExt(fileObj);
         var _arrAllowExt = ['jpg', 'jpeg', 'gif', 'png'];
         return _arrAllowExt.includes(_ext);
     },
@@ -1230,7 +1230,7 @@ CommonJS.FileValid = {
      * CommonJS.FileValid.ifRunableFile(fileObj);
      */
     ifRunableFile: function(fileObj) {
-        var _ext = CommonJS.File.getFileExt(fileObj);
+        var _ext = this.File.getFileExt(fileObj);
         var extReg = /(bat|bin|cmd|com|cpl|dll|exe|gadget|inf1|ins|isu|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|scr|sct|sh|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf|wsh)$/i;
         return extReg.test(_ext);
     },
@@ -1244,7 +1244,7 @@ CommonJS.FileValid = {
      */
      isAllowCustom: function(fileObj, arrAllowExt) {
         if ( Array.isArray ) {
-            var _ext = CommonJS.File.getFileExt(fileObj);
+            var _ext = this.File.getFileExt(fileObj);
             return arrAllowExt.includes(_ext);
         } else {
             console.log('두 번째 인자가 Array가 아님');
@@ -2084,9 +2084,9 @@ CommonJS.Mobile = {
      * CommonJS.Mobile.sendSMS('010-9924-3732', '테스트');
      */
     sendSMS: function(telNo, content) {
-        if ( CommonJS.BrowserInfo.isMobile() ) {
-            if ( CommonJS.FormatValid.isCellPhoneNumber(telNo) ) {
-                var _mobileOs = CommonJS.BrowserInfo.isMobileOs().iOS ? 'ios' : 'android';
+        if ( this.BrowserInfo.isMobile() ) {
+            if ( this.FormatValid.isCellPhoneNumber(telNo) ) {
+                var _mobileOs = this.BrowserInfo.isMobileOs().iOS ? 'ios' : 'android';
 
                 location.href = 'sms:' + telNo +(_mobileOs == 'ios' ? '&' : '?') + 'body='+ encodeURIComponent(content);
             }
@@ -2102,8 +2102,8 @@ CommonJS.Mobile = {
      * CommonJS.Mobile.makeAcall('010-9924-3732');
      */
     makeAcall: function(telNo) {
-        if ( CommonJS.BrowserInfo.isMobile() ) {
-            if ( CommonJS.FormatValid.isCellPhoneNumber(telNo) ) {
+        if ( this.BrowserInfo.isMobile() ) {
+            if ( this.FormatValid.isCellPhoneNumber(telNo) ) {
                 location.href = 'tel:' + telNo;
             }
         } else {
@@ -2131,7 +2131,7 @@ CommonJS.Mobile = {
         fileElement.setAttribute('capture', 'camera');
 
         fileElement.addEventListener('change', function(e) {
-            if ( CommonJS.BrowserInfo.isMobile() ) {
+            if ( this.BrowserInfo.isMobile() ) {
                 var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
 
                 imgElement.setAttribute("src", _fileUrl);
@@ -2159,7 +2159,7 @@ CommonJS.Mobile = {
         fileElement.setAttribute('capture', 'microphone');
 
         fileElement.addEventListener('change', function(e) {
-            if ( CommonJS.BrowserInfo.isMobile() ) {
+            if ( this.BrowserInfo.isMobile() ) {
                 var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
 
                 audioElement.setAttribute("src", _fileUrl);
@@ -2202,8 +2202,8 @@ CommonJS.Mobile = {
      * CommonJS.Mobile.runAppLinkUrl(androidUrl, iosUrl, iosAppStoreUrl);
      */
     runAppLinkUrl: function(androidUrl, iosUrl, iosAppStoreUrl) {
-        if ( CommonJS.BrowserInfo.isMobile() ) {
-            if ( CommonJS.BrowserInfo.isMobileOs().iOS ) {
+        if ( this.BrowserInfo.isMobile() ) {
+            if ( this.BrowserInfo.isMobileOs().iOS ) {
                 // 1초 이후 반응이 없으면 앱스토어로 이동
                 setTimeout(function() {
                     window.open(iosAppStoreUrl);
@@ -2492,11 +2492,11 @@ CommonJS.Http = {
         }
 
         if (typeof param == 'object') {
-            var _classType = CommonJS.getClassType(param);
+            var _classType = this.getClassType(param);
 
             if ( _classType === 'Object' ) {
                 // serialize() 는 jQuery 만 지원
-                _params = CommonJS.objectToQueryString(param).replace('?', '');
+                _params = this.objectToQueryString(param).replace('?', '');
             }
 
             if ( _classType === 'Array' ) {
@@ -2534,7 +2534,7 @@ CommonJS.Http = {
         if (isAsync) {
             _xmlHttp.onload = function() {
                 try {
-                    callback( CommonJS.JSON.jsonToObject(_xmlHttp.response) );
+                    callback( this.JSON.jsonToObject(_xmlHttp.response) );
                 } catch (error) {
                     callback( _xmlHttp.response );
                 }
@@ -2542,14 +2542,14 @@ CommonJS.Http = {
         } else {
             if ( (callback == undefined) || (typeof callback != 'function') ) {
                 try {
-                    _retData = CommonJS.JSON.jsonToObject(_xmlHttp.response);
+                    _retData = this.JSON.jsonToObject(_xmlHttp.response);
                 } catch (error) {
                     _retData = _xmlHttp.response;
                 }
                 
             } else {
                 try {
-                    callback( CommonJS.JSON.jsonToObject(_xmlHttp.response) );
+                    callback( this.JSON.jsonToObject(_xmlHttp.response) );
                 } catch (error) {
                     callback( _xmlHttp.response );
                 }
