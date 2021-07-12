@@ -2376,6 +2376,9 @@ CommonJS.Editor = {
      *   - addImageBlobHook - 하단 참고
      * @link https://kodepaper.tistory.com/31
      * 
+     * [이미지 업로드 Backend 처리]
+     * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/ToastUploadController.java
+     * 
      * @description
      * jQuery 필수 아니라서 사용 안할려고 구글링 하면서 아주 발악을... fetch 아직은 너무도 어색한 그대...
      */
