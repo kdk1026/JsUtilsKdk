@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 2.7
+ * @version 2.8
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가
  *
@@ -163,6 +163,15 @@
         _win.document.close;
         _win.print();
         _win.close();
+    },
+    /**
+     * Object를 QueryString 으로 반환
+     * @param {Object} obj 
+     * @returns 
+     */
+    objectToQueryString: function(obj) {
+        var _queryString = Object.entries(obj).map(e => e.join('=')).join('&');
+        return '?' + _queryString;
     }
     /*
     // TODO : 퍼블을 해야 테스트를 해야하므로.... 적합한 환경 접하면 테스트하는 걸로....
