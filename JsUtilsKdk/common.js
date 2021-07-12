@@ -24,6 +24,7 @@
  * @property {object} CommonJS.Mobile - 2021.07.10 추가
  * @property {object} CommonJS.Map - 2021.07.11 추가
  * @property {object} CommonJS.Editor - 2021.07.11 추가 (설명 위주로만 정리)
+ * @property {object} CommonJS.Http - 2021.07.12 추가
  * @property {method} prototype
  */
  var CommonJS = {
@@ -176,6 +177,21 @@
     objectToQueryString: function(obj) {
         var _queryString = Object.entries(obj).map(e => e.join('=')).join('&');
         return '?' + _queryString;
+    },
+    /**
+     * Class 구분
+     * @param {any} obj 
+     * @returns
+     * @example
+     * console.log( CommonJS.getClassType([]) );//"Array"
+     * console.log( CommonJS.getClassType({}) );//"Object"
+     * console.log( CommonJS.getClassType(1) );//"Number"
+     * console.log( CommonJS.getClassType(new Date()) );//"Date"
+     * 
+     * @link https://owenjeon.github.io/2016/08/12/array-object/ 
+     */
+    getClassType(obj) {
+        return Object.prototype.toString.call(obj).slice(8,-1);
     }
     /*
     // TODO : 퍼블을 해야 테스트를 해야하므로.... 적합한 환경 접하면 테스트하는 걸로....
@@ -2440,6 +2456,85 @@ CommonJS.Editor = {
         */
     }
 }
+
+CommonJS.Http = {
+    /**
+     * 
+     * @param {boolean} isAsync 
+     * @param {string} method 
+     * @param {string} url 
+     * @param {(undefined|Object)} header
+     *   - param, callback 없는 경우만 생략 가능 / 없으면 {} 로 넘길 것
+     * @param {(undefined|Object|Element)} param
+     *   - form인 경우에만 Element로 넘길 것
+     * @param {(undefined|Function)} callback 
+     * @returns 
+     */
+    commonHttpRequest: function(isAsync, method, url, header, param, callback) {
+        var _retData = {};
+
+        var _contentType = "application/x-www-form-urlencoded; charset=utf-8";
+        var  _params = (param == undefined) ? {} : param;
+
+        if (typeof param == 'object') {
+            var _classType = CommonJS.getClassType(param);
+
+            if ( _classType === 'Object' ) {
+                _params = Object.entries(param).map(e => e.join('=')).join('&');
+            }
+
+            if ( _classType === 'Array' ) {
+                _contentType = "application/json; charset=utf-8";
+                _params = JSON.stringify(param);
+            }
+        }
+
+        if ( param != null ) {
+            if ( method.toLowerCase() === 'get' ) {
+                url = url + '?' + _params;
+            }
+        }
+
+        var _xmlHttp = new XMLHttpRequest();
+
+        _xmlHttp.open(method, url, isAsync);
+
+        _xmlHttp.setRequestHeader('Content-type', _contentType);
+
+        for (key in header) {
+            _xmlHttp.setRequestHeader(key, header[key]);
+        }
+
+        if ( param != null && 'FORM' === param.nodeName ) {
+            var _formData = new FormData(param);
+             _xmlHttp.send(_formData);
+        } else {
+            if ( _param != null ) {
+                _xmlHttp.send(queryString);
+            } else {
+                _xmlHttp.send(null);
+            }
+        }
+
+        if (isAsync) {
+            _xmlHttp.onload = function() {
+                callback( JSON.parse(_xmlHttp.response) );
+            }
+        } else {
+            if ( (callback == undefined) || (typeof callback != 'function') ) {
+                _retData = JSON.parse(_xmlHttp.response);
+            } else {
+                callback( JSON.parse(_xmlHttp.response) );
+            }
+        }
+
+        return _retData;
+    },
+    commonFetch: function() {
+        // TODO : 비동기만 가능한 것 같음, 정리 예정
+    }
+}
+
 
 //--------------------------------------------------------------------
 // prototype
