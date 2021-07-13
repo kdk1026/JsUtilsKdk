@@ -2594,6 +2594,17 @@ CommonJS.Http = {
      * @param {Function} callback 
      * @example
      * CommonJS.Http.commonFetch(method, url, header, param, callback);
+     * 
+     * @example
+     * 나름 신기술이라 var 대신 const, let 사용 / 화살표 함수 사용
+     * 
+     * [화살표 함수]
+     * (response) => 
+     *      console.log(response)
+     * 
+     * function(response) {
+     *      console.log(response)
+     * }
      */
     commonFetch: function(method, url, header, param, callback) {
 		let _contentType = "application/x-www-form-urlencoded; charset=utf-8";
