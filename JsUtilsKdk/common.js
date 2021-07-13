@@ -2714,21 +2714,21 @@ CommonJS.Code = {
      * CommonJS.Code.makeQrCode($( ID or Class ), '대한민국', 128, 128);
      */
     makeQrCode: function(qrCodeDivElement, text, width, height) {
-        let = el = null;
+        var _el = null;
 
         if ( CommonJS.Valid.isUndefined(qrCodeDivElement.length) ) {
-            el = qrCodeDivElement;
+            _el = qrCodeDivElement;
         } else {
             if ( CommonJS.Valid.isUndefined(qrCodeDivElement.attr('id')) ) {
-                el = document.querySelector('.' + qrCodeDivElement.attr('class') );
+                _el = document.querySelector('.' + qrCodeDivElement.attr('class') );
             }
 
             if ( CommonJS.Valid.isUndefined(qrCodeDivElement.attr('class')) ) {
-                el = document.querySelector('#' + qrCodeDivElement.attr('id') );
+                _el = document.querySelector('#' + qrCodeDivElement.attr('id') );
             }
         }
 
-		new QRCode(el
+		new QRCode(_el
             , {
                 text: text,
                 width: CommonJS.Valid.isUndefined(width) ? 128 : width,
