@@ -2555,11 +2555,16 @@ CommonJS.Http = {
                             callback(_xmlHttp.response);
                         }
                     } else {
-                        alert( _xmlHttp.response );
+                        alert( _xmlHttp.statusText );
                     }
                 }
             }
         } else {
+            if ( _xmlHttp.status !== 200 ) {
+                alert( _xmlHttp.statusText );
+                return false;
+            }
+
             if ( (CommonJS.Valid.isUndefined(callback)) || (typeof callback != 'function') ) {
                 try {
                     _retData = CommonJS.JSON.jsonToObject(_xmlHttp.response); 
