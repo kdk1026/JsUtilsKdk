@@ -2329,7 +2329,7 @@ CommonJS.Editor = {
      */
     ckeditor: function(targetElement) {
         // 다운로드 경로\ckeditor5\sample\index.html 참고
-        // html 모드는 어뜨카지?
+        // html 모드는 지원 안하는 듯
     },
     /**
      * Summernote
@@ -2391,6 +2391,8 @@ CommonJS.Editor = {
             });
         }
        */
+
+        // html 모드 지원
     },
     /**
      * Toast Editor
@@ -2455,6 +2457,8 @@ CommonJS.Editor = {
         jQuery 사용 시, summernote 와 동일하되 다음 옵션만 추가하면 됨
             async: false
         */
+
+        // html 모드는 지원 안하는 듯
     }
 }
 
