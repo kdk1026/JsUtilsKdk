@@ -1,11 +1,12 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 2.8
+ * @version 2.9
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가
  *
  * @property {object} CommonJS
+ * @property {object} CommonJS.Object - 2021.07.13 추가 (CommonJS 에서 mergeObject, objectToQueryString 분리하고, 추가)
  * @property {object} CommonJS.Text - 2021.07.10 추가 (CommonJS 에서 addZero 분리하고, 추가)
  * @property {object} CommonJS.Valid
  * @property {object} CommonJS.DateTime
@@ -120,17 +121,6 @@
         }
     },
     /**
-     * 인자로 받은 Object를 병합한 Object 반환
-     * @param  {...any} sources 
-     * @returns
-     * @example
-     * CommonJS.mergeObject(obj1, obj2, obj3);
-     */
-    mergeObject: function(...sources) {
-        var _newObj = {};
-        return Object.assign(_newObj, ...sources);
-    },
-    /**
      * 인자로 받은 Array를 병합한 Array 반환
      * @param {Array} arr 
      * @param  {...any} sources 
@@ -168,19 +158,8 @@
         _win.close();
     },
     /**
-     * Object를 QueryString 으로 반환
-     * @param {Object} obj 
-     * @returns 
-     * @example
-     * CommonJS.objectToQueryString(obj);
-     */
-    objectToQueryString: function(obj) {
-        var _queryString = Object.entries(obj).map(e => e.join('=')).join('&');
-        return '?' + _queryString;
-    },
-    /**
      * Class 구분
-     * @param {any} obj 
+     * @param {any} any 
      * @returns
      * @example
      * console.log( CommonJS.getClassType([]) );//"Array"
@@ -190,8 +169,8 @@
      * 
      * @link https://owenjeon.github.io/2016/08/12/array-object/ 
      */
-    getClassType(obj) {
-        return Object.prototype.toString.call(obj).slice(8,-1);
+    getClassType(any) {
+        return Object.prototype.toString.call(any).slice(8,-1);
     }
     /*
     // TODO : 퍼블을 해야 테스트를 해야하므로.... 적합한 환경 접하면 테스트하는 걸로....
@@ -267,6 +246,43 @@ CommonJS.Text = {
         }
 
         console.log('클립보드에 복사 되었습니다.');
+    }
+},
+
+CommonJS.Object = {
+    /**
+     * 인자로 받은 Object를 병합한 Object 반환
+     * @param  {...any} sources 
+     * @returns
+     * @example
+     * CommonJS.Object.mergeObject(obj1, obj2, obj3);
+     */
+     mergeObject: function(...sources) {
+        var _newObj = {};
+        return Object.assign(_newObj, ...sources);
+    },
+    /**
+     * Object를 전송 가능한 Data로 만듬
+     *   - jQuery serialize()와 동일
+     * @param {Object} obj 
+     * @example
+     * CommonJS.Object.makeFormBody(obj);
+     */
+    makeFormBody: function(obj) {
+        var _query = Object.keys(obj)
+                        .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]))
+                        .join('&');
+        return _query;
+    },
+    /**
+     * Object를 QueryString 으로 반환
+     * @param {Object} obj 
+     * @returns 
+     * @example
+     * CommonJS.Object.objectToQueryString(obj);
+     */
+     objectToQueryString: function(obj) {
+        return '?' + CommonJS.Object.makeFormBody(obj);
     }
 }
 
@@ -2489,9 +2505,9 @@ CommonJS.Http = {
         var _contentType = "application/x-www-form-urlencoded; charset=utf-8";
         var  _params = (param == undefined) ? {} : param;
 
-        if ( !CommonJS.Valid.isBlank(param) ) {
+        if ( !CommonJS.Valid.isEmptyObject(param) ) {
             if ( method.toLowerCase() === 'get' ) {
-                url = url + '?' + _params;
+                url = url + CommonJS.Object.objectToQueryString(param);
             }
         }
 
@@ -2500,7 +2516,7 @@ CommonJS.Http = {
 
             if ( _classType === 'Object' ) {
                 // serialize() 는 jQuery 만 지원
-                _params = CommonJS.objectToQueryString(param).replace('?', '');
+                _params = CommonJS.Object.makeFormBody(param);
             }
 
             if ( _classType === 'Array' ) {
@@ -2516,7 +2532,7 @@ CommonJS.Http = {
             _xmlHttp.setRequestHeader(key, header[key]);
         }
 
-        if ( !CommonJS.Valid.isBlank(param) && 'FORM' === param.nodeName ) {
+        if ( 'FORM' === param.nodeName ) {
             var _formData = new FormData(param);
              _xmlHttp.send(_formData);
         } else {
@@ -2529,37 +2545,116 @@ CommonJS.Http = {
             }
         }
 
-        var _responseStr = _xmlHttp.response;
-
         if (isAsync) {
-            _xmlHttp.onload = function() {
-                try {
-                    callback( CommonJS.JSON.jsonToObject(_responseStr) );
-                } catch (error) {
-                    callback(_responseStr);
+            _xmlHttp.onreadystatechange = function() {
+                if ( _xmlHttp.readyState === _xmlHttp.DONE ) {
+                    if ( _xmlHttp.status === 200 || _xmlHttp.status === 201 ) {
+                        try {
+                            callback( CommonJS.JSON.jsonToObject(_xmlHttp.response) );
+                        } catch (error) {
+                            callback(_xmlHttp.response);
+                        }
+                    } else {
+                        alert( _xmlHttp.response );
+                    }
                 }
             }
         } else {
             if ( (CommonJS.Valid.isUndefined(callback)) || (typeof callback != 'function') ) {
                 try {
-                    _retData = CommonJS.JSON.jsonToObject(_responseStr);
+                    _retData = CommonJS.JSON.jsonToObject(_xmlHttp.response); 
                 } catch (error) {
-                    _retData = _responseStr;
+                    _retData = _xmlHttp.response;
                 }
                 
             } else {
                 try {
-                    callback( CommonJS.JSON.jsonToObject(_responseStr) );
+                    callback( CommonJS.JSON.jsonToObject(_xmlHttp.response) );
                 } catch (error) {
-                    callback(_responseStr);
+                    callback(_xmlHttp.response);
                 }
             }
         }
 
         return _retData;
     },
-    commonFetch: function() {
-        // TODO : 비동기만 가능한 것 같음, 정리 예정
+    /**
+     * 공통 Fetch 처리
+     * 
+     * @link https://developer.mozilla.org/ko/docs/Web/API/Fetch_API
+     * @link https://www.daleseo.com/js-window-fetch/
+     * 
+     * @description IE는 지원하지 않음. 속 썩이던 IE 잘가~ 이제 슬슬 사라질 때 되지 않았나?
+     * @description 비동기만 지원
+     * 
+     * @param {string} method 
+     * @param {string} url 
+     * @param {(null|Headers)} header 
+     * @param {({}|Object)} param 
+     * @param {Function} callback 
+     * @example
+     * CommonJS.Http.commonFetch(method, url, header, param, callback);
+     */
+    commonFetch: function(method, url, header, param, callback) {
+		let _contentType = "application/x-www-form-urlencoded; charset=utf-8";
+		let _params;
+
+        if ( !CommonJS.Valid.isEmptyObject(param) ) {
+            if ( method.toLowerCase() === 'get' ) {
+                url = url + CommonJS.Object.objectToQueryString(param);
+            }
+        }
+
+        if ( method.toLowerCase() === 'get' ) {
+            _params = null;
+        }
+
+		if (typeof param == 'object') {
+            if ( method.toLowerCase() === 'post' ) {
+                const _classType = CommonJS.getClassType(param);
+
+                if ( _classType === 'Object' ) {
+                    _params = CommonJS.Object.makeFormBody(param);
+                }
+
+                if ( _classType === 'Array' ) {
+                    _contentType = "application/json; charset=utf-8";
+                    _params = CommonJS.JSON.objectToJsonString(param);
+                }
+            }
+		}
+
+        let _myHeaders = new Headers();
+        if ( header == null ) {
+            _myHeaders.append('Content-Type', _contentType);
+        } else {
+            _myHeaders = header;
+        }
+
+        if ( _myHeaders.get('Content-Type') == null ) {
+            _myHeaders.append('Content-Type', _contentType);
+        }
+
+        if ( 'FORM' === param.nodeName ) {
+            _params = new FormData(param);
+            _myHeaders = new Headers();
+        }
+
+        fetch(url, {
+            method: method,
+            headers: _myHeaders,
+            body: _params
+        })
+        .then( (response) => 
+            //console.log(response)
+            response.json()
+        )
+        .then( (data) => 
+            callback(data)
+        )
+        .catch( (error) =>
+            alert('Error: ' + error)
+        )
     }
 }
 
