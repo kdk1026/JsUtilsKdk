@@ -2728,8 +2728,7 @@ CommonJS.Code = {
             }
         }
 
-		new QRCode(_el
-            , {
+		new QRCode(_el, {
                 text: text,
                 width: CommonJS.Valid.isUndefined(width) ? 128 : width,
                 height: CommonJS.Valid.isUndefined(width) ? 128 : height
