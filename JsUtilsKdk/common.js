@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 2.9
+ * @version 3.0
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가
  *
@@ -26,6 +26,7 @@
  * @property {object} CommonJS.Map - 2021.07.11 추가
  * @property {object} CommonJS.Editor - 2021.07.11 추가 (설명 위주로만 정리)
  * @property {object} CommonJS.Http - 2021.07.12 추가
+ * @property {object} CommonJS.Code - 2021.07.13 추가
  * @property {method} prototype
  */
  var CommonJS = {
@@ -2333,6 +2334,10 @@ CommonJS.Editor = {
      * [부분 유료]
      * 'Commercial feature' 플러그인만 사용 안하면 무료로 가능
      * 
+     * @example
+     * [복사]
+     *   - 파일 : ckeditor.js, ckeditor.js.map
+     * 
      * [이미지 업로드 처리]
      * @link https://ckeditor.com/docs/ckeditor5/latest/framework/guides/deep-dive/upload-adapter.html#implementing-a-custom-upload-adapter
      *   - The complete implementation - URL만 변경
@@ -2419,7 +2424,7 @@ CommonJS.Editor = {
      * NHN에서 만든 오픈소스 에디터 / Markdown 기반 지원 / npm 환경 최적화
      * 
      * @example
-     * [CDN 다운로드]
+     * [CDN 다운로드 후 복사]
      *   - https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js
      *   - https://uicdn.toast.com/editor/latest/toastui-editor.min.css
      * 
@@ -2671,6 +2676,65 @@ CommonJS.Http = {
         .catch( (error) =>
             alert('Error: ' + error)
         )
+    }
+}
+
+CommonJS.Code = {
+    /**
+     * 바코드 생성
+     *   - 라이브러리 사용법이 간단해서 굳이 공통 함수로 만들지는 않음
+     * @link https://barcode-coder.com/en/barcode-jquery-plugin-201.html
+     * 
+     * @description
+     * jQuery 필수
+     */
+    makeBarcode: function() {
+    },
+    /**
+     * QR 코드 생성
+     * @param {Element} qrCodeDivElement 
+     * @param {string} text 
+     * @param {(undefined|number)} width
+     * @param {(undefined|number)} height 
+     * @link https://github.com/davidshimjs/qrcodejs
+     * 
+     * @example
+     * [복사]
+     *   - 파일 : qrcode.min.js
+     * 
+     * @description 색상 옵션도 제공하지만 딱히 필요 없을거 같아서 생략함
+     * 
+     * @example
+     * [JavaScript]
+     * CommonJS.Code.makeQrCode(document.querySelector( ID or Class ), 'http://www.naver.com');
+     * CommonJS.Code.makeQrCode(document.querySelector( ID or Class ), 'http://www.naver.com', 128, 128);
+     * 
+     * [jQuery]
+     * CommonJS.Code.makeQrCode($( ID or Class ), '대한민국');
+     * CommonJS.Code.makeQrCode($( ID or Class ), '대한민국', 128, 128);
+     */
+    makeQrCode: function(qrCodeDivElement, text, width, height) {
+        let = el = null;
+
+        if ( CommonJS.Valid.isUndefined(qrCodeDivElement.length) ) {
+            el = qrCodeDivElement;
+        } else {
+            if ( CommonJS.Valid.isUndefined(qrCodeDivElement.attr('id')) ) {
+                el = document.querySelector('.' + qrCodeDivElement.attr('class') );
+            }
+
+            if ( CommonJS.Valid.isUndefined(qrCodeDivElement.attr('class')) ) {
+                el = document.querySelector('#' + qrCodeDivElement.attr('id') );
+            }
+        }
+
+		new QRCode(el
+            , {
+                text: text,
+                width: CommonJS.Valid.isUndefined(width) ? 128 : width,
+                height: CommonJS.Valid.isUndefined(width) ? 128 : height
+            }
+        );
     }
 }
 
