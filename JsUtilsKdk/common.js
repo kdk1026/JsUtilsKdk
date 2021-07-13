@@ -2024,20 +2024,18 @@ CommonJS.SnsShare = {
     },
     /**
      * Kakao 공유
-     * @param {string} apiKey 
      * @param {string} webUrl
      * @param {string} mobileWebUrl
      * @param {string} title - 공유 미리보기 제목
      * @param {string} imageUrl - 공유 미리보기 썸네일
      * @param {string} btnTitle
      * @example
-     * CommonJS.SnsShare.shareKakao(apiKey, webUrl, mobileWebUrl, title, imageUrl, btnTitle);
+     * CommonJS.SnsShare.shareKakao(webUrl, mobileWebUrl, title, imageUrl, btnTitle);
      * 
      * @link https://developers.kakao.com/docs/latest/ko/getting-started/sdk-js
      * @link https://developers.kakao.com/docs/latest/ko/message/js-link
      */
     shareKakao: function(apiKey, webUrl, mobileWebUrl, title, imageUrl, btnTitle) {
-        Kakao.init(apiKey);
         Kakao.Link.createDefaultButton({
             container: '#CONTAINER_ID',
             objectType: 'feed',
@@ -2062,14 +2060,12 @@ CommonJS.SnsShare = {
     },
     /**
      * Kakao Story 공유
-     * @param {string} apiKey 
      * @param {string} url 
      * @param {string} title 
      * @example
-     * CommonJS.SnsShare.shareKakaoStory(apiKey, url, title);
+     * CommonJS.SnsShare.shareKakaoStory(url, title);
      */
-    shareKakaoStory: function(apiKey, url, title) {
-        Kakao.init(apiKey);
+    shareKakaoStory: function(url, title) {
         Kakao.Story.share(
             {
                 url: url,
