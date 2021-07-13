@@ -264,10 +264,14 @@ CommonJS.Object = {
     },
     /**
      * Object를 전송 가능한 Data로 만듬
-     *   - jQuery serialize()와 동일
+     *   - jQuery serialize()와 동일하나 Form은 지원하지 않음
+     *   - Form serialize는 아래 링크 참고
      * @param {Object} obj 
      * @example
      * CommonJS.Object.makeFormBody(obj);
+     * 
+     * @link https://code.google.com/archive/p/form-serialize/downloads
+     * @link https://gist.github.com/icetee/d650eb8195e1329903ac38818e5befa5
      */
     makeFormBody: function(obj) {
         var _query = Object.keys(obj)
