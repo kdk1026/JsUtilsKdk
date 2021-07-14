@@ -2825,6 +2825,8 @@ CommonJS.Code = {
          * @param {string} ClientId 
          * @param {string} CallBackUrl 
          * @param {string} serviceDoamin 
+         * 
+         * @link https://developers.naver.com/docs/login/web/web.md
          */
         loginWithNaver: function(ClientId, CallBackUrl, serviceDoamin)  {
             // naver_id_login은 CallBackUrl 에도 설정 해줘야 함
