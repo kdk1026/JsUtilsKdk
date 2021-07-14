@@ -6,8 +6,8 @@
  * @description 버전업 기준 : 수정 / 함수 추가
  *
  * @property {object} CommonJS
- * @property {object} CommonJS.Object - 2021.07.13 추가 (CommonJS 에서 mergeObject, objectToQueryString 분리하고, 추가)
  * @property {object} CommonJS.Text - 2021.07.10 추가 (CommonJS 에서 addZero 분리하고, 추가)
+ * @property {object} CommonJS.Object - 2021.07.13 추가 (CommonJS 에서 mergeObject, objectToQueryString 분리하고, 추가)
  * @property {object} CommonJS.Valid
  * @property {object} CommonJS.DateTime
  * @property {object} CommonJS.Format
@@ -195,102 +195,102 @@ var CommonJS = {
 };
 
 CommonJS.Text = {
-        /**
-         * 10 이하의 숫자에 0을 붙여서 반환
-         * @param {number} num
-         * @returns {string}
-         * @example
-         * CommonJS.Text.addZero(3);
-         */
-        addZero: function (num) {
-            if (num < 10) {
-                num = '0' + num;
-            }
-            return num;
-        },
-        /**
-         * 문자열이 Blank / Undefined 이면 defaultStr 반환
-         * @param {string} string 
-         * @param {string} defaultStr 
-         * @returns 
-         * @example
-         * CommonJS.Text.defaultString('', '치환');
-         */
-        defaultString: function (string, defaultStr) {
-            if (CommonJS.Valid.isBlank(string) || CommonJS.Valid.isUndefined(string)) {
-                return defaultStr;
-            } else {
-                return string;
-            }
-        },
-        /**
-         * 클립보드 복사하기
-         *   - IE 10 이하 고려 안함
-         * @param {undefined|Element} textElement 
-         * @param {undefined|string} string 
-         * @example
-         * 클릭 이벤트 시에만 동작 (onload 시에는 불가)
-         * 
-         * CommonJS.Text.copyToClipBoard( document.querySelector(셀렉터) );
-         * CommonJS.Text.copyToClipBoard( null, '복사할 내용' );
-         */
-        copyToClipBoard: function (textElement, string) {
-            if (textElement != null) {
-                textElement.select();
-                document.execCommand("Copy");
-            } else {
-                const _t = document.createElement("textarea");
-                document.body.appendChild(_t);
-                _t.value = string;
-                _t.select();
-                document.execCommand("Copy");
-                document.body.removeChild(_t);
-            }
-
-            console.log('클립보드에 복사 되었습니다.');
+    /**
+     * 10 이하의 숫자에 0을 붙여서 반환
+     * @param {number} num
+     * @returns {string}
+     * @example
+     * CommonJS.Text.addZero(3);
+     */
+    addZero: function (num) {
+        if (num < 10) {
+            num = '0' + num;
+        }
+        return num;
+    },
+    /**
+     * 문자열이 Blank / Undefined 이면 defaultStr 반환
+     * @param {string} string 
+     * @param {string} defaultStr 
+     * @returns 
+     * @example
+     * CommonJS.Text.defaultString('', '치환');
+     */
+    defaultString: function (string, defaultStr) {
+        if (CommonJS.Valid.isBlank(string) || CommonJS.Valid.isUndefined(string)) {
+            return defaultStr;
+        } else {
+            return string;
         }
     },
-
-    CommonJS.Object = {
-        /**
-         * 인자로 받은 Object를 병합한 Object 반환
-         * @param  {...any} sources 
-         * @returns
-         * @example
-         * CommonJS.Object.mergeObject(obj1, obj2, obj3);
-         */
-        mergeObject: function (...sources) {
-            var _newObj = {};
-            return Object.assign(_newObj, ...sources);
-        },
-        /**
-         * Object를 전송 가능한 Data로 만듬
-         *   - jQuery serialize()와 동일하나 Form은 지원하지 않음
-         *   - Form serialize는 아래 링크 참고
-         * @param {Object} obj 
-         * @example
-         * CommonJS.Object.makeFormBody(obj);
-         * 
-         * @link https://code.google.com/archive/p/form-serialize/downloads
-         * @link https://gist.github.com/icetee/d650eb8195e1329903ac38818e5befa5
-         */
-        makeFormBody: function (obj) {
-            var _query = Object.keys(obj)
-                .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]))
-                .join('&');
-            return _query;
-        },
-        /**
-         * Object를 QueryString 으로 반환
-         * @param {Object} obj 
-         * @returns 
-         * @example
-         * CommonJS.Object.objectToQueryString(obj);
-         */
-        objectToQueryString: function (obj) {
-            return '?' + CommonJS.Object.makeFormBody(obj);
+    /**
+     * 클립보드 복사하기
+     *   - IE 10 이하 고려 안함
+     * @param {undefined|Element} textElement 
+     * @param {undefined|string} string 
+     * @example
+     * 클릭 이벤트 시에만 동작 (onload 시에는 불가)
+     * 
+     * CommonJS.Text.copyToClipBoard( document.querySelector(셀렉터) );
+     * CommonJS.Text.copyToClipBoard( null, '복사할 내용' );
+     */
+    copyToClipBoard: function (textElement, string) {
+        if (textElement != null) {
+            textElement.select();
+            document.execCommand("Copy");
+        } else {
+            const _t = document.createElement("textarea");
+            document.body.appendChild(_t);
+            _t.value = string;
+            _t.select();
+            document.execCommand("Copy");
+            document.body.removeChild(_t);
         }
+
+        console.log('클립보드에 복사 되었습니다.');
     }
+},
+
+CommonJS.Object = {
+    /**
+     * 인자로 받은 Object를 병합한 Object 반환
+     * @param  {...any} sources 
+     * @returns
+     * @example
+     * CommonJS.Object.mergeObject(obj1, obj2, obj3);
+     */
+    mergeObject: function (...sources) {
+        var _newObj = {};
+        return Object.assign(_newObj, ...sources);
+    },
+    /**
+     * Object를 전송 가능한 Data로 만듬
+     *   - jQuery serialize()와 동일하나 Form은 지원하지 않음
+     *   - Form serialize는 아래 링크 참고
+     * @param {Object} obj 
+     * @example
+     * CommonJS.Object.makeFormBody(obj);
+     * 
+     * @link https://code.google.com/archive/p/form-serialize/downloads
+     * @link https://gist.github.com/icetee/d650eb8195e1329903ac38818e5befa5
+     */
+    makeFormBody: function (obj) {
+        var _query = Object.keys(obj)
+            .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]))
+            .join('&');
+        return _query;
+    },
+    /**
+     * Object를 QueryString 으로 반환
+     * @param {Object} obj 
+     * @returns 
+     * @example
+     * CommonJS.Object.objectToQueryString(obj);
+     */
+    objectToQueryString: function (obj) {
+        return '?' + CommonJS.Object.makeFormBody(obj);
+    }
+}
 
 CommonJS.Valid = {
     /**
