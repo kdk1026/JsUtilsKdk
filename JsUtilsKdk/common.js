@@ -2350,7 +2350,7 @@ CommonJS.Editor = {
      * ckeditor_custom_upload.js
      * 
      * [이미지 업로드 Backend 처리]
-     * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/CkEditorUploadController.java
+     * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/EditorUploadController.java
      */
     ckeditor: function (targetElement) {
         // 다운로드 경로\ckeditor5\sample\index.html 참고
@@ -2382,7 +2382,7 @@ CommonJS.Editor = {
      *   - onImageUpload - 하단 참고
      * 
      * [이미지 업로드 Backend 처리]
-     * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/SummernoteUploadController.java
+     * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/EditorUploadController.java
      */
     summernote: function (targetElement) {
         /*
@@ -2443,7 +2443,7 @@ CommonJS.Editor = {
      * @link https://kodepaper.tistory.com/31
      * 
      * [이미지 업로드 Backend 처리]
-     * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/ToastUploadController.java
+     * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/EditorUploadController.java
      * 
      * @description
      * jQuery 필수 아니라서 사용 안할려고 구글링 하면서 아주 발악을... fetch 아직은 너무도 어색한 그대...
