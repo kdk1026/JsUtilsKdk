@@ -2882,7 +2882,7 @@ CommonJS.Addr = {
      * 
      * @link https://postcode.map.daum.net/guide#sample
      * 
-     * @description 신청 과정 없이 그냥 사용 / CSS는 별도로 제공하지 않음
+     * @description 신청 과정 없이 그냥 사용
      * 
      * @example
      * [JavaScript]
