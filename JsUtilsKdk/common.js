@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 3.1
+ * @version 3.2
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가
  *
@@ -28,6 +28,7 @@
  * @property {object} CommonJS.Http - 2021.07.12 추가
  * @property {object} CommonJS.Code - 2021.07.13 추가
  * @property {object} CommonJS.SocialLogin - 2021.07.14 추가
+ * @property {object} CommonJS.Addr - 2021.07.14 추가
  * @property {method} prototype
  */
 var CommonJS = {
@@ -2684,191 +2685,254 @@ CommonJS.Http = {
 }
 
 CommonJS.Code = {
-        /**
-         * 바코드 생성
-         *   - 라이브러리 사용법이 간단해서 굳이 공통 함수로 만들지는 않음
-         * @link https://barcode-coder.com/en/barcode-jquery-plugin-201.html
-         * 
-         * @description
-         * jQuery 필수
-         */
-        makeBarcode: function () {},
-        /**
-         * QR 코드 생성
-         * @param {Element} qrCodeDivElement 
-         * @param {string} text 
-         * @param {(undefined|number)} width
-         * @param {(undefined|number)} height 
-         * @link https://github.com/davidshimjs/qrcodejs
-         * 
-         * @example
-         * [복사]
-         *   - 파일 : qrcode.min.js
-         * 
-         * @description 색상 옵션도 제공하지만 딱히 필요 없을거 같아서 생략함
-         * 
-         * @example
-         * [JavaScript]
-         * CommonJS.Code.makeQrCode(document.querySelector( ID or Class ), 'http://www.naver.com');
-         * CommonJS.Code.makeQrCode(document.querySelector( ID or Class ), 'http://www.naver.com', 128, 128);
-         * 
-         * [jQuery]
-         * CommonJS.Code.makeQrCode($( ID or Class ), '대한민국');
-         * CommonJS.Code.makeQrCode($( ID or Class ), '대한민국', 128, 128);
-         */
-        makeQrCode: function (qrCodeDivElement, text, width, height) {
-            var _el = null;
+    /**
+     * 바코드 생성
+     *   - 라이브러리 사용법이 간단해서 굳이 공통 함수로 만들지는 않음
+     * @link https://barcode-coder.com/en/barcode-jquery-plugin-201.html
+     * 
+     * @description
+     * jQuery 필수
+     */
+    makeBarcode: function () {},
+    /**
+     * QR 코드 생성
+     * @param {Element} qrCodeDivElement 
+     * @param {string} text 
+     * @param {(undefined|number)} width
+     * @param {(undefined|number)} height 
+     * @link https://github.com/davidshimjs/qrcodejs
+     * 
+     * @example
+     * [복사]
+     *   - 파일 : qrcode.min.js
+     * 
+     * @description 색상 옵션도 제공하지만 딱히 필요 없을거 같아서 생략함
+     * 
+     * @example
+     * [JavaScript]
+     * CommonJS.Code.makeQrCode(document.querySelector( ID or Class ), 'http://www.naver.com');
+     * CommonJS.Code.makeQrCode(document.querySelector( ID or Class ), 'http://www.naver.com', 128, 128);
+     * 
+     * [jQuery]
+     * CommonJS.Code.makeQrCode($( ID or Class ), '대한민국');
+     * CommonJS.Code.makeQrCode($( ID or Class ), '대한민국', 128, 128);
+     */
+    makeQrCode: function (qrCodeDivElement, text, width, height) {
+        var _el = null;
 
-            if (CommonJS.Valid.isUndefined(qrCodeDivElement.length)) {
-                _el = qrCodeDivElement;
-            } else {
-                if (CommonJS.Valid.isUndefined(qrCodeDivElement.attr('id'))) {
-                    _el = document.querySelector('.' + qrCodeDivElement.attr('class'));
-                }
-
-                if (CommonJS.Valid.isUndefined(qrCodeDivElement.attr('class'))) {
-                    _el = document.querySelector('#' + qrCodeDivElement.attr('id'));
-                }
+        if (CommonJS.Valid.isUndefined(qrCodeDivElement.length)) {
+            _el = qrCodeDivElement;
+        } else {
+            if (CommonJS.Valid.isUndefined(qrCodeDivElement.attr('id'))) {
+                _el = document.querySelector('.' + qrCodeDivElement.attr('class'));
             }
 
-            new QRCode(_el, {
-                text: text,
-                width: CommonJS.Valid.isUndefined(width) ? 128 : width,
-                height: CommonJS.Valid.isUndefined(width) ? 128 : height
-            });
+            if (CommonJS.Valid.isUndefined(qrCodeDivElement.attr('class'))) {
+                _el = document.querySelector('#' + qrCodeDivElement.attr('id'));
+            }
+        }
+
+        new QRCode(_el, {
+            text: text,
+            width: CommonJS.Valid.isUndefined(width) ? 128 : width,
+            height: CommonJS.Valid.isUndefined(width) ? 128 : height
+        });
+    }
+},
+
+/**
+ * ********************************************************************
+ * 소셜 로그인은 정확한 처리 방법을 아직 모름...
+ * 
+ * 로그인 > 토큰 할당 > DB / LocalStorage / SessionStorage 에 저장해서 시간 체크해서 갱신 해주는게 맞는거 같기는 한데...
+ * 현재까지는 토큰은 무시하고, 사용자 정보 가져오기 > 회원가입/로그인 처리
+ * 
+ * <참고>
+ * ※ 개발자 계정, 추가 등록 계정 외에 로그인 위한 설정
+ * 
+ * - 카카오
+ *   : 도메인 추가 가능
+ *   : 앱 로고 등록, 사업자 등록번호 등록, OAuth Redirect URI 설정
+ *   : 로그인 필수 동의 항목 (프로필 정보(닉네임/프로필 사진), 카카오계정(이메일) 외에는 선택 동의는 가능하지만 필수 동의는 검수 필요)
+ * 
+ * - 네이버
+ *   : 환경별로 각갇 등록
+ *   : 앱 로고 등록
+ *   : 검수요청 필수 (제공 정보 활용처 확인 - 이미지, 서비스 적용 형태 확인 - 이미지)
+ * 
+ * ※ 나름 중요한 데이터 이므로 const 최대 활용
+ * ********************************************************************
+ */
+CommonJS.SocialLogin = {
+    /**
+     * 카카오 로그인
+     * 
+     * @param {Function} userMeSucCallBack 
+     * @param {Function} userMeFailCallBak 
+     * @param {Function} loginFailCallBack
+     * 
+     * @link https://developers.kakao.com/docs/latest/ko/kakaologin/js
+     * 
+     * @example
+     *  CommonJS.SocialLogin.loginWithKakao(userMeSucCallBack, userMeFailCallBak, loginFailCallBack);
+     */
+    loginWithKakao: function (userMeSucCallBack, userMeFailCallBak, loginFailCallBack) {
+        Kakao.Auth.login({
+            success: function (response) {
+                // console.log('login response : ', response);
+
+                const _accessToken = response.access_token;
+
+                // 토큰 할당
+                Kakao.Auth.setAccessToken(_accessToken);
+
+                // 사용자 정보 가져오기
+                Kakao.API.request({
+                    url: '/v2/user/me',
+                    success: function (response) {
+                        // console.log('/v2/user/me : ', response);
+                        userMeSucCallBack(response);
+                    },
+                    fail: function (error) {
+                        // console.log('/v2/user/me :', error);
+                        userMeFailCallBak(error);
+                    }
+                });
+            },
+            fail: function (error) {
+                // console.log('login fail : ', error);
+                loginFailCallBack(error);
+            }
+        });
+    },
+    /**
+     * 카카오 로그아웃
+     * @param {Function} logoutCallBack 
+     * @returns 
+     */
+    logoutWithKakao: function(logoutCallBack) {
+        if (!Kakao.Auth.getAccessToken()) {
+            console.log('Not logged in.');
+            return;
+        }
+
+        // console.log('before logout : ', Kakao.Auth.getAccessToken());
+
+        Kakao.Auth.logout(function() {
+            // console.log('after logout : ', Kakao.Auth.getAccessToken());
+            logoutCallBack( Kakao.Auth.getAccessToken() );
+        });
+    },
+    /**
+     * 네이버 로그인
+     * @param {string} ClientId 
+     * @param {string} CallBackUrl 
+     * @param {string} serviceDoamin 
+     * 
+     * @link https://developers.naver.com/docs/login/web/web.md
+     */
+    loginWithNaver: function(ClientId, CallBackUrl, serviceDoamin)  {
+        const _naver_id_login = new naver_id_login(ClientId, CallBackUrl);
+        const _state = _naver_id_login.getUniqState();
+
+        _naver_id_login.setButton("white", 2,40);
+        _naver_id_login.setDomain(serviceDoamin);
+        _naver_id_login.setState(_state);
+        _naver_id_login.setPopup();
+        _naver_id_login.init_naver_id_login();
+    },
+    /**
+     * 네이버 로그인 콜백
+     * @param {string} ClientId 
+     * @param {string} CallBackUrl 
+     */
+    loginWithNaverCallBack: function(ClientId, CallBackUrl) {
+        const _naver_id_login = new naver_id_login(ClientId, CallBackUrl);
+
+        if ( _naver_id_login.oauthParams.access_token ) {
+            // 접근 토큰 값 출력
+            // console.log('login response : ', naver_id_login.oauthParams.access_token);
+    
+            // 네이버 사용자 프로필 조회
+            _naver_id_login.get_naver_userprofile("naverSignInCallback()");
+        }
+
+        // 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
+        function naverSignInCallback() {
+            // console.log('getProfileData : ', naver_id_login.getProfileData('email'));
+            // console.log('getProfileData : ', naver_id_login.getProfileData('nickname'));
+
+            const _profileObj = {};
+            _profileObj.email = _naver_id_login.getProfileData('email');
+            _profileObj.nickname = _naver_id_login.getProfileData('nickname');
+
+            window.opener.getProfileSucCallBack(_profileObj);
+            window.close();
         }
     },
+    // 네이버 로그아웃은 제공하지 않으므로 REST API 이용해야 함
+}
 
+CommonJS.Addr = {
     /**
-     * ********************************************************************
-     * 소셜 로그인은 정확한 처리 방법을 아직 모름...
+     * 다음(카카오) 주소찾기
+     * @param {Element} zipcodeEl 
+     * @param {Element} roadAddrEl 
+     * @param {Element} jibunAddrEl 
      * 
-     * 로그인 > 토큰 할당 > DB / LocalStorage / SessionStorage 에 저장해서 시간 체크해서 갱신 해주는게 맞는거 같기는 한데...
-     * 현재까지는 토큰은 무시하고, 사용자 정보 가져오기 > 회원가입/로그인 처리
+     * @link https://postcode.map.daum.net/guide#sample
      * 
-     * <참고>
-     * ※ 개발자 계정, 추가 등록 계정 외에 로그인 위한 설정
+     * @description 신청 과정 없이 그냥 사용 / CSS는 별도로 제공하지 않음
      * 
-     * - 카카오
-     *   : 도메인 추가 가능
-     *   : 앱 로고 등록, 사업자 등록번호 등록, OAuth Redirect URI 설정
-     *   : 로그인 필수 동의 항목 (프로필 정보(닉네임/프로필 사진), 카카오계정(이메일) 외에는 선택 동의는 가능하지만 필수 동의는 검수 필요)
+     * @example
+     * [JavaScript]
+     * CommonJS.Addr.daumPostcode( document.querySelector('#zipcode'), document.querySelector('#roadAddr'), document.querySelector('#jibunAddr') );
      * 
-     * - 네이버
-     *   : 환경별로 각갇 등록
-     *   : 앱 로고 등록
-     *   : 검수요청 필수 (제공 정보 활용처 확인 - 이미지, 서비스 적용 형태 확인 - 이미지)
-     * ********************************************************************
+     * [jQuery]
+     * CommonJS.Addr.daumPostcode( $('#zipcode'), $('#roadAddr'), $('#jibunAddr') );
      */
-    CommonJS.SocialLogin = {
-        /**
-         * 카카오 로그인
-         * 
-         * @param {Function} userMeSucCallBack 
-         * @param {Function} userMeFailCallBak 
-         * @param {Function} loginFailCallBack
-         * 
-         * @link https://developers.kakao.com/docs/latest/ko/kakaologin/js
-         * 
-         * @example
-         *  CommonJS.SocialLogin.loginWithKakao(userMeSucCallBack, userMeFailCallBak, loginFailCallBack);
-         */
-        loginWithKakao: function (userMeSucCallBack, userMeFailCallBak, loginFailCallBack) {
-            Kakao.Auth.login({
-                success: function (response) {
-                    // console.log('login response : ', response);
+    daumPostcode: function(zipcodeEl, roadAddrEl, jibunAddrEl) {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var _zipcode = data.zonecode;
+                var _roadAddr = data.roadAddress;
+                var _jibunAddr = data.jibunAddress;
 
-                    const accessToken = response.access_token;
-
-                    // 토큰 할당
-                    Kakao.Auth.setAccessToken(accessToken);
-
-                    // 사용자 정보 가져오기
-                    Kakao.API.request({
-                        url: '/v2/user/me',
-                        success: function (response) {
-                            // console.log('/v2/user/me : ', response);
-                            userMeSucCallBack(response);
-                        },
-                        fail: function (error) {
-                            // console.log('/v2/user/me :', error);
-                            userMeFailCallBak(error);
-                        }
-                    });
-                },
-                fail: function (error) {
-                    // console.log('login fail : ', error);
-                    loginFailCallBack(error);
+                if ( CommonJS.Valid.isUndefined(zipcodeEl.length) ) {
+                    zipcodeEl.value = _zipcode;
+                } else {
+                    zipcodeEl.val(_zipcode);
                 }
-            });
-        },
-        /**
-         * 카카오 로그아웃
-         * @param {Function} logoutCallBack 
-         * @returns 
-         */
-        logoutWithKakao: function(logoutCallBack) {
-            if (!Kakao.Auth.getAccessToken()) {
-                console.log('Not logged in.');
-                return;
+
+                if ( CommonJS.Valid.isUndefined(roadAddrEl.length) ) {
+                    roadAddrEl.value = _roadAddr;
+                } else {
+                    roadAddrEl.val(_roadAddr);
+                }
+
+                if ( CommonJS.Valid.isUndefined(jibunAddrEl.length) ) {
+                    jibunAddrEl.value = _jibunAddr;
+                } else {
+                    jibunAddrEl.val(_jibunAddr);
+                }
             }
-
-            // console.log('before logout : ', Kakao.Auth.getAccessToken());
-
-            Kakao.Auth.logout(function() {
-                // console.log('after logout : ', Kakao.Auth.getAccessToken());
-                logoutCallBack( Kakao.Auth.getAccessToken() );
-            });
-        },
-        /**
-         * 네이버 로그인
-         * @param {string} ClientId 
-         * @param {string} CallBackUrl 
-         * @param {string} serviceDoamin 
-         * 
-         * @link https://developers.naver.com/docs/login/web/web.md
+        }).open();
+    },
+    /**
+     * 도로명주소 API
+     * 
+     * @link https://www.juso.go.kr/addrlink/devCenterEventBoardDetail.do?regSn=731&noticeType=T&currentPage=1&keyword=&searchType=
+     * 
+     * @description URL 별로 신청해야 함 - 운영(본인인증 O) / 개발(본인인증 X, 기간 제한)
+     * 
+     * @example
+     * - JavaScript는 지원하지 않지만 참고하기 위해 명시해 놓음
+     * - 서버 사이드만 지원 (JSP | PHP | ASP)
+     * - 팝업 API를 제공하지만 절대 사용하면 안된다. 세션이 끊어지는 이슈가 존재
+         * - 위 링크는 검색 API를 팝업 API처럼 사용할 수 있도록 디자인 적용한 샘플소스, 그냥 이거 쓰면 된다.
          */
-        loginWithNaver: function(ClientId, CallBackUrl, serviceDoamin)  {
-            // naver_id_login은 CallBackUrl 에도 설정 해줘야 함
-            var naver_id_login = new naver_id_login(ClientId, CallBackUrl);
-            var state = naver_id_login.getUniqState();
-    
-            naver_id_login.setButton("white", 2,40);
-            naver_id_login.setDomain(serviceDoamin);
-            naver_id_login.setState(state);
-            naver_id_login.setPopup();
-            naver_id_login.init_naver_id_login();
-        },
-        /**
-         * 네이버 로그인 콜백
-         * @param {string} ClientId 
-         * @param {string} CallBackUrl 
-         */
-        loginWithNaverCallBack: function(ClientId, CallBackUrl) {
-            var naver_id_login = new naver_id_login(ClientId, CallBackUrl);
-
-            if ( naver_id_login.oauthParams.access_token ) {
-                // 접근 토큰 값 출력
-                // console.log('login response : ', naver_id_login.oauthParams.access_token);
-        
-                // 네이버 사용자 프로필 조회
-                naver_id_login.get_naver_userprofile("naverSignInCallback()");
-            }
-
-            // 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
-            function naverSignInCallback() {
-                // console.log('getProfileData : ', naver_id_login.getProfileData('email'));
-                // console.log('getProfileData : ', naver_id_login.getProfileData('nickname'));
-
-                const profileObj = {};
-                profileObj.email = naver_id_login.getProfileData('email');
-                profileObj.nickname = naver_id_login.getProfileData('nickname');
-
-                window.opener.getProfileSucCallBack(profileObj);
-                window.close();
-            }
-        },
-        // 네이버 로그아웃은 별도로 처리
+        roadAddrAPI: function() {
+        }
     }
 
 
