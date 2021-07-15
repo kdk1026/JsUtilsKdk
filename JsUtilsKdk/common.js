@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 3.2
+ * @version 3.3
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가
  *
@@ -1502,6 +1502,47 @@ CommonJS.BrowserInfo = {
             iOS: navigator.userAgent.match(/iPhone|iPad|iPod/i) == null ? false : true
         };
         return _ret;
+    },
+    /**
+     * UserAgent 에서 특정 문자열 유무 체크
+     * @param {string} chkStr 
+     * @returns
+     * @example
+     * CommonJS.BrowserInfo.isCheckUserAgent('KAKAOTALK');
+     * 
+     * @example
+     * 주로 모바일 협업 시, 애플리케이션 접속 판별로 사용
+     * - 커스터마이징 하지 않는 이상 모바일 웹, WebView 의 UserAgent는 동일
+     */
+    isCheckUserAgent: function(chkStr) {
+        var _agent = navigator.userAgent;
+		return chkStr.indexOf(customStr) > -1;
+    },
+    /**
+     * 응답 헤더 에서 특정 키와 그에 해당하는 문자열 유무 체크
+     *   - 주의: 키는 모두 소문자로 체크해야 한다. (브라우저 네트워크탭에서 응답 헤더 복붙해서 소문자로 변경)
+     * @param {string} key 
+     * @param {string} chkStr 
+     * @returns 
+     * @example
+     * CommonJS.BrowserInfo.isCheckResponseHeader('vary', 'Origin');
+     * 
+     * @example
+     * 애플리케이션 접속 판별로도 사용되고, 요청 헤더에 추가되어 요청이 들어와서 꺼내야 하는 경우 등 사용
+     */
+    isCheckResponseHeader: function(key, chkStr) {
+		var _req = new XMLHttpRequest();
+		_req.open('GET', document.location, false);
+		_req.send(null);
+
+		var _allResponseHeaders = _req.getAllResponseHeaders().split("\r\n");
+		var _headers = _allResponseHeaders.reduce(function (acc, current, i){
+			var _parts = current.split(': ');
+			acc[_parts[0]] = _parts[1];
+			return acc;
+		}, {});
+
+        return (headers[key] === chkStr);
     }
 }
 
@@ -2091,243 +2132,251 @@ CommonJS.SnsShare = {
  * WebView 에서 JavaScript 에 값 전달
  *   - JavaScript 에 특이사항은 없음 / 항상 보내는 입장에서만 특이사항이 발생
  * 
- * 프로젝트에 따라 정석인 JavascriptBridge 대신 다른 방식으로 값 주고 받을 수 있음
+ * 프로젝트에 따라 정석인 JavascriptBridge 대신 다른 방식으로 값 전달할 수 있음 (JS with WebView)
+ *   - 모바일 개발자가 원하는 방식대로 맞혀주고, 테스트 해서 전달만 잘되면 된다... 제시한 방식이 편하다는데 어찌할 것인가...
+ * 
+ *   예1) location.href="스키마://CallBackValue?" + obj;
+ *   예2) alert('스키마://prepaid?value=' + vParamStr);
  * ********************************************************************
+ * ※ iOS는 구글링만 한 결과
+ *   (맥북이 없고.. 있어도 마우스 사용법도 다르고... xcode도 어느정도 익혀야 할테고... ObjectiveC/Swift도 모르고...)
  */
 CommonJS.Mobile = {
-        /**
-         * SMS 문자 보내기
-         *   - 연락처, 문자 내용 설정된 상태로 문자 보내기 화면으로 이동 시킴
-         * @param {string|number} telNo 
-         * @param {string} content 
-         * @example
-         * CommonJS.Mobile.sendSMS('010-9924-3732', '테스트');
-         */
-        sendSMS: function (telNo, content) {
-            if (CommonJS.BrowserInfo.isMobile()) {
-                if (CommonJS.FormatValid.isCellPhoneNumber(telNo)) {
-                    var _mobileOs = CommonJS.BrowserInfo.isMobileOs().iOS ? 'ios' : 'android';
+    /**
+     * SMS 문자 보내기
+     *   - 연락처, 문자 내용 설정된 상태로 문자 보내기 화면으로 이동 시킴
+     * @param {string|number} telNo 
+     * @param {string} content 
+     * @example
+     * CommonJS.Mobile.sendSMS('010-9924-3732', '테스트');
+     */
+    sendSMS: function (telNo, content) {
+        if (CommonJS.BrowserInfo.isMobile()) {
+            if (CommonJS.FormatValid.isCellPhoneNumber(telNo)) {
+                var _mobileOs = CommonJS.BrowserInfo.isMobileOs().iOS ? 'ios' : 'android';
 
-                    location.href = 'sms:' + telNo + (_mobileOs == 'ios' ? '&' : '?') + 'body=' + encodeURIComponent(content);
-                }
-            } else {
-                console.log('모바일 플랫폼에서만 사용 가능합니다.');
+                location.href = 'sms:' + telNo + (_mobileOs == 'ios' ? '&' : '?') + 'body=' + encodeURIComponent(content);
             }
-        },
-        /**
-         * 전화 걸기
-         *   - 연락처 설정된 상태로 전화 걸기 화면으로 이동 시킴
-         * @param {string|number} telNo
-         * @example
-         * CommonJS.Mobile.makeAcall('010-9924-3732');
-         */
-        makeAcall: function (telNo) {
-            if (CommonJS.BrowserInfo.isMobile()) {
-                if (CommonJS.FormatValid.isCellPhoneNumber(telNo)) {
-                    location.href = 'tel:' + telNo;
-                }
-            } else {
-                console.log('모바일 플랫폼에서만 사용 가능합니다.');
-            }
-        },
-        /**
-         * 카메라 실행
-         *   - (일반적인) accept, capture 속성이 없는 경우
-         *          : 카메라, 캠코더, 파일
-         *   - accept 속성만 있는 경우
-         *          accept="image/*" : 작업 선택 - 카메라, 내 파일, 파일
-         *          accept="audio/*" : 작업 선택 - 음성 녹음, 내 파일, 파일
-         * @param {Element} fileElement 
-         * @param {Element} imgElement 
-         * @example
-         * [JavaScript]
-         * CommonJS.Mobile.runCamera( document.querySelector('#file'), document.querySelector('#img') );
-         * 
-         * [jQuery]
-         * CommonJS.Mobile.runCamera( $('#file')[0], $('#img')[0] );
-         */
-        runCamera: function (fileElement, imgElement) {
-            fileElement.setAttribute('accept', 'image/*');
-            fileElement.setAttribute('capture', 'camera');
-
-            fileElement.addEventListener('change', function (e) {
-                if (CommonJS.BrowserInfo.isMobile()) {
-                    var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
-
-                    imgElement.setAttribute("src", _fileUrl);
-                    this.removeAttribute('capture');
-                } else {
-                    // 카메라 실행이 목적이므로 실행 가능하더라도 실행 시키지 않음
-                    console.log('모바일 플랫폼에서만 사용 가능합니다.');
-                }
-            });
-        },
-        /**
-         * 음성 녹음 실행
-         *   - runCamera 참고
-         * @param {Element} fileElement
-         * @param {Element} audioElement
-         * @example
-         * [JavaScript]
-         * CommonJS.Mobile.runCamera( document.querySelector('#file'), document.querySelector('#audio') );
-         * 
-         * [jQuery]
-         * CommonJS.Mobile.runCamera( $('#file')[0], $('#audio')[0] );
-         */
-        runMicroPhone: function (fileElement, audioElement) {
-            fileElement.setAttribute('accept', 'audio/*');
-            fileElement.setAttribute('capture', 'microphone');
-
-            fileElement.addEventListener('change', function (e) {
-                if (CommonJS.BrowserInfo.isMobile()) {
-                    var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
-
-                    audioElement.setAttribute("src", _fileUrl);
-                    this.removeAttribute('capture');
-
-                } else {
-                    // 음성 녹음 실행이 목적이므로 실행 가능하더라도 실행 시키지 않음
-                    console.log('모바일 플랫폼에서만 사용 가능합니다.');
-                }
-            });
-        },
-        /**
-         * 안드로이드 앱링크 or 딥링크 URL 생성
-         * @param {string} host 
-         * @param {string} scheme 
-         * @param {string} package 
-         * @returns
-         * @example
-         * CommonJS.Mobile.makeAndroidAppLinkUrl('instagram.com', 'https', 'com.instagram.android');
-         * 
-         * 링크 생성 하더라도 작동하려면 다음 설정 필수
-         * AndroidManifest.xml
-         *  <intent-filter>
-         *      <action android:name="android.intent.action.VIEW" />
-         *      <category android:name="android.intent.category.DEFAULT" />
-         *      <category android:name="android.intent.category.BROWSABLE" />
-         * 
-         *      <data android:host="호스트" android:scheme="스키마" />
-         *  </intent-filter>
-         */
-        makeAndroidAppLinkUrl: function (host, scheme, package) {
-            return 'intent://' + host + '/#Intent;package=' + package + ';scheme=' + scheme + ';end';
-        },
-        /**
-         * 앱링크 or 딥링크 실행
-         * @param {string} androidUrl 
-         * @param {string} iosUrl 
-         * @param {string} iosAppStoreUrl 
-         * @example
-         * CommonJS.Mobile.runAppLinkUrl(androidUrl, iosUrl, iosAppStoreUrl);
-         */
-        runAppLinkUrl: function (androidUrl, iosUrl, iosAppStoreUrl) {
-            if (CommonJS.BrowserInfo.isMobile()) {
-                if (CommonJS.BrowserInfo.isMobileOs().iOS) {
-                    // 1초 이후 반응이 없으면 앱스토어로 이동
-                    setTimeout(function () {
-                        window.open(iosAppStoreUrl);
-                    }, 1000);
-
-                    location.href = iosUrl;
-                } else {
-                    // 안드로이드는 설치되어 있지 않으면 자동으로 마켓으로 이동
-                    location.href = androidUrl;
-                }
-            } else {
-                console.log('모바일 플랫폼에서만 사용 가능합니다.');
-            }
+        } else {
+            console.log('모바일 플랫폼에서만 사용 가능합니다.');
         }
     },
-
     /**
-     * ********************************************************************
-     * GoogleMap - Geocoding 유료
-     *   > https://cloud.google.com/maps-platform/pricing?hl=ko
-     * ********************************************************************
+     * 전화 걸기
+     *   - 연락처 설정된 상태로 전화 걸기 화면으로 이동 시킴
+     * @param {string|number} telNo
+     * @example
+     * CommonJS.Mobile.makeAcall('010-9924-3732');
      */
-    CommonJS.Map = {
-        /**
-         * 해당 주소로 카카오 지도 표시
-         * @param {Element} mapElement 
-         * @param {string} addr 
-         * @example
-         * CommonJS.Map.searchKakaoMap( document.querySelector('#map'), '경기도 성남시 삼평동 대왕판교로645번길 16' );
-         * 
-         * @link https://apis.map.kakao.com/web/sample/addr2coord/
-         */
-        searchKakaoMap: function (mapElement, addr) {
-            var container = mapElement;
-            var options = {
-                center: new kakao.maps.LatLng(33.450701, 126.570667),
-                level: 3
-            };
+    makeAcall: function (telNo) {
+        if (CommonJS.BrowserInfo.isMobile()) {
+            if (CommonJS.FormatValid.isCellPhoneNumber(telNo)) {
+                location.href = 'tel:' + telNo;
+            }
+        } else {
+            console.log('모바일 플랫폼에서만 사용 가능합니다.');
+        }
+    },
+    /**
+     * 카메라 실행
+     *   - (일반적인) accept, capture 속성이 없는 경우
+     *          : 카메라, 캠코더, 파일
+     *   - accept 속성만 있는 경우
+     *          accept="image/*" : 작업 선택 - 카메라, 내 파일, 파일
+     *          accept="audio/*" : 작업 선택 - 음성 녹음, 내 파일, 파일
+     * @param {Element} fileElement 
+     * @param {Element} imgElement 
+     * @example
+     * [JavaScript]
+     * CommonJS.Mobile.runCamera( document.querySelector('#file'), document.querySelector('#img') );
+     * 
+     * [jQuery]
+     * CommonJS.Mobile.runCamera( $('#file')[0], $('#img')[0] );
+     */
+    runCamera: function (fileElement, imgElement) {
+        fileElement.setAttribute('accept', 'image/*');
+        fileElement.setAttribute('capture', 'camera');
 
-            // 지도를 생성합니다  
-            var map = new kakao.maps.Map(container, options);
+        fileElement.addEventListener('change', function (e) {
+            if (CommonJS.BrowserInfo.isMobile()) {
+                var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
 
-            // 주소-좌표 변환 객체를 생성합니다
-            var geocoder = new kakao.maps.services.Geocoder();
+                imgElement.setAttribute("src", _fileUrl);
+                this.removeAttribute('capture');
+            } else {
+                // 카메라 실행이 목적이므로 실행 가능하더라도 실행 시키지 않음
+                console.log('모바일 플랫폼에서만 사용 가능합니다.');
+            }
+        });
+    },
+    /**
+     * 음성 녹음 실행
+     *   - runCamera 참고
+     * @param {Element} fileElement
+     * @param {Element} audioElement
+     * @example
+     * [JavaScript]
+     * CommonJS.Mobile.runCamera( document.querySelector('#file'), document.querySelector('#audio') );
+     * 
+     * [jQuery]
+     * CommonJS.Mobile.runCamera( $('#file')[0], $('#audio')[0] );
+     */
+    runMicroPhone: function (fileElement, audioElement) {
+        fileElement.setAttribute('accept', 'audio/*');
+        fileElement.setAttribute('capture', 'microphone');
 
-            // 주소로 좌표를 검색합니다
-            geocoder.addressSearch(addr, function (result, status) {
-                // 정상적으로 검색이 완료됐으면 
-                if (status === kakao.maps.services.Status.OK) {
-                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+        fileElement.addEventListener('change', function (e) {
+            if (CommonJS.BrowserInfo.isMobile()) {
+                var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
 
-                    // 결과값으로 받은 위치를 마커로 표시합니다
-                    var marker = new kakao.maps.Marker({
-                        map: map,
-                        position: coords
-                    });
+                audioElement.setAttribute("src", _fileUrl);
+                this.removeAttribute('capture');
 
-                    // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-                    map.setCenter(coords);
-                }
-            });
-        },
-        /**
-         * 해당 주소로 네이버 지도 표시
-         * @param {string} mapElementId 
-         * @param {string} addr
-         * @example
-         * CommonJS.Map.searchNaverMap('map', '제주특별자치도 제주시 첨단로 242');
-         * 
-         * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-2-Getting-Started.html
-         * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-Geocoder-Geocoding.html
-         * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-3-geocoder-geocoding.example.html
-         * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-2-Marker.html
-         */
-        searchNaverMap: function (mapElementId, addr) {
-            var mapOptions = {
-                center: new naver.maps.LatLng(37.3595704, 127.105399),
-                zoom: 15
-            };
+            } else {
+                // 음성 녹음 실행이 목적이므로 실행 가능하더라도 실행 시키지 않음
+                console.log('모바일 플랫폼에서만 사용 가능합니다.');
+            }
+        });
+    },
+    /**
+     * 안드로이드 앱링크 or 딥링크 URL 생성
+     * @param {string} host 
+     * @param {string} scheme 
+     * @param {string} package 
+     * @returns
+     * @example
+     * CommonJS.Mobile.makeAndroidAppLinkUrl('instagram.com', 'https', 'com.instagram.android');
+     * 
+     * 링크 생성 하더라도 작동하려면 다음 설정 필수
+     * AndroidManifest.xml
+     *  <intent-filter>
+     *      <action android:name="android.intent.action.VIEW" />
+     *      <category android:name="android.intent.category.DEFAULT" />
+     *      <category android:name="android.intent.category.BROWSABLE" />
+     * 
+     *      <data android:host="호스트" android:scheme="스키마" />
+     *  </intent-filter>
+     */
+    makeAndroidAppLinkUrl: function (host, scheme, package) {
+        return 'intent://' + host + '/#Intent;package=' + package + ';scheme=' + scheme + ';end';
+    },
+    /**
+     * 앱링크 or 딥링크 실행
+     * @param {string} androidUrl 
+     * @param {string} iosUrl 
+     * @param {string} iosAppStoreUrl 
+     * @example
+     * CommonJS.Mobile.runAppLinkUrl(androidUrl, iosUrl, iosAppStoreUrl);
+     * 
+     * @description iOS는 구글링한 결과... 예전에 프로젝트때 누군가 해놓은거는 한 3초 설정해놓았던거 같은데...
+     */
+    runAppLinkUrl: function (androidUrl, iosUrl, iosAppStoreUrl) {
+        if (CommonJS.BrowserInfo.isMobile()) {
+            if (CommonJS.BrowserInfo.isMobileOs().iOS) {
+                // 1초 이후 반응이 없으면 앱스토어로 이동
+                setTimeout(function () {
+                    window.open(iosAppStoreUrl);
+                }, 1000);
 
-            var map = new naver.maps.Map(mapElementId, mapOptions);
-
-            // Geocoder를 활용한 주소와 좌표 검색 API 호출하기
-            naver.maps.Service.geocode({
-                query: addr
-            }, function (status, response) {
-                if (status === naver.maps.Service.Status.ERROR) {
-                    return alert('Something wrong!');
-                }
-
-                // 성공 시의 response 처리
-                var item = response.v2.addresses[0],
-                    point = new naver.maps.Point(item.x, item.y);
-
-                map.setCenter(point);
-
-                // 원하는 위치에 마커 올리기
-                var marker = new naver.maps.Marker({
-                    position: new naver.maps.LatLng(item.y, item.x),
-                    map: map
-                });
-            });
+                location.href = iosUrl;
+            } else {
+                // 안드로이드는 설치되어 있지 않으면 자동으로 마켓으로 이동
+                location.href = androidUrl;
+            }
+        } else {
+            console.log('모바일 플랫폼에서만 사용 가능합니다.');
         }
     }
+},
+
+/**
+ * ********************************************************************
+ * GoogleMap - Geocoding 유료
+ *   > https://cloud.google.com/maps-platform/pricing?hl=ko
+ * ********************************************************************
+ */
+CommonJS.Map = {
+    /**
+     * 해당 주소로 카카오 지도 표시
+     * @param {Element} mapElement 
+     * @param {string} addr 
+     * @example
+     * CommonJS.Map.searchKakaoMap( document.querySelector('#map'), '경기도 성남시 삼평동 대왕판교로645번길 16' );
+     * 
+     * @link https://apis.map.kakao.com/web/sample/addr2coord/
+     */
+    searchKakaoMap: function (mapElement, addr) {
+        var container = mapElement;
+        var options = {
+            center: new kakao.maps.LatLng(33.450701, 126.570667),
+            level: 3
+        };
+
+        // 지도를 생성합니다  
+        var map = new kakao.maps.Map(container, options);
+
+        // 주소-좌표 변환 객체를 생성합니다
+        var geocoder = new kakao.maps.services.Geocoder();
+
+        // 주소로 좌표를 검색합니다
+        geocoder.addressSearch(addr, function (result, status) {
+            // 정상적으로 검색이 완료됐으면 
+            if (status === kakao.maps.services.Status.OK) {
+                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                // 결과값으로 받은 위치를 마커로 표시합니다
+                var marker = new kakao.maps.Marker({
+                    map: map,
+                    position: coords
+                });
+
+                // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                map.setCenter(coords);
+            }
+        });
+    },
+    /**
+     * 해당 주소로 네이버 지도 표시
+     * @param {string} mapElementId 
+     * @param {string} addr
+     * @example
+     * CommonJS.Map.searchNaverMap('map', '제주특별자치도 제주시 첨단로 242');
+     * 
+     * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-2-Getting-Started.html
+     * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-Geocoder-Geocoding.html
+     * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-3-geocoder-geocoding.example.html
+     * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-2-Marker.html
+     */
+    searchNaverMap: function (mapElementId, addr) {
+        var mapOptions = {
+            center: new naver.maps.LatLng(37.3595704, 127.105399),
+            zoom: 15
+        };
+
+        var map = new naver.maps.Map(mapElementId, mapOptions);
+
+        // Geocoder를 활용한 주소와 좌표 검색 API 호출하기
+        naver.maps.Service.geocode({
+            query: addr
+        }, function (status, response) {
+            if (status === naver.maps.Service.Status.ERROR) {
+                return alert('Something wrong!');
+            }
+
+            // 성공 시의 response 처리
+            var item = response.v2.addresses[0],
+                point = new naver.maps.Point(item.x, item.y);
+
+            map.setCenter(point);
+
+            // 원하는 위치에 마커 올리기
+            var marker = new naver.maps.Marker({
+                position: new naver.maps.LatLng(item.y, item.x),
+                map: map
+            });
+        });
+    }
+}
 
 CommonJS.Editor = {
     /**
