@@ -2886,8 +2886,100 @@ CommonJS.SocialLogin = {
         }
 
         return _naver_id_login;
-    }
+    },
     // 네이버 로그아웃은 제공하지 않으므로 REST API 이용해야 함
+
+    /**
+     * 구글 로그인
+     * 
+     * @link https://developers.google.com/identity/sign-in/web/sign-in#before_you_begin
+     * @link https://developers.google.com/identity/sign-in/web/reference#gapiauth2initparams
+     * 
+     * @example
+     * - 구글은 구현 이전에 설정부터 복잡하다...
+     * - 설정 시, URI 입력하는 부분이 있는데 IP로 입력하면 구글 로그인이 안된다.
+     *   예) http://127.0.0.1:5500 (X), http://localhost:5500 (O)
+     * 
+     * - 유틸로 만들 수가 없다... 아래 링크의 블로그 주인장분이 너무 정리를 잘해주셨지만... 구현 방법만 정리해 놓음
+     * 
+     * @link https://tyrannocoding.tistory.com/51
+     */
+    loginWithGoogle: function() {
+        /*
+            <head>
+                ...
+                <meta name ="클라이언트 ID">
+
+                ...
+                <script src="https://apis.google.com/js/platform.js?onload=googleAuthInit" async defer></script>
+            </head>
+            <body>
+                <div class="g-signin2" id="GgCustomLogin"></div>
+
+                <script>
+                    function googleAuthInit() {
+                        gapi.load('auth2', function() {
+                            gapi.auth2.init();
+
+                            options = new gapi.auth2.SigninOptionsBuilder();
+                            options.setPrompt('select_account');
+                            options.setScope('profile').setScope('email'); 
+
+                            gapi.auth2.getAuthInstance().attachClickHandler('GgCustomLogin', options, googleSignIn, googleSignFailure);
+                        });
+                    }
+
+                    function googleSignIn(googleUser) {
+                        const access_token = googleUser.getAuthResponse().access_token;
+
+                        const method = 'get';
+                        const url = 'https://people.googleapis.com/v1/people/me';
+                        const param = {};
+                         param.personFields = 'birthdays';
+                        param.key = 'API 키';
+                        param.access_token = _access_token;
+
+                        CommonJS.Http.commonFetch(method, url, null, param, googleSignInCallBack);
+                    }
+
+                    // 프로필을 가져온다
+                    function googleSignInCallBack(data) {
+                        const googleUser = gapi.auth2.getAuthInstance().currentUser.get();
+                        const profile = googleUser.getBasicProfile();
+
+                        console.log(profile);
+                    }
+
+                    function googleSignFailure(t) {
+                        console.log(t);
+                    }
+
+                    // 로그아웃
+                    function googleSignOut() {
+                        const auth2 = gapi.auth2.getAuthInstance();
+                        auth2.signOut().then(function () {
+                            console.log('User signed out.');
+                        });
+                        auth2.disconnect();
+                    }
+                </script>
+            </body>
+        */
+    },
+    /**
+     * 페이스북 로그인
+     * 
+     * @link https://developers.facebook.com/docs/facebook-login/web?locale=ko_KR
+     * 
+     * @example
+     * - 구글에 비하면 양반인듯
+     * - 유틸로 만들 수가 없다... 구글 로그인 참고 블로그 주인장 분이 페이스북 로그인도 정리를 잘해주셔서... 구현 방법만 정리해 놓을 예정
+     * 
+     * @link https://tyrannocoding.tistory.com/50
+     */
+    loginWithFacebook: function() {
+        // XXX : 구현 방법 정리 예정
+    }
 }
 
 CommonJS.Addr = {
