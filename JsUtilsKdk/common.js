@@ -2855,10 +2855,11 @@ CommonJS.SocialLogin = {
      * 네이버 로그인 콜백
      * @param {string} ClientId 
      * @param {string} CallBackUrl
+     * @param {Function} naverSignInCallback
      * @returns 
      * 
      * @example
-     * const naverIdLogin = CommonJS.SocialLogin.loginWithNaverCallBack(ClientId, "http://127.0.0.1:5500/test/naver_login.html");
+     * const naverIdLogin = CommonJS.SocialLogin.loginWithNaverCallBack(ClientId, "http://127.0.0.1:5500/test/naver_login.html", 'naverSignInCallback');
      * 
      * // 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
      * function naverSignInCallback() {
@@ -2873,7 +2874,7 @@ CommonJS.SocialLogin = {
      *      window.close();
      * }
      */
-    loginWithNaverCallBack: function(ClientId, CallBackUrl) {
+    loginWithNaverCallBack: function(ClientId, CallBackUrl, naverSignInCallback) {
         const _naver_id_login = new naver_id_login(ClientId, CallBackUrl);
 
         if ( _naver_id_login.oauthParams.access_token ) {
@@ -2881,7 +2882,7 @@ CommonJS.SocialLogin = {
             // console.log('login response : ', naver_id_login.oauthParams.access_token);
     
             // 네이버 사용자 프로필 조회
-            _naver_id_login.get_naver_userprofile("naverSignInCallback()");
+            _naver_id_login.get_naver_userprofile( naverSignInCallback+'()' );
         }
 
         return _naver_id_login;
