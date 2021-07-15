@@ -2835,7 +2835,7 @@ CommonJS.SocialLogin = {
      * @link https://developers.naver.com/docs/login/web/web.md
      * 
      * @example
-     * CommonJS.SocialLogin.loginWithNaver('A43Bves_ovKKl8L3XGjM', 'http://127.0.0.1:5500/test/naver_login_callback.html', 'http://127.0.0.1:5500"');
+     * CommonJS.SocialLogin.loginWithNaver(ClientId, 'http://127.0.0.1:5500/test/naver_login_callback.html', 'http://127.0.0.1:5500"');
      * 
      * function getProfileSucCallBack(data) {
      *      console.log(data);
@@ -2858,7 +2858,7 @@ CommonJS.SocialLogin = {
      * @returns 
      * 
      * @example
-     * const naverIdLogin = CommonJS.SocialLogin.loginWithNaverCallBack("A43Bves_ovKKl8L3XGjM", "http://127.0.0.1:5500/test/naver_login.html");
+     * const naverIdLogin = CommonJS.SocialLogin.loginWithNaverCallBack(ClientId, "http://127.0.0.1:5500/test/naver_login.html");
      * 
      * // 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
      * function naverSignInCallback() {
