@@ -2774,7 +2774,7 @@ CommonJS.SocialLogin = {
      * @link https://developers.kakao.com/docs/latest/ko/kakaologin/js
      * 
      * @example
-     *  CommonJS.SocialLogin.loginWithKakao(userMeSucCallBack, userMeFailCallBak, loginFailCallBack);
+     * CommonJS.SocialLogin.loginWithKakao(userMeSucCallBack, userMeFailCallBak, loginFailCallBack);
      */
     loginWithKakao: function (userMeSucCallBack, userMeFailCallBak, loginFailCallBack) {
         Kakao.Auth.login({
@@ -2808,7 +2808,10 @@ CommonJS.SocialLogin = {
     /**
      * 카카오 로그아웃
      * @param {Function} logoutCallBack 
-     * @returns 
+     * @returns
+     *  
+     * @example
+     * CommonJS.SocialLogin.logoutWithKakao(logoutCallBack);
      */
     logoutWithKakao: function(logoutCallBack) {
         if (!Kakao.Auth.getAccessToken()) {
@@ -2830,6 +2833,13 @@ CommonJS.SocialLogin = {
      * @param {string} serviceDoamin 
      * 
      * @link https://developers.naver.com/docs/login/web/web.md
+     * 
+     * @example
+     * CommonJS.SocialLogin.loginWithNaver('A43Bves_ovKKl8L3XGjM', 'http://127.0.0.1:5500/test/naver_login_callback.html', 'http://127.0.0.1:5500"');
+     * 
+     * function getProfileSucCallBack(data) {
+     *      console.log(data);
+     * }
      */
     loginWithNaver: function(ClientId, CallBackUrl, serviceDoamin)  {
         const _naver_id_login = new naver_id_login(ClientId, CallBackUrl);
@@ -2844,7 +2854,24 @@ CommonJS.SocialLogin = {
     /**
      * 네이버 로그인 콜백
      * @param {string} ClientId 
-     * @param {string} CallBackUrl 
+     * @param {string} CallBackUrl
+     * @returns 
+     * 
+     * @example
+     * const naverIdLogin = CommonJS.SocialLogin.loginWithNaverCallBack("A43Bves_ovKKl8L3XGjM", "http://127.0.0.1:5500/test/naver_login.html");
+     * 
+     * // 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
+     * function naverSignInCallback() {
+     *      console.log('getProfileData : ', naverIdLogin.getProfileData('email'));
+     *      console.log('getProfileData : ', naverIdLogin.getProfileData('nickname'));
+     * 
+     *      const profileObj = {};
+     *      profileObj.email = naverIdLogin.getProfileData('email');
+     *      profileObj.nickname = naverIdLogin.getProfileData('nickname');
+     * 
+     *      window.opener.getProfileSucCallBack(profileObj);
+     *      window.close();
+     * }
      */
     loginWithNaverCallBack: function(ClientId, CallBackUrl) {
         const _naver_id_login = new naver_id_login(ClientId, CallBackUrl);
@@ -2857,19 +2884,8 @@ CommonJS.SocialLogin = {
             _naver_id_login.get_naver_userprofile("naverSignInCallback()");
         }
 
-        // 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
-        function naverSignInCallback() {
-            // console.log('getProfileData : ', naver_id_login.getProfileData('email'));
-            // console.log('getProfileData : ', naver_id_login.getProfileData('nickname'));
-
-            const _profileObj = {};
-            _profileObj.email = _naver_id_login.getProfileData('email');
-            _profileObj.nickname = _naver_id_login.getProfileData('nickname');
-
-            window.opener.getProfileSucCallBack(_profileObj);
-            window.close();
-        }
-    },
+        return _naver_id_login;
+    }
     // 네이버 로그아웃은 제공하지 않으므로 REST API 이용해야 함
 }
 
