@@ -1297,6 +1297,27 @@ CommonJS.FileValid = {
      */
     isFileMaxSize: function (fileObj, maxSize) {
         return (Number(fileObj.size) > Number(maxSize));
+    },
+    /**
+     * 지원 파일 체크 (동영상 웹 표준)
+     * @param {Object} fileObj 
+     * @returns 
+     * 
+     * @link https://kutar37.tistory.com/entry/HTML5-video-audio-%ED%83%9C%EA%B7%B8
+     */
+    isVideoStandard: function (fileObj) {
+        var _ext = CommonJS.File.getFileExt(fileObj);
+        var _arrAllowExt = ['mp4', 'webm', 'ogg'];
+        return _arrAllowExt.includes(_ext);
+    },
+    /**
+     * 지원 파일 체크 (동영상 웹 추천)
+     * @param {Object} fileObj 
+     * @returns 
+     */
+    isVideoRecomend: function (fileObj) {
+        var _ext = CommonJS.File.getFileExt(fileObj);
+        return _ext === 'mp4'
     }
 }
 
