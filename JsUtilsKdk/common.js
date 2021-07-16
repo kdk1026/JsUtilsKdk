@@ -3132,7 +3132,7 @@ CommonJS.Discount = {
      * @returns 
      */
     calcRate: function(originPrice, salePrice) {
-        return Math.floor(100 - (salePrice * 100 / originPrice))
+        return Math.round(100 - ((salePrice / originPrice) * 100))
     },
     /**
      * 할인가 구하기
