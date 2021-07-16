@@ -2297,9 +2297,14 @@ CommonJS.Mobile = {
      * @param {string} iosUrl 
      * @param {string} iosAppStoreUrl 
      * @example
-     * CommonJS.Mobile.runAppLinkUrl(androidUrl, iosUrl, iosAppStoreUrl);
+     * [Android]
+     * CommonJS.Mobile.runAppLinkUrl('intent://instagram.com/#Intent;package=com.instagram.android;scheme=https;end', '', '');
      * 
-     * @description iOS는 구글링한 결과... 예전에 프로젝트때 누군가 해놓은거는 한 3초 설정해놓았던거 같은데...
+     * [iOS]
+     * CommonJS.Mobile.runAppLinkUrl('', 'instagram://media', 'https://itunes.apple.com/kr/app/instagram/id389801252?mt=8');
+     * 
+     * @description iOS는 구글링한 결과... 예전에 프로젝트때 누군가 해놓은거는 한 3초 설정해놓았던거 같은데... 1초도 상관 없는듯
+     * @link https://gomest.tistory.com/7
      */
     runAppLinkUrl: function (androidUrl, iosUrl, iosAppStoreUrl) {
         if (CommonJS.BrowserInfo.isMobile()) {
