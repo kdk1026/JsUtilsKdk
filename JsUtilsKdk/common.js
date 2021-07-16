@@ -1279,7 +1279,7 @@ CommonJS.FileValid = {
      * CommonJS.FileValid.isAllowCustom(fileObj, arrAllowExt);
      */
     isAllowCustom: function (fileObj, arrAllowExt) {
-        if (Array.isArray) {
+        if ( Array.isArray(arrAllowExt) ) {
             var _ext = CommonJS.File.getFileExt(fileObj);
             return arrAllowExt.includes(_ext);
         } else {
@@ -1318,6 +1318,15 @@ CommonJS.FileValid = {
     isVideoRecomend: function (fileObj) {
         var _ext = CommonJS.File.getFileExt(fileObj);
         return _ext === 'mp4'
+    },
+    /**
+     * 지원 파일 체크 (오디오 웹 추천)
+     * @param {Object} fileObj 
+     * @returns 
+     */
+    isAudioRecomend: function (fileObj) {
+        var _ext = CommonJS.File.getFileExt(fileObj);
+        return _ext === 'mp3'
     }
 }
 
