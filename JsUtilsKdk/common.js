@@ -29,6 +29,7 @@
  * @property {object} CommonJS.Code - 2021.07.13 추가
  * @property {object} CommonJS.SocialLogin - 2021.07.14 추가
  * @property {object} CommonJS.Addr - 2021.07.14 추가
+ * @property {object} CommonJS.Discount - 2021.07.16 추가
  * @property {method} prototype
  */
 var CommonJS = {
@@ -3090,6 +3091,28 @@ CommonJS.Addr = {
      * - 위 링크는 검색 API를 팝업 API처럼 사용할 수 있도록 디자인 적용한 샘플소스, 그냥 이거 쓰면 된다.
      */
     roadAddrAPI: function() {
+    }
+},
+
+CommonJS.Discount = {
+    /**
+     * 할인율 구하기
+     * @param {number} originPrice 
+     * @param {number} salePrice 
+     * @returns 
+     */
+    calcRate: function(originPrice, salePrice) {
+        return Math.floor(100 - (salePrice * 100 / originPrice))
+    },
+    /**
+     * 할인가 구하기
+     * @param {number}} originPrice 
+     * @param {float|double} rate 
+     * @returns 
+     */
+    clacSalePrice: function(originPrice, rate) {
+        var _savePrice = originPrice * (rate / 100);
+        return originPrice - _savePrice;
     }
 }
 
