@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 3.3
+ * @version 3.4
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가
  *
@@ -2596,6 +2596,11 @@ CommonJS.Http = {
      * CommonJS.Http.commonAjax(isAsync, method, url, header, param, callback);
      * 
      * @link https://202psj.tistory.com/1647
+     * 
+     * @link http://tcpschool.com/ajax/ajax_server_xmlhttprequest
+     * @description 놀랍도다... 어째든 Ajax를 IE 5 시절부터 사용했다는 말...
+     *      윈도우 3.1, 95 시절에는 인터넷 존재를 몰라서... 플로피디스크 게임이나 주구장창 하던 시절인데...
+     *      IE 7 시절부터 XMLHttpRequest 사용했다는 것도 놀라울 일... Ajax 라는 걸 jQuery 에서 처음 알아서...
      */
     commonAjax: function (isAsync, method, url, header, param, callback) {
         var _retData = {};
@@ -2975,7 +2980,7 @@ CommonJS.SocialLogin = {
 
         return _naver_id_login;
     },
-    // 네이버 로그아웃은 제공하지 않으므로 REST API 이용해야 함
+    // 네이버 로그아웃은 JavaScript로 제공하지 않으므로 REST API 이용해야 함 (접근 토큰 삭제)
 
     /**
      * 구글 로그인
@@ -3003,6 +3008,7 @@ CommonJS.SocialLogin = {
             </head>
             <body>
                 <div class="g-signin2" id="GgCustomLogin"></div>
+                <a href="#" onclick="googleSignOut();">Sign out</a>
 
                 <script>
                     function googleAuthInit() {
@@ -3061,12 +3067,97 @@ CommonJS.SocialLogin = {
      * 
      * @example
      * - 구글에 비하면 양반인듯
-     * - 유틸로 만들 수가 없다... 구글 로그인 참고 블로그 주인장 분이 페이스북 로그인도 정리를 잘해주셔서... 구현 방법만 정리해 놓을 예정
+     * - 유틸로 만들 수가 없다... 구글 로그인 참고 블로그 주인장 분이 페이스북 로그인도 정리를 잘해주셔서... 구현 방법만 정리해 놓음
      * 
      * @link https://tyrannocoding.tistory.com/50
+     * 
+     * @description SDK 임포트 URL > 코드 받기
+     *      나머지 내용 훑어보고, 전체 코드 예시 참고
+     * @link https://developers.facebook.com/docs/facebook-login/web#loginbutton
+     * 
+     * @description Language는 URL 참고 후, Locales URL 참고
+     * @link https://developers.facebook.com/docs/javascript/advanced-setup
+     * @link http://fbdevwiki.com/wiki/Locales
+     * 
+     * @description 버전도 다르지만 따라할 수는 없으니 참고만 해서 진행하다 보면
+     *      콘솔에 이런 오류가 발생한다. 그냥 한마디로 https 쓰라는거다...
+     *      sdk.js?hash=8fdbc8422dc2ce03b58408150cdadd42:49 The Login Button plugin no longer works on http pages. Please update your site to use https for Facebook Login
+     * 
+     *      링크를 통해 VS코드 Live Server에 https 적용
+     * @link https://uiyoji-journal.tistory.com/89
+     * 
+     * @description VS코드 settings.json 파일 열기 참고
+     * @link https://velog.io/@devyang97/VScode-settings.json
+     * 
+     * @example
+     * 아이고야...까탑스럽구만...
+     * 
+     * 기본설정: 기본 설정 열기(JSON)
+     * liveServer.settings.https 검색 복사
+     * 기본설정: 설정 열기(JSON)
+     * 최하단에 추가
+     * 설정 이후, Liver Server 다시 시작, 안전하지 않음 클릭
      */
     loginWithFacebook: function() {
-        // XXX : 구현 방법 정리 예정
+        /*
+            <head>
+                ...
+                <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v11.0&appId=앱ID&autoLogAppEvents=1" nonce="rRcgKpNh"></script>
+            </head>
+            <body>
+                <div id="fb-root"></div>
+                <div class="fb-login-button" data-width="" data-size="large" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"
+                    scope="public_profile,email" onlogin="checkLoginState();"></div>
+
+                <a href="#" onclick="facebookSignOut();">Sign out</a>
+
+                <script>
+                    window.fbAsyncInit = function() {
+                        FB.init({
+                            appId            : '앱ID',    
+                            autoLogAppEvents : true, 
+                            xfbml            : true,
+                            version          : 'v11.0'
+                        });
+
+                        FB.getLoginStatus(function(response) { 
+                            statusChangeCallback(response);
+                        });
+                    });
+
+                    function checkLoginState() {
+                        FB.getLoginStatus(function(response) {
+                            // console.log( response );
+                            statusChangeCallback(response);
+                        });
+                    }
+
+                    function statusChangeCallback(response) { 
+                        if (response.status === 'connected') {
+                            callgetProfileAPI();
+                        } else if (response.status === 'not_authorized') {
+                            // 사람은 Facebook에 로그인했지만 앱에는 로그인하지 않았습니다.
+                            alert('앱에 로그인해야 이용가능한 기능입니다.');
+                        } else {
+                            // 그 사람은 Facebook에 로그인하지 않았으므로이 앱에 로그인했는지 여부는 확실하지 않습니다.
+                            alert('페이스북에 로그인해야 이용가능한 기능입니다.');
+                        }
+                    }
+
+                    function callgetProfileAPI() {
+                        FB.api('/me', function(response) {
+                            console.log(response);
+                        });
+                    }
+
+                    function facebookSignOut() {
+                        FB.logout(function(response) {
+                            console.log(response);
+                        });
+                    }
+                </script>
+            </body>
+        */
     }
 }
 
