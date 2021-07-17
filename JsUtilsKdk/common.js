@@ -1574,6 +1574,20 @@ CommonJS.BrowserInfo = {
 		}, {});
 
         return (headers[key] === chkStr);
+    },
+    /**
+     * 브라우저 언어 확인
+     */
+    getLanguage: function() {
+        return navigator.language || navigator.userLanguage;
+    },
+    /**
+     * 공인 IP 가져오기
+     * @returns 
+     */
+    getPublicIp: function() {
+        var _retJson = CommonJS.Http.commonAjax(false, 'get', 'https://api.ipify.org?format=json', null, {}, null);
+        return _retJson.ip;
     }
 }
 
