@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 3.4
+ * @version 3.5
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가
  *
@@ -1410,6 +1410,115 @@ CommonJS.Byte = {
             }
         }
         return _nCnt;
+    },
+    /**
+     * input text/textarea의 Byte를 체크하여 nowByteEle에 표시
+     * @param {Element - this} obj 
+     * @param {Element} nowByteEle 
+     * @param {(undefined|boolean)} isEucKr 
+     * @example
+     * <input type="text" id="temp" />
+     * <span id="nowByte">0</span>/100bytes
+     * 
+     * [JavaScript]
+     * document.querySelector('#temp').addEventListener('keyup', function() {
+     *      CommonJS.Byte.checkByte( this, document.querySelector('#nowByte') );
+     * });
+     * 
+     * [jQuery]
+     * $('#temp').keyup(function() {
+     *      CommonJS.Byte.checkByte( $(this), $('#nowByte') );
+     * });
+     */
+    checkByte: function(obj, nowByteEle, isEucKr) {
+		let _textVal;
+		if ( obj.length === undefined ) {
+			_textVal = obj.value;
+		} else {
+			_textVal = obj.val();
+		}
+
+        const _textLen = textVal.length;
+
+        let _totalByte = 0;
+        for (let i=0; i < textLen; i++) {
+            const eachChar = textVal.charAt(i);
+			const uniChar = escape(eachChar);
+
+            if ( uniChar.length > 4 ) {
+                if (isEucKr) {
+                    _totalByte += 2;
+                } else {
+                    _totalByte += 3;
+                }
+            } else {
+                _totalByte += 1;
+            }
+        }
+
+		if ( nowByteEle.length === undefined ) {
+			nowByteEle.innerText = _totalByte;
+		} else {
+			nowByteEle.text( _totalByte );
+		}
+    },
+    /**
+     * input text/textarea의 Byte를 체크하여 maxByte 초과 체크
+     * @param {Element - this} obj 
+     * @param {(undefined|number)} maxByte 
+     * @param {(undefined|boolean)} isEucKr 
+     * @returns 
+     * @example
+     * <!-- 심플한 방식 : data-code="abcd" -->
+     * <input type="text" id="temp" data-max-byte="20" />
+     * 
+     * [JavaScript]
+     * document.querySelector('#temp').addEventListener('keyup', function() {
+     *      CommonJS.Byte.isOverMaxByte( this );
+     * });
+     * 
+     * [jQuery]
+     * $('#temp').keyup(function() {
+     *      CommonJS.Byte.isOverMaxByte( $(this) );
+     * });
+     */
+    isOverMaxByte: function(obj, maxByte, isEucKr) {
+        let _textVal;
+        let _maxByte = maxByte;
+
+		if ( obj.length === undefined ) {
+			_textVal = obj.value;
+
+			if ( _maxByte === undefined ) {
+				_maxByte = obj.dataset.maxByte;
+			}
+		} else {
+			_textVal = obj.val();
+
+			if ( _maxByte === undefined ) {
+				_maxByte = obj.data('maxByte');
+			}
+		}
+
+        const _textLen = textVal.length;
+
+        let _totalByte = 0;
+        for (let i=0; i < textLen; i++) {
+            const eachChar = textVal.charAt(i);
+			const uniChar = escape(eachChar);
+
+            if ( uniChar.length > 4 ) {
+                if (isEucKr) {
+                    _totalByte += 2;
+                } else {
+                    _totalByte += 3;
+                }
+            } else {
+                _totalByte += 1;
+            }
+        }
+
+        return (totalByte > _maxByte);
     }
 }
 
