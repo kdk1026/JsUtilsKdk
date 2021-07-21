@@ -110,6 +110,8 @@ var CommonJS = {
      * @param {string} beforeFuncNm - 특정 함수가 실행 되기전 실행할 함수
      * @param {string} funcNm - 실행할 특정 함수
      * @param {undefined|?} parent - 함수의 위치
+     * 
+     * @description 개발 당시에는 몰라도 분석할 때는 헷갈릴 듯...
      * @example
      * CommonJS.scriptHook(fnValid, fnSubmit);
      */
