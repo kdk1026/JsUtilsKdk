@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 3.5
+ * @version 3.6
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가
  *
@@ -30,6 +30,7 @@
  * @property {object} CommonJS.SocialLogin - 2021.07.14 추가
  * @property {object} CommonJS.Addr - 2021.07.14 추가
  * @property {object} CommonJS.Discount - 2021.07.16 추가
+ * @property {object} CommonJS.Print - 2021.07.21 추가 (CommonJS 에서 printTheArea 분리하고, 추가)
  * @property {method} prototype
  */
 var CommonJS = {
@@ -134,32 +135,6 @@ var CommonJS = {
      */
     mergeArray: function (arr, ...sources) {
         return arr.concat(...sources);
-    },
-    /**
-     * 해당 영역안의 내용만 프린트 출력 (주로 div, textarea)
-     * @param {Element}} Element 
-     * @example
-     * [JavaScript]
-     * CommonJS.printTheArea( document.querySelector(셀렉터) );
-     * 
-     * [jQuery]
-     * CommonJS.printTheArea( $(셀렉터) );
-     */
-    printTheArea: function (Element) {
-        var _win = null;
-        _win = window.open();
-        self.focus();
-        _win.document.open();
-
-        if (Element.length === undefined) {
-            _win.document.write(Element.innerHTML);
-        } else {
-            _win.document.write(Element.html());
-        }
-
-        _win.document.close;
-        _win.print();
-        _win.close();
     },
     /**
      * Class 구분
@@ -3374,6 +3349,67 @@ CommonJS.Discount = {
     }
 }
 
+CommonJS.Print = {
+    /**
+     * 해당 영역안의 내용만 프린트 출력 (주로 div, textarea)
+     * @param {Element} Element 
+     * @description CSS 먹지 않음
+     * 
+     * @example
+     * [JavaScript]
+     * CommonJS.Print.printTheArea( document.querySelector(셀렉터) );
+     * 
+     * [jQuery]
+     * CommonJS.Print.printTheArea( $(셀렉터) );
+     */
+     printTheArea: function (Element) {
+        var _win = null;
+        _win = window.open();
+        self.focus();
+        _win.document.open();
+
+        if (Element.length === undefined) {
+            _win.document.write(Element.innerHTML);
+        } else {
+            _win.document.write(Element.html());
+        }
+
+        _win.document.close;
+        _win.print();
+        _win.close();
+    },
+    /**
+     * 해당 영역안의 내용만 프린트 출력 (주로 div, textarea)
+     * @param {Element} Element 
+     * @description CSS 먹음, 프린트 이후 어쩔 수 없이 자동 새로고침
+     * @description body에 CSS가 있는 경우, 안먹을 듯...
+     * 
+     * @example
+     * [JavaScript]
+     * CommonJS.Print.printAsItIs( document.querySelector(셀렉터) );
+     * 
+     * [jQuery]
+     * CommonJS.Print.printAsItIs( $(셀렉터) );
+     * 
+     * @link http://lemon421.cafe24.com/blog/textyle/23385
+     */
+    printAsItIs: function (Element) {
+        var _printBeforeBody;
+
+        if (Element.length === undefined) {
+            _printBeforeBody = Element.innerHTML;
+        } else {
+            _printBeforeBody = Element.html();
+        }
+
+        window.onbeforeprint = function () {
+            document.body.innerHTML = _printBeforeBody;
+        }
+
+        window.print();
+        location.reload();
+    }
+}
 
 //--------------------------------------------------------------------
 // prototype
