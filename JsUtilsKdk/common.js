@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 3.6
+ * @version 3.7
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가
  *
@@ -1687,43 +1687,77 @@ CommonJS.Input = {
     /**
      * 숫자만 입력
      * @param {Element} inputElement
+     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyNum( document.querySelector(셀렉터) );
+     * CommonJS.Input.onlyNum( null, 아이디_셀렉터 );
      * 
      * [jQuery]
      * CommonJS.Input.onlyNum( $(셀렉터) );
+     * CommonJS.Input.onlyNum( null, 셀렉터 );
      */
-    onlyNum: function (inputElement) {
-        if (inputElement.length === undefined) {
-            inputElement.addEventListener('keyup', function (e) {
-                this.value = e.target.value.replace(/[^0-9]/gi, '');
-            });
+    onlyNum: function (inputElement, inputElementStr) {
+        if (inputElement !== null) {
+            if (inputElement.length === undefined) {
+                inputElement.addEventListener('keyup', function (e) {
+                    this.value = e.target.value.replace(/[^0-9]/gi, '');
+                });
+            } else {
+                inputElement.keyup(function(e) {
+                    $(this).val(e.target.value.replace(/[^0-9]/gi, ''));
+                });
+            }
         } else {
-            $(document).on('keyup', inputElement, function (e) {
-                inputElement.val(e.target.value.replace(/[^0-9]/gi, ''));
-            });
+            if (document.querySelector(inputElementStr).length === undefined) {
+                document.addEventListener('keyup', function (e) {
+                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
+                        this.value = e.target.value.replace(/[^0-9]/gi, '');
+                    }
+                });
+            } else {
+                $(document).on('keyup', inputElementStr, function (e) {
+                    $(this).val(e.target.value.replace(/[^0-9]/gi, ''));
+                });
+            }
         }
     },
     /**
      * 숫자만 입력 + 세 자리마다 콤마 자동 입력
      * @param {Element} inputElement
+     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyFormatNum( document.querySelector(셀렉터) );
+     * CommonJS.Input.onlyFormatNum( null, 아이디_셀렉터 );
      * 
      * [jQuery]
      * CommonJS.Input.onlyFormatNum( $(셀렉터) );
+     * CommonJS.Input.onlyFormatNum( null, 셀렉터 );
      */
-    onlyFormatNum: function (inputElement) {
-        if (inputElement.length === undefined) {
-            inputElement.addEventListener('keyup', function (e) {
-                this.value = fnTemp(e);
-            });
+    onlyFormatNum: function (inputElement, inputElementStr) {
+        if (inputElement !== null) {
+            if (inputElement.length === undefined) {
+                inputElement.addEventListener('keyup', function (e) {
+                    this.value = fnTemp(e);
+                });
+            } else {
+                inputElement.keyup(function(e) {
+                    $(this).val( fnTemp(e) );
+                });
+            }
         } else {
-            $(document).on('keyup', inputElement, function (e) {
-                inputElement.val(fnTemp(e));
-            });
+            if (document.querySelector(inputElementStr).length === undefined) {
+                document.addEventListener('keyup', function (e) {
+                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
+                        this.value = fnTemp(e);
+                    }
+                });
+            } else {
+                $(document).on('keyup', inputElementStr, function (e) {
+                    $(this).val( fnTemp(e) );
+                });
+            }
         }
 
         function fnTemp(e) {
@@ -1740,169 +1774,305 @@ CommonJS.Input = {
     /**
      * 영문만 입력
      * @param {Element} inputElement
+     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyEng( document.querySelector(셀렉터) );
+     * CommonJS.Input.onlyEng( null, 아이디_셀렉터 );
      * 
      * [jQuery]
      * CommonJS.Input.onlyEng( $(셀렉터) );
+     * CommonJS.Input.onlyEng( null, 셀렉터 );
      */
-    onlyEng: function (inputElement) {
-        if (inputElement.length === undefined) {
-            inputElement.addEventListener('keyup', function (e) {
-                this.value = e.target.value.replace(/[^a-zA-Z]/gi, '');
-            });
+    onlyEng: function (inputElement, inputElementStr) {
+        if (inputElement !== null) {
+            if (inputElement.length === undefined) {
+                inputElement.addEventListener('keyup', function (e) {
+                    this.value = e.target.value.replace(/[^a-zA-Z]/gi, '');
+                });
+            } else {
+                inputElement.keyup(function(e) {
+                    $(this).val(e.target.value.replace(/[^a-zA-Z]/gi, ''));
+                });
+            }
         } else {
-            $(document).on('keyup', inputElement, function (e) {
-                inputElement.val(e.target.value.replace(/[^a-zA-Z]/gi, ''));
-            });
+            if (document.querySelector(inputElementStr).length === undefined) {
+                document.addEventListener('keyup', function (e) {
+                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
+                        this.value = e.target.value.replace(/[^a-zA-Z]/gi, '');
+                    }
+                });
+            } else {
+                $(document).on('keyup', inputElementStr, function (e) {
+                    $(this).val(e.target.value.replace(/[^a-zA-Z]/gi, ''));
+                });
+            }
         }
     },
     /**
      * 영문 + '_' 만 입력
      * @param {Element} inputElement
+     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyEngUnder( document.querySelector(셀렉터) );
+     * CommonJS.Input.onlyEngUnder( null, 아이디_셀렉터 );
      * 
      * [jQuery]
      * CommonJS.Input.onlyEngUnder( $(셀렉터) );
+     * CommonJS.Input.onlyEngUnder( null, 셀렉터 );
      */
-    onlyEngUnder: function (inputElement) {
-        if (inputElement.length === undefined) {
-            inputElement.addEventListener('keyup', function (e) {
-                this.value = e.target.value.replace(/[^a-zA-Z_]/gi, '');
-            });
+    onlyEngUnder: function (inputElement, inputElementStr) {
+        if (inputElement !== null) {
+            if (inputElement.length === undefined) {
+                inputElement.addEventListener('keyup', function (e) {
+                    this.value = e.target.value.replace(/[^a-zA-Z_]/gi, '');
+                });
+            } else {
+                inputElement.keyup(function(e) {
+                    $(this).val(e.target.value.replace(/[^a-zA-Z_]/gi, ''));
+                });
+            }
         } else {
-            $(document).on('keyup', inputElement, function (e) {
-                inputElement.val(e.target.value.replace(/[^a-zA-Z_]/gi, ''));
-            });
+            if (document.querySelector(inputElementStr).length === undefined) {
+                document.addEventListener('keyup', function (e) {
+                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
+                        this.value = e.target.value.replace(/[^a-zA-Z_]/gi, '');
+                    }
+                });
+            } else {
+                $(document).on('keyup', inputElementStr, function (e) {
+                    $(this).val(e.target.value.replace(/[^a-zA-Z_]/gi, ''));
+                });
+            }
         }
     },
     /**
      * 영문 + 숫자만 입력
      * @param {Element} inputElement
+     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyEngNum( document.querySelector(셀렉터) );
+     * CommonJS.Input.onlyEngNum( null, 아이디_셀렉터 );
      * 
      * [jQuery]
      * CommonJS.Input.onlyEngNum( $(셀렉터) );
+     * CommonJS.Input.onlyEngNum( null, 셀렉터 );
      */
-    onlyEngNum: function (inputElement) {
-        if (inputElement.length === undefined) {
-            inputElement.addEventListener('keyup', function (e) {
-                this.value = e.target.value.replace(/[^a-zA-Z0-9]/gi, '');
-            });
+    onlyEngNum: function (inputElement, inputElementStr) {
+        if (inputElement !== null) {
+            if (inputElement.length === undefined) {
+                inputElement.addEventListener('keyup', function (e) {
+                    this.value = e.target.value.replace(/[^a-zA-Z0-9]/gi, '');
+                });
+            } else {
+                inputElement.keyup(function(e) {
+                    $(this).val(e.target.value.replace(/[^a-zA-Z0-9]/gi, ''));
+                });
+            }
         } else {
-            $(document).on('keyup', inputElement, function (e) {
-                inputElement.val(e.target.value.replace(/[^a-zA-Z0-9]/gi, ''));
-            });
+            if (document.querySelector(inputElementStr).length === undefined) {
+                document.addEventListener('keyup', function (e) {
+                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
+                        this.value = e.target.value.replace(/[^a-zA-Z0-9]/gi, '');
+                    }
+                });
+            } else {
+                $(document).on('keyup', inputElementStr, function (e) {
+                    $(this).val(e.target.value.replace(/[^a-zA-Z0-9]/gi, ''));
+                });
+            }
         }
     },
     /**
      * 영문 + SPACE 입력
      * @param {Element} inputElement
+     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyEngBlank( document.querySelector(셀렉터) );
+     * CommonJS.Input.onlyEngBlank( null, 아이디_셀렉터 );
      * 
      * [jQuery]
      * CommonJS.Input.onlyEngBlank( $(셀렉터) );
+     * CommonJS.Input.onlyEngBlank( null, 셀렉터 );
      */
-    onlyEngBlank: function (inputElement) {
-        if (inputElement.length === undefined) {
-            inputElement.addEventListener('keyup', function (e) {
-                this.value = e.target.value.replace(/[^a-zA-Z\s]/gi, '');
-            });
+    onlyEngBlank: function (inputElement, inputElementStr) {
+        if (inputElement !== null) {
+            if (inputElement.length === undefined) {
+                inputElement.addEventListener('keyup', function (e) {
+                    this.value = e.target.value.replace(/[^a-zA-Z\s]/gi, '');
+                });
+            } else {
+                inputElement.keyup(function(e) {
+                    $(this).val(e.target.value.replace(/[^a-zA-Z\s]/gi, ''));
+                });
+            }
         } else {
-            $(document).on('keyup', inputElement, function (e) {
-                inputElement.val(e.target.value.replace(/[^a-zA-Z\s]/gi, ''));
-            });
+            if (document.querySelector(inputElementStr).length === undefined) {
+                document.addEventListener('keyup', function (e) {
+                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
+                        this.value = e.target.value.replace(/[^a-zA-Z\s]/gi, '');
+                    }
+                });
+            } else {
+                $(document).on('keyup', inputElementStr, function (e) {
+                    $(this).val(e.target.value.replace(/[^a-zA-Z\s]/gi, ''));
+                });
+            }
         }
     },
     /**
      * 한글만 입력
      * @param {Element} inputElement
+     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyHangul( document.querySelector(셀렉터) );
+     * CommonJS.Input.onlyHangul( null, 아이디_셀렉터 );
      * 
      * [jQuery]
      * CommonJS.Input.onlyHangul( $(셀렉터) );
+     * CommonJS.Input.onlyHangul( null, 셀렉터 );
      */
-    onlyHangul: function (inputElement) {
-        if (inputElement.length === undefined) {
-            inputElement.addEventListener('keyup', function (e) {
-                this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
-            });
+    onlyHangul: function (inputElement, inputElementStr) {
+        if (inputElement !== null) {
+            if (inputElement.length === undefined) {
+                inputElement.addEventListener('keyup', function (e) {
+                    this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
+                });
+            } else {
+                inputElement.keyup(function(e) {
+                    $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/gi, ''));
+                });
+            }
         } else {
-            $(document).on('keyup', inputElement, function (e) {
-                inputElement.val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/gi, ''));
-            });
+            if (document.querySelector(inputElementStr).length === undefined) {
+                document.addEventListener('keyup', function (e) {
+                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
+                        this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
+                    }
+                });
+            } else {
+                $(document).on('keyup', inputElementStr, function (e) {
+                    $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/gi, ''));
+                });
+            }
         }
     },
     /**
      * 한글 + SPACE 입력
      * @param {Element} inputElement
+     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyHangulBlank( document.querySelector(셀렉터) );
+     * CommonJS.Input.onlyHangulBlank( null, 아이디_셀렉터 );
      * 
      * [jQuery]
      * CommonJS.Input.onlyHangulBlank( $(셀렉터) );
+     * CommonJS.Input.onlyHangulBlank( null, 셀렉터 );
      */
-    onlyHangulBlank: function (inputElement) {
-        if (inputElement.length === undefined) {
-            inputElement.addEventListener('keyup', function (e) {
-                this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ\s]/gi, '');
-            });
+    onlyHangulBlank: function (inputElement, inputElementStr) {
+        if (inputElement !== null) {
+            if (inputElement.length === undefined) {
+                inputElement.addEventListener('keyup', function (e) {
+                    this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ\s]/gi, '');
+                });
+            } else {
+                inputElement.keyup(function(e) {
+                    $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ\s]/gi, ''));
+                });
+            }
         } else {
-            $(document).on('keyup', inputElement, function (e) {
-                inputElement.val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ\s]/gi, ''));
-            });
+            if (document.querySelector(inputElementStr).length === undefined) {
+                document.addEventListener('keyup', function (e) {
+                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
+                        this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ\s]/gi, '');
+                    }
+                });
+            } else {
+                $(document).on('keyup', inputElementStr, function (e) {
+                    $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ\s]/gi, ''));
+                });
+            }
         }
     },
     /**
      * 한글 + 영문 + 숫자 입력
      * @param {Element} inputElement
+     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyHanEngNum( document.querySelector(셀렉터) );
+     * CommonJS.Input.onlyHanEngNum( null, 아이디_셀렉터 );
      * 
      * [jQuery]
      * CommonJS.Input.onlyHanEngNum( $(셀렉터) );
+     * CommonJS.Input.onlyHanEngNum( null, 셀렉터 );
      */
-    onlyHanEngNum: function (inputElement) {
-        if (inputElement.length === undefined) {
-            inputElement.addEventListener('keyup', function (e) {
-                this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/gi, '');
-            });
+    onlyHanEngNum: function (inputElement, inputElementStr) {
+        if (inputElement !== null) {
+            if (inputElement.length === undefined) {
+                inputElement.addEventListener('keyup', function (e) {
+                    this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/gi, '');
+                });
+            } else {
+                inputElement.keyup(function(e) {
+                    $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/gi, ''));
+                });
+            }
         } else {
-            $(document).on('keyup', inputElement, function (e) {
-                inputElement.val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/gi, ''));
-            });
+            if (document.querySelector(inputElementStr).length === undefined) {
+                document.addEventListener('keyup', function (e) {
+                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
+                        this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/gi, '');
+                    }
+                });
+            } else {
+                $(document).on('keyup', inputElementStr, function (e) {
+                    $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/gi, ''));
+                });
+            }
         }
     },
     /**
      * 한글 입력 막기
      * @param {Element} inputElement
+     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.blockingHangul( document.querySelector(셀렉터) );
+     * CommonJS.Input.blockingHangul( null, 아이디_셀렉터 );
      * 
      * [jQuery]
      * CommonJS.Input.blockingHangul( $(셀렉터) );
+     * CommonJS.Input.blockingHangul( null, 셀렉터 );
      */
-    blockingHangul: function (inputElement) {
-        if (inputElement.length === undefined) {
-            inputElement.addEventListener('keyup', function (e) {
-                this.value = e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
-            });
+    blockingHangul: function (inputElement, inputElementStr) {
+        if (inputElement !== null) {
+            if (inputElement.length === undefined) {
+                inputElement.addEventListener('keyup', function (e) {
+                    this.value = e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
+                });
+            } else {
+                inputElement.keyup(function(e) {
+                    $(this).val(e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, ''));
+                });
+            }
         } else {
-            $(document).on('keyup', inputElement, function (e) {
-                inputElement.val(e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, ''));
-            });
+            if (document.querySelector(inputElementStr).length === undefined) {
+                document.addEventListener('keyup', function (e) {
+                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
+                        this.value = e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
+                    }
+                });
+            } else {
+                $(document).on('keyup', inputElementStr, function (e) {
+                    $(this).val(e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, ''));
+                });
+            } 
         }
     },
     /**
@@ -1966,22 +2136,43 @@ CommonJS.Input = {
     /**
      * 전화번호 하이픈(-) 자동입력
      * @param {Element} inputElement
+     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.formatHypenPhone( document.querySelector(셀렉터) );
+     * CommonJS.Input.formatHypenPhone( null, 아이디_셀렉터 );
      * 
      * [jQuery]
      * CommonJS.Input.formatHypenPhone( $(셀렉터) );
+     * CommonJS.Input.formatHypenPhone( null, 셀렉터 );
      */
-    formatHypenPhone: function (inputElement) {
-        if (inputElement.length === undefined) {
-            inputElement.addEventListener('keyup', function (e) {
-                fnTemp(e, inputElement);
-            });
+    formatHypenPhone: function (inputElement, inputElementStr) {
+        if (inputElement !== null) {
+            if (inputElement.length === undefined) {
+                inputElement.addEventListener('keyup', function (e) {
+                    fnTemp(e, inputElement);
+                });
+            } else {
+                inputElement.keyup(function(e) {
+                    fnTemp(e, inputElement);
+                });
+            }
         } else {
-            $(document).on('keyup', inputElement, function (e) {
-                fnTemp(e, inputElement);
-            });
+            if (document.querySelector(inputElementStr).length === undefined) {
+                let inputElement = document.querySelector(inputElementStr);
+
+                document.addEventListener('keyup', function (e) {
+                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
+                        fnTemp(e, inputElement);
+                    }
+                });
+            } else {
+                let inputElement = $(inputElementStr);
+
+                $(document).on('keyup', inputElementStr, function (e) {
+                    fnTemp(e, inputElement);
+                });
+            }
         }
 
         function fnTemp(e, inputElement) {
