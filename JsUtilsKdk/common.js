@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 3.7
+ * @version 3.8
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가
  *
@@ -1633,7 +1633,7 @@ CommonJS.BrowserInfo = {
      */
     isCheckUserAgent: function(chkStr) {
         var _agent = navigator.userAgent;
-		return chkStr.indexOf(customStr) > -1;
+		return _agent.indexOf(chkStr) > -1;
     },
     /**
      * 응답 헤더 에서 특정 키와 그에 해당하는 문자열 유무 체크
