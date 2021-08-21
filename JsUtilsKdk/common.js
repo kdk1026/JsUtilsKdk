@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 3.8
+ * @version 3.9
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가
  *
@@ -3217,59 +3217,79 @@ CommonJS.SocialLogin = {
      * @param {string} serviceDoamin 
      * 
      * @link https://developers.naver.com/docs/login/web/web.md
+     * @description SDK 버전 1
+     * 
+     * @link https://developers.naver.com/docs/login/sdks/sdks.md
+     * @description SDK 버전 2
+     * 
+     * @link https://triplexlab.tistory.com/45
+     * 
+     * @see SDK 버전2로 변경
      * 
      * @example
-     * CommonJS.SocialLogin.loginWithNaver(ClientId, 'http://127.0.0.1:5500/test/naver_login_callback.html', 'http://127.0.0.1:5500"');
-     * 
-     * function getProfileSucCallBack(data) {
-     *      console.log(data);
-     * }
+     * CommonJS.SocialLogin.loginWithNaver(ClientId, 'http://127.0.0.1:5500/test/naver_login_callback.html');
      */
-    loginWithNaver: function(ClientId, CallBackUrl, serviceDoamin)  {
-        const _naver_id_login = new naver_id_login(ClientId, CallBackUrl);
-        const _state = _naver_id_login.getUniqState();
-
-        _naver_id_login.setButton("white", 2,40);
-        _naver_id_login.setDomain(serviceDoamin);
-        _naver_id_login.setState(_state);
-        _naver_id_login.setPopup();
-        _naver_id_login.init_naver_id_login();
+    loginWithNaver: function(ClientId, CallBackUrl)  {
+        const naverLogin = new naver.LoginWithNaverId(
+            {
+                clientId: ClientId,
+                callbackUrl: CallBackUrl,
+                isPopup: true, /* 팝업을 통한 연동처리 여부 */
+                loginButton: {color: "green", type: 3, height: 60} /* 로그인 버튼의 타입을 지정 */
+            }
+        );
+    
+        /* 설정정보를 초기화하고 연동을 준비 */
+        naverLogin.init();
     },
     /**
      * 네이버 로그인 콜백
      * @param {string} ClientId 
      * @param {string} CallBackUrl
-     * @param {Function} naverSignInCallback
      * @returns 
      * 
+     * @see SDK 버전2로 변경
+     * 
      * @example
-     * const naverIdLogin = CommonJS.SocialLogin.loginWithNaverCallBack(ClientId, "http://127.0.0.1:5500/test/naver_login.html", 'naverSignInCallback');
+     * const naverIdLogin = CommonJS.SocialLogin.loginWithNaverCallBack(ClientId, 'http://127.0.0.1:5500/test/naver_login_callback.html');
      * 
-     * // 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
-     * function naverSignInCallback() {
-     *      console.log('getProfileData : ', naverIdLogin.getProfileData('email'));
-     *      console.log('getProfileData : ', naverIdLogin.getProfileData('nickname'));
+     * // Callback의 처리. 정상적으로 Callback 처리가 완료될 경우 main page로 redirect(또는 Popup close)
+     * window.addEventListener('load', function () {
+     * 		naverLogin.getLoginStatus(function (status) {
+     * 			if (status) {
+     * 				// 필수적으로 받아야하는 프로필 정보가 있다면 callback처리 시점에 체크
+     * 				const email = naverLogin.user.getEmail();
+     * 				const name = naverLogin.user.getName();
+     * 				const mobile = naverLogin.user.getMobile();
+     * 	
+     * 				const profileObj = {};
+     * 				profileObj.email = email;
+     * 				profileObj.name = name;
+     * 				profileObj.mobile = mobile;
      * 
-     *      const profileObj = {};
-     *      profileObj.email = naverIdLogin.getProfileData('email');
-     *      profileObj.nickname = naverIdLogin.getProfileData('nickname');
-     * 
-     *      window.opener.getProfileSucCallBack(profileObj);
-     *      window.close();
-     * }
+     * 				window.opener.getProfileSucCallBack(profileObj);
+     * 				window.close();	
+     * 			} else {
+     * 				console.log("callback 처리에 실패하였습니다.");
+     * 			}
+     * 		});
+     * });
      */
     loginWithNaverCallBack: function(ClientId, CallBackUrl, naverSignInCallback) {
-        const _naver_id_login = new naver_id_login(ClientId, CallBackUrl);
-
-        if ( _naver_id_login.oauthParams.access_token ) {
-            // 접근 토큰 값 출력
-            // console.log('login response : ', naver_id_login.oauthParams.access_token);
+        const naverLogin = new naver.LoginWithNaverId(
+            {
+                clientId: ClientId,
+                callbackUrl: CallBackUrl,
+                isPopup: true,
+                callbackHandle: true
+                /* callback 페이지가 분리되었을 경우에 callback 페이지에서는 callback처리를 해줄수 있도록 설정합니다. */
+            }
+        );
     
-            // 네이버 사용자 프로필 조회
-            _naver_id_login.get_naver_userprofile( naverSignInCallback+'()' );
-        }
-
-        return _naver_id_login;
+        /* 네아로 로그인 정보를 초기화하기 위하여 init을 호출 */
+        naverLogin.init();
+    
+        return naverLogin;
     },
     // 네이버 로그아웃은 JavaScript로 제공하지 않으므로 REST API 이용해야 함 (접근 토큰 삭제)
 
