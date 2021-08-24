@@ -84,6 +84,9 @@ var CommonJS = {
     },
     /**
      * 현재 위치정보 출력
+     * 
+     * @description SSL인 경우에만 가져올 수 있다. 로컬은 예외인 듯
+     * 
      * @example
      * CommonJS.getLocation(fnLocationSuc, fnLocationErr);
      * 
