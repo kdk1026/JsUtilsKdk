@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 3.9
+ * @version 4.0
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가
  *
@@ -2474,6 +2474,7 @@ CommonJS.Mobile = {
      * @param {string} content 
      * @example
      * CommonJS.Mobile.sendSMS('010-9924-3732', '테스트');
+     * CommonJS.Mobile.sendSMS(null, '테스트');
      */
     sendSMS: function (telNo, content) {
         if (CommonJS.BrowserInfo.isMobile()) {
@@ -2481,6 +2482,8 @@ CommonJS.Mobile = {
                 var _mobileOs = CommonJS.BrowserInfo.isMobileOs().iOS ? 'ios' : 'android';
 
                 location.href = 'sms:' + telNo + (_mobileOs == 'ios' ? '&' : '?') + 'body=' + encodeURIComponent(content);
+            } else {
+                location.href = 'sms:' + (_mobileOs == 'ios' ? '&' : '?') + 'body=' + encodeURIComponent(content);
             }
         } else {
             console.log('모바일 플랫폼에서만 사용 가능합니다.');
