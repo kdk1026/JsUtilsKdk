@@ -3,7 +3,7 @@
  * @since 2018.12.02
  * @version 4.0
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
- * @description 버전업 기준 : 수정 / 함수 추가
+ * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  *
  * @property {object} CommonJS
  * @property {object} CommonJS.Text - 2021.07.10 추가 (CommonJS 에서 addZero 분리하고, 추가)
@@ -1319,10 +1319,17 @@ CommonJS.Cookie = {
      * @example
      * CommonJS.Cookie.setCookie(name, value, expireDay);
      */
-    setCookie: function (name, value, expireDay) {
+     setCookie: function (name, value, expireDay, domain) {
         var _date = new Date();
         _date.setDate(_date.getDate() + Number(expireDay));
-        document.cookie = name + '=' + escape(value) + '; path=/; expires=' + _date.toGMTString() + ';';
+        
+        if (domain) {
+            var cookie_str = name + '=' + escape(value) + '; path=/; expires=' + _date.toGMTString() + ';';
+            cookie_str += 'domain=' + escape(domain);
+            document.cookie = cookie_str;
+        } else {
+	        document.cookie = name + '=' + escape(value) + '; path=/; expires=' + _date.toGMTString() + ';';
+        }
     },
     /**
      * 쿠키 값 얻기
