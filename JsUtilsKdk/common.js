@@ -1315,15 +1315,15 @@ CommonJS.Cookie = {
      * 쿠키 생성
      * @param {string} name
      * @param {*} value
-     * @param {number} expireDay
+     * @param {number} expireSec
      * @param {(undefined|string)} domain
      * @example
-     * CommonJS.Cookie.setCookie(name, value, expireDay);
-     * CommonJS.Cookie.setCookie(name, value, expireDay, domain);
+     * CommonJS.Cookie.setCookie(name, value, expireSec);
+     * CommonJS.Cookie.setCookie(name, value, expireSec, domain);
      */
      setCookie: function (name, value, expireDay, domain) {
         var _date = new Date();
-        _date.setDate(_date.getDate() + Number(expireDay));
+        _date.setSeconds(_date.getSeconds() + Number(expireSec));
         
         if (domain) {
             var cookie_str = name + '=' + escape(value) + '; path=/; expires=' + _date.toGMTString() + ';';
