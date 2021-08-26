@@ -1321,7 +1321,7 @@ CommonJS.Cookie = {
      * CommonJS.Cookie.setCookie(name, value, expireSec);
      * CommonJS.Cookie.setCookie(name, value, expireSec, domain);
      */
-     setCookie: function (name, value, expireDay, domain) {
+     setCookie: function (name, value, expireSec, domain) {
         var _date = new Date();
         _date.setSeconds(_date.getSeconds() + Number(expireSec));
         
