@@ -1316,8 +1316,10 @@ CommonJS.Cookie = {
      * @param {string} name
      * @param {*} value
      * @param {number} expireDay
+     * @param {(undefined|string)} domain
      * @example
      * CommonJS.Cookie.setCookie(name, value, expireDay);
+     * CommonJS.Cookie.setCookie(name, value, expireDay, domain);
      */
      setCookie: function (name, value, expireDay, domain) {
         var _date = new Date();
