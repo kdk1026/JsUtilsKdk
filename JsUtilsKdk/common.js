@@ -3138,7 +3138,7 @@ CommonJS.Code = {
         });
     },
     /**
-     * QR 코드 스캐너
+     * QR 코드, 바코드 스캐너
      * @param {Function} scanSuccCallBack 
      * @param {Function} scanErrCallBack 
      * @link https://blog.minhazav.dev/research/html5-qrcode
@@ -3148,14 +3148,16 @@ CommonJS.Code = {
      * 
      * @link https://github.com/mebjas/html5-qrcode/tree/master/examples/html5
      * 
-     * @description 바코드도 가능하다고 하는데 안된다....
      * @example
      * https://test-a9f7e.web.app/scanner.html
      * 
-     * @description Frontend 였으면 안드로이드 라이브러리 JS 버전으로 바코드도 가능할텐데...
-     *  https://zxing-js.github.io/library/
+     * @description 내부적으로는 이걸 이용한다고 한다. (안드로이드 사용하는 라이브러리의 JS 버전)
+     *      https://zxing-js.github.io/library/
+     * 
+     * @example
+     * https://test-a9f7e.web.app/zxing.html
      */
-    startQRScanner() {
+    startScanner() {
         /*
             <div style="width: 500px" id="qr-reader"></div>
             <div id="qr-reader-results"></div>
