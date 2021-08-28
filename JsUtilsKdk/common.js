@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 4.0
+ * @version 4.1
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  *
@@ -3136,6 +3136,24 @@ CommonJS.Code = {
             width: CommonJS.Valid.isUndefined(width) ? 128 : width,
             height: CommonJS.Valid.isUndefined(width) ? 128 : height
         });
+    },
+    /**
+     * QR 코드&바코드 스캐너
+     * @param {Function} scanSuccCallBack 
+     * @param {Function} scanErrCallBack 
+     * @link https://blog.minhazav.dev/research/html5-qrcode
+     * 
+     * @link https://github.com/mebjas/html5-qrcode
+     *  - dist/html5-qrcode.min.js
+     * 
+     * @link https://github.com/mebjas/html5-qrcode/tree/master/examples/html5
+     * 
+     * @description 그냥 이런게 있다는 정도... 인식이 거의 안되는거 같다...
+     * 
+     * @description Frontend 였으면 안드로이드에서 쓰는 라이브러리 쓸 수 있을텐데...
+     *  https://zxing-js.github.io/library/
+     */
+    startQRScanner() {
     }
 },
 
