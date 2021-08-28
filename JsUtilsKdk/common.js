@@ -3149,6 +3149,8 @@ CommonJS.Code = {
      * @link https://github.com/mebjas/html5-qrcode/tree/master/examples/html5
      * 
      * @description 바코드도 가능하다고 하는데 안된다....
+     * @example
+     * https://test-a9f7e.web.app/scanner.html
      * 
      * @description Frontend 였으면 안드로이드 라이브러리 JS 버전으로 바코드도 가능할텐데...
      *  https://zxing-js.github.io/library/
