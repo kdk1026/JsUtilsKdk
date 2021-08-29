@@ -3156,6 +3156,9 @@ CommonJS.Code = {
      * 
      * @example
      * https://test-a9f7e.web.app/zxing.html
+     * 
+     * @description QR코드는 그래도 쓸만
+     *  바코드는 QR코드 넓이와 비슷한 것만 인식 가능
      */
     startScanner() {
         /*
