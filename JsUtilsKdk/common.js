@@ -2515,12 +2515,11 @@ CommonJS.Mobile = {
         }
     },
     /**
-     * 카메라 실행
+     * 카메라 실행 (이미지)
      *   - (일반적인) accept, capture 속성이 없는 경우
      *          : 카메라, 캠코더, 파일
      *   - accept 속성만 있는 경우
      *          accept="image/*" : 작업 선택 - 카메라, 내 파일, 파일
-     *          accept="audio/*" : 작업 선택 - 음성 녹음, 내 파일, 파일
      * @param {Element} fileElement 
      * @param {Element} imgElement 
      * @example
@@ -2547,8 +2546,42 @@ CommonJS.Mobile = {
         });
     },
     /**
+     * 카메라 실행 (동영상)
+     *   - (일반적인) accept, capture 속성이 없는 경우
+     *          : 카메라, 캠코더, 파일
+     *   - accept 속성만 있는 경우
+     *          accept="video/*" : 작업 선택 - 카메라 캠코더, 내 파일, 파일
+     * @param {Element} fileElement 
+     * @param {Element} imgElement 
+     * @example
+     * [JavaScript]
+     * CommonJS.Mobile.runCamera( document.querySelector('#file'), document.querySelector('#img') );
+     * 
+     * [jQuery]
+     * CommonJS.Mobile.runCamera( $('#file')[0], $('#img')[0] );
+     */
+    runCamcorder: function (fileElement, imgElement) {
+        fileElement.setAttribute('accept', 'video/*');
+        fileElement.setAttribute('capture', 'camcorder');
+
+        fileElement.addEventListener('change', function (e) {
+            if (CommonJS.BrowserInfo.isMobile()) {
+                var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
+
+                imgElement.setAttribute("src", _fileUrl);
+                this.removeAttribute('camcorder');
+            } else {
+                // 카메라 실행이 목적이므로 실행 가능하더라도 실행 시키지 않음
+                console.log('모바일 플랫폼에서만 사용 가능합니다.');
+            }
+        });
+    },
+    /**
      * 음성 녹음 실행
-     *   - runCamera 참고
+     *   - (일반적인) accept, capture 속성이 없는 경우
+     *          : 카메라, 캠코더, 파일
+     *   - accept 속성만 있는 경우
+     *          accept="audio/*" : 작업 선택 - 음성 녹음, 내 파일, 파일
      * @param {Element} fileElement
      * @param {Element} audioElement
      * @example
@@ -2559,7 +2592,7 @@ CommonJS.Mobile = {
      * CommonJS.Mobile.runCamera( $('#file')[0], $('#audio')[0] );
      */
     runMicroPhone: function (fileElement, audioElement) {
-        fileElement.setAttribute('accept', 'audio/*');
+        fileElement.setAttribute('accept', '    audio/*');
         fileElement.setAttribute('capture', 'microphone');
 
         fileElement.addEventListener('change', function (e) {
