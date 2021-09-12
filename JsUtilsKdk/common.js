@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 4.1
+ * @version 4.2
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  *
@@ -155,7 +155,7 @@ var CommonJS = {
      */
     getClassType(any) {
         return Object.prototype.toString.call(any).slice(8, -1);
-    }
+    },
     /*
     // TODO : 퍼블을 해야 테스트를 해야하므로.... 적합한 환경 접하면 테스트하는 걸로....
     scrollPaging: function(divElement, pageNum) {
@@ -172,8 +172,25 @@ var CommonJS = {
 
             return pageNum;
         });
-    }
+    },
     */
+   /**
+    * 이미지를 base64 인코딩된 data URI로 반환
+    * @param {Element} img 
+    * @returns 
+    * @example
+    * CommonJS.getImageToDataUrl( document.querySelector('#img') );
+    */
+    getImageToDataUrl(img) {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        ctx.drawImage(img, 0, 0);
+        return canvas.toDataURL('image/jpeg');
+    }
 };
 
 CommonJS.Text = {
