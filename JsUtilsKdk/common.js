@@ -193,6 +193,8 @@ var CommonJS = {
     },
     /**
      * 파이어폭스&사파리 앞으로, 뒤로 버튼에 대한 캐시 삭제
+     * @example
+     * CommonJS.reloadFirefoxSafari();
      */
     reloadFirefoxSafari() {
         window.onpageshow = function (event) {
