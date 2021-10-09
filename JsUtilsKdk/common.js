@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 4.2
+ * @version 4.3
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  *
@@ -190,6 +190,16 @@ var CommonJS = {
 
         ctx.drawImage(img, 0, 0);
         return canvas.toDataURL('image/jpeg');
+    },
+    /**
+     * 파이어폭스&사파리 앞으로, 뒤로 버튼에 대한 캐시 삭제
+     */
+    reloadFirefoxSafari() {
+        window.onpageshow = function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        }
     }
 };
 
