@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 4.3
+ * @version 4.4
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  *
@@ -1376,13 +1376,20 @@ CommonJS.Cookie = {
     /**
      * 쿠키 삭제
      * @param {string} name
+     * @param {(undefined|string)} domain
      * @example
      * CommonJS.Cookie.deleteCookie(name);
+     * CommonJS.Cookie.deleteCookie(name, domain);
      */
-    deleteCookie: function (name) {
+    deleteCookie: function (name, domain) {
         var _date = new Date();
         _date.setDate(_date.getDate() - 1);
-        document.cookie = name + '=' + '; path=/; expires=' + _date.toGMTString() + ';';
+
+        if (domain) {
+        	document.cookie = name + '=' + '; path=/; expires=' + _date.toGMTString() + '; domain=' + escape(domain);
+        } else {
+        	document.cookie = name + '=' + '; path=/; expires=' + _date.toGMTString() + ';';
+        }
     }
 }
 
