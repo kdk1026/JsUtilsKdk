@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 4.4
+ * @version 4.5
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  *
@@ -2441,37 +2441,26 @@ CommonJS.SnsShare = {
         );
     },
     /**
-     * Kakao 공유
+     * Kakao 텍스트 공유
      * @param {string} webUrl
      * @param {string} mobileWebUrl
      * @param {string} title - 공유 미리보기 제목
      * @param {string} imageUrl - 공유 미리보기 썸네일
      * @param {string} btnTitle
      * @example
-     * CommonJS.SnsShare.shareKakao(webUrl, mobileWebUrl, title, imageUrl, btnTitle);
-     * 
+     * CommonJS.SnsShare.shareKakaoText(text, webUrl, mobileWebUrl);
+     *
      * @link https://developers.kakao.com/docs/latest/ko/getting-started/sdk-js
      * @link https://developers.kakao.com/docs/latest/ko/message/js-link
      */
-    shareKakao: function (apiKey, webUrl, mobileWebUrl, title, imageUrl, btnTitle) {
-        Kakao.Link.createDefaultButton({
-            container: '#CONTAINER_ID',
-            objectType: 'feed',
-            content: {
-                title: title,
-                imageUrl: imageUrl,
-                link: {
-                    webUrl: webUrl,
-                    mobileWebUrl: mobileWebUrl
-                }
-            },
-            buttons: [{
-                title: btnTitle,
-                link: {
-                    webUrl: webUrl,
-                    mobileWebUrl: mobileWebUrl
-                }
-            }]
+     shareKakaoText: function (text, webUrl, mobileWebUrl) {
+        Kakao.Link.sendDefault({
+            objectType: 'text',
+            text: text,
+		  	link: {
+		    	mobileWebUrl: mobileWebUrl,
+		    	webUrl: webUrl,
+		  	},
         });
     },
     /**
