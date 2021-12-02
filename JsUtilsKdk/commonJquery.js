@@ -135,6 +135,7 @@ $(document).ajaxStop(function() {
 			enctype: 'multipart/form-data',
 			type: method,
 			url: url,
+			headers: (header == undefined) ? {} : header,
 			data: _param,
 			success: function(result) {
 				if (isAsync) {
