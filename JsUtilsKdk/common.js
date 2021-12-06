@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 4.5
+ * @version 4.6
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  *
@@ -786,6 +786,17 @@ CommonJS.FormatValid = {
      */
     isUrl: function (val) {
         var _re = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+        return _re.test(val);
+    },
+    /**
+     * IP 형식 체크
+     * @param {*} val 
+     * @returns 
+     * @example
+     * CommonJS.FormatValid.isIp(val);
+     */
+    isIp: function (val) {
+        var _re = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]|\*)\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]|\*)$/;
         return _re.test(val);
     }
 }
