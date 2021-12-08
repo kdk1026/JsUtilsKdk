@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 4.6
+ * @version 4.7
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  *
@@ -247,13 +247,35 @@ CommonJS.Text = {
      */
     copyToClipBoard: function (textElement, string) {
         if (textElement != null) {
-            textElement.select();
-            document.execCommand("Copy");
+            if (CommonJS.BrowserInfo.isMobileOs().iOS) {
+                var editable = textElement.contentEditable;
+                var readOnly = textElement.readOnly;
+
+                textElement.contentEditable = true;
+                textElement.readOnly = false;
+
+                var range = document.createRange();
+                range.selectNodeContents(textElement);
+
+                var selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+
+                textElement.setSelectionRange(0, 999999);
+                textElement.contentEditable = editable;
+                textElement.readOnly = readOnly;
+            } else {
+                textElement.select();
+                document.execCommand("Copy");
+            }
         } else {
             const _t = document.createElement("textarea");
-            document.body.appendChild(_t);
             _t.value = string;
+
+            document.body.appendChild(_t);
             _t.select();
+            _t.setSelectionRange(0, 9999);  // 셀렉트 범위 설정
+
             document.execCommand("Copy");
             document.body.removeChild(_t);
         }
