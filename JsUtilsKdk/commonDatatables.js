@@ -2,7 +2,7 @@
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2019.03.10
  * @version 1.0
- * @description 범용적으로 사용하고자 했으나 참고용일듯
+ * @description 범용적으로 사용하고자 했으나 참고용일듯...
  */
 var lang_kor = {
 	"decimal" : "",
