@@ -3449,7 +3449,7 @@ CommonJS.SocialLogin = {
      * 		});
      * });
      */
-    loginWithNaverCallBack: function(ClientId, CallBackUrl, naverSignInCallback) {
+    loginWithNaverCallBack: function(ClientId, CallBackUrl) {
         const naverLogin = new naver.LoginWithNaverId(
             {
                 clientId: ClientId,
