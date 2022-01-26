@@ -3513,8 +3513,9 @@ CommonJS.SocialLogin = {
 
                         const method = 'get';
                         const url = 'https://people.googleapis.com/v1/people/me';
+                        
                         const param = {};
-                         param.personFields = 'birthdays';
+                        param.personFields = 'birthdays';
                         param.key = 'API 키';
                         param.access_token = access_token;
 
