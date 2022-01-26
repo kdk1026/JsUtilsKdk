@@ -3516,7 +3516,7 @@ CommonJS.SocialLogin = {
                         const param = {};
                          param.personFields = 'birthdays';
                         param.key = 'API 키';
-                        param.access_token = _access_token;
+                        param.access_token = access_token;
 
                         CommonJS.Http.commonFetch(method, url, null, param, googleSignInCallBack);
                     }
