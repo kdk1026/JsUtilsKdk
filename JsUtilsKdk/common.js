@@ -3486,7 +3486,7 @@ CommonJS.SocialLogin = {
         /*
             <head>
                 ...
-                <meta name ="클라이언트 ID">
+                <meta name ="google-signin-client_id" content="OAuth2.0 클라이언트ID">
 
                 ...
                 <script src="https://apis.google.com/js/platform.js?onload=googleAuthInit" async defer></script>
