@@ -3809,26 +3809,6 @@ CommonJS.Scroll = {
                 callback(pageNum);
             }
         });
-    },
-    /**
-     * CommonJS.Scroll.scrollPagingDocument( pageNum, callback );
-     * 
-     * @description
-     * 테스트를 안해봄...
-     * 
-     * @param {*} pageNum 
-     * @param {*} callback 
-     */
-    scrollPagingDocument: function(pageNum, callback) {
-        document.addEventListener('scroll', function() {
-            var _scroll = this.scrollTop + this.clientHeight;  
-            var _height = this.scrollHeight; 
-
-            if ( _scroll >= _height ) {
-                pageNum ++;
-                callback(pageNum);
-            }     
-        });
     }
 }
 
