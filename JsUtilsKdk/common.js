@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 4.7
+ * @version 4.8
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  *
@@ -31,6 +31,7 @@
  * @property {object} CommonJS.Addr - 2021.07.14 추가
  * @property {object} CommonJS.Discount - 2021.07.16 추가
  * @property {object} CommonJS.Print - 2021.07.21 추가 (CommonJS 에서 printTheArea 분리하고, 추가)
+ * @property {object} CommonJS.Scroll - 2022.02.10 추가
  * @property {method} prototype
  */
 var CommonJS = {
@@ -156,24 +157,6 @@ var CommonJS = {
     getClassType(any) {
         return Object.prototype.toString.call(any).slice(8, -1);
     },
-    /*
-    // TODO : 퍼블을 해야 테스트를 해야하므로.... 적합한 환경 접하면 테스트하는 걸로....
-    scrollPaging: function(divElement, pageNum) {
-        divElement.scroll(function() {
-            var _innerHeight = this.innerHeight();
-            var _scroll = this.scrollTop() + this.innerHeight(); 
-            var _height = this.scrollHeight; 
-
-            if ( _scroll >= _height ) {
-                pageNum ++;
-
-                console.log('pageNum is : ', pageNum);
-            }
-
-            return pageNum;
-        });
-    },
-    */
    /**
     * 이미지를 base64 인코딩된 data URI로 반환
     * @param {Element} img 
@@ -3796,6 +3779,56 @@ CommonJS.Print = {
 
         window.print();
         location.reload();
+    }
+}
+
+CommonJS.Scroll = {
+    /**
+     * CommonJS.Scroll.scrollPagingDiv( document.querySelector(셀렉터), pageNum, callback );
+     * 
+     * @description
+     * function fnCallback(pageNum) {
+     *      console.log( pageNum );
+     * 
+     *      if ( totCnt > pageNum * pageSize ) {
+     *          조회
+     *      }
+     * }
+     * 
+     * @param {*} divElement 
+     * @param {*} pageNum 
+     * @param {*} callback 
+     */
+    scrollPagingDiv: function(divElement, pageNum, callback) {
+        divElement.addEventListener('scroll', function() {
+            var _scroll = this.scrollTop + this.clientHeight;  
+            var _height = this.scrollHeight; 
+
+            if ( _scroll >= _height ) {
+                pageNum ++;
+                callback(pageNum);
+            }
+        });
+    },
+    /**
+     * CommonJS.Scroll.scrollPagingDocument( pageNum, callback );
+     * 
+     * @description
+     * 테스트를 안해봄...
+     * 
+     * @param {*} pageNum 
+     * @param {*} callback 
+     */
+    scrollPagingDocument: function(pageNum, callback) {
+        document.addEventListener('scroll', function() {
+            var _scroll = this.scrollTop + this.clientHeight;  
+            var _height = this.scrollHeight; 
+
+            if ( _scroll >= _height ) {
+                pageNum ++;
+                callback(pageNum);
+            }     
+        });
     }
 }
 
