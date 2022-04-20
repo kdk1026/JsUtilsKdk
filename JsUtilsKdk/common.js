@@ -32,6 +32,7 @@
  * @property {object} CommonJS.Addr - 2021.07.14 추가
  * @property {object} CommonJS.Discount - 2021.07.16 추가
  * @property {object} CommonJS.Print - 2021.07.21 추가 (CommonJS 에서 printTheArea 분리하고, 추가)
+ * @property {object} CommonJS.Scroll - 2022.02.10 추가
  * @property {method} prototype
  */
 var CommonJS = {
@@ -157,24 +158,6 @@ var CommonJS = {
     getClassType(any) {
         return Object.prototype.toString.call(any).slice(8, -1);
     },
-    /*
-    // TODO : 퍼블을 해야 테스트를 해야하므로.... 적합한 환경 접하면 테스트하는 걸로....
-    scrollPaging: function(divElement, pageNum) {
-        divElement.scroll(function() {
-            var _innerHeight = this.innerHeight();
-            var _scroll = this.scrollTop() + this.innerHeight(); 
-            var _height = this.scrollHeight; 
-
-            if ( _scroll >= _height ) {
-                pageNum ++;
-
-                console.log('pageNum is : ', pageNum);
-            }
-
-            return pageNum;
-        });
-    },
-    */
    /**
     * 이미지를 base64 인코딩된 data URI로 반환
     * @param {Element} img 
@@ -3805,6 +3788,36 @@ CommonJS.Print = {
 
         window.print();
         location.reload();
+    }
+}
+
+CommonJS.Scroll = {
+    /**
+     * CommonJS.Scroll.scrollPagingDiv( document.querySelector(셀렉터), pageNum, callback );
+     * 
+     * @description
+     * function fnCallback(pageNum) {
+     *      console.log( pageNum );
+     * 
+     *      if ( totCnt > pageNum * pageSize ) {
+     *          조회
+     *      }
+     * }
+     * 
+     * @param {*} divElement 
+     * @param {*} pageNum 
+     * @param {*} callback 
+     */
+    scrollPagingDiv: function(divElement, pageNum, callback) {
+        divElement.addEventListener('scroll', function() {
+            var _scroll = this.scrollTop + this.clientHeight;  
+            var _height = this.scrollHeight; 
+
+            if ( _scroll >= _height ) {
+                pageNum ++;
+                callback(pageNum);
+            }
+        });
     }
 }
 
