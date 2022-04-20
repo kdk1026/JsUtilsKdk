@@ -1,9 +1,10 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 4.7
+ * @version 4.8
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
+ * @description 파일명을 common-util.js 로 변경해서 사용
  *
  * @property {object} CommonJS
  * @property {object} CommonJS.Text - 2021.07.10 추가 (CommonJS 에서 addZero 분리하고, 추가)
@@ -3401,6 +3402,11 @@ CommonJS.SocialLogin = {
      * @see SDK 버전2로 변경
      * 
      * @example
+     * <!-- 네이버아이디로로그인 버튼 노출 영역 -->
+     * <div id="naverIdLogin" style="display: none;"></div>
+     * 
+     * document.querySelector('#naverIdLogin').firstChild.click();
+     * 
      * CommonJS.SocialLogin.loginWithNaver(ClientId, 'http://127.0.0.1:5500/test/naver_login_callback.html');
      */
     loginWithNaver: function(ClientId, CallBackUrl)  {
@@ -3576,6 +3582,8 @@ CommonJS.SocialLogin = {
      * @description VS코드 settings.json 파일 열기 참고
      * @link https://velog.io/@devyang97/VScode-settings.json
      * 
+     * @description 안드로이드의 경우, 네이티브로 개발해야 함 (웹뷰 방식 중단)
+     * 
      * @example
      * 아이고야...까탑스럽구만...
      * 
@@ -3650,6 +3658,7 @@ CommonJS.SocialLogin = {
         으아아!
         인스타그램 (페이스북, 계정만 다른가?), 라인, 트위터, 애플
         뭔놈의 소셜 로그인이 이리 많아 ㅡㅡ 미쳐 버리겄네.. 추후 천천히..
+        애플은 원노트 참고
     */
 }
 
