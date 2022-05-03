@@ -109,6 +109,53 @@ $(document).ajaxStop(function() {
 		return _retData;
 	},
     /**
+     * 공통 Ajax 처리 (JSON)
+     * @param {boolean} isAsync 
+     * @param {string} method 
+     * @param {string} url 
+     * @param {(undefined|Object)} header 
+     *   - param, callback 없는 경우만 생략 가능 / 없으면 {} 로 넘길 것
+     * @param {(undefined|Object)} param 
+     * @param {(undefined|Function)} callback 
+     * @returns 
+	 * @example
+	 * $.commonAjax(isAsync, method, url, header, param, callback);
+     */
+	 commonAjaxJson: function(isAsync, method, url, header, param, callback) {
+		let _retData = {};
+
+		let _contentType = "application/json; charset=utf-8";
+		let _params = (param == undefined) ? {} : param;
+
+		$.ajax({
+			async: isAsync,
+			cache: false,
+			traditional: true,
+			contentType: _contentType,
+			dataType: "json",
+			type: method,
+			url: url,
+            headers: (header == undefined) ? {} : header,
+			data: _params,
+			success: function(result) {
+				if (isAsync) {
+					callback(result);
+				} else {
+					if ( (callback == undefined) || (typeof callback != 'function') ) {
+						_retData = result;
+					} else {
+						callback(result);
+					}
+				}
+			},
+			error: function(xhr, status, err) {
+				alert("code = "+ xhr.status + " message = " + xhr.responseText + " error = " + err);
+			}
+		});
+
+		return _retData;
+	},
+    /**
      * 공통 Ajax 파일 처리
      * @param {boolean} isAsync 
      * @param {string} method 
