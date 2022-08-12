@@ -1494,8 +1494,8 @@ CommonJS.Byte = {
         const _textLen = _textVal.length;
 
         let _totalByte = 0;
-        for (let i=0; i < textLen; i++) {
-            const eachChar = textVal.charAt(i);
+        for (let i=0; i < _textLen; i++) {
+            const eachChar = _textVal.charAt(i);
 			const uniChar = escape(eachChar);
 
             if ( uniChar.length > 4 ) {
