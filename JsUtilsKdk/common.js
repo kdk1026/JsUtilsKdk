@@ -1491,7 +1491,7 @@ CommonJS.Byte = {
 			_textVal = obj.val();
 		}
 
-        const _textLen = textVal.length;
+        const _textLen = _textVal.length;
 
         let _totalByte = 0;
         for (let i=0; i < textLen; i++) {
