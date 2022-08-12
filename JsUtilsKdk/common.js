@@ -3915,7 +3915,6 @@ CommonJS.Masking = {
         let originStr = str;
         let rrnStr;
         let maskingStr;
-        let strLength;
 
         if ( CommonJS.Valid.isBlank(originStr) ) {
             return originStr;
@@ -3924,12 +3923,10 @@ CommonJS.Masking = {
         rrnStr = originStr.match(/(?:[0-9]{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[1,2][0-9]|3[0,1]))-[1-4]{1}[0-9]{6}\b/gi);
 
         if ( !CommonJS.Valid.isNull(rrnStr) ) {
-            strLength = rrnStr.toString().split('-').length;
             maskingStr = originStr.toString().replace(rrnStr,rrnStr.toString().replace(/(-?)([1-4]{1})([0-9]{6})\b/gi,"$1$2******"));
         } else {
             rrnStr = originStr.match(/\d{13}/gi);
             if ( !CommonJS.Valid.isBlank(rrnStr[0]) ) {
-                strLength = rrnStr.toString().split('-').length;
                 maskingStr = originStr.toString().replace(rrnStr,rrnStr.toString().replace(/([0-9]{6})$/gi,"******"));
             } else {
                 return originStr;
