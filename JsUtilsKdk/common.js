@@ -2812,7 +2812,6 @@ CommonJS.Map = {
 CommonJS.Editor = {
     /**
      * CK Editor
-     * @param {Element} targetElement 
      * @link https://ckeditor.com/ckeditor-5/online-builder/
      * 
      * @example
@@ -2833,13 +2832,12 @@ CommonJS.Editor = {
      * [이미지 업로드 Backend 처리]
      * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/EditorUploadController.java
      */
-    ckeditor: function (targetElement) {
+    ckeditor: function () {
         // 다운로드 경로\ckeditor5\sample\index.html 참고
         // html 모드는 지원 안하는 듯
     },
     /**
      * Summernote
-     * @param {Element} targetElement 
      * @link https://summernote.org/getting-started/#requires-html5-doctype
      * @link https://summernote.org/getting-started/#without-bootstrap
      * 
@@ -2865,7 +2863,7 @@ CommonJS.Editor = {
      * [이미지 업로드 Backend 처리]
      * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/EditorUploadController.java
      */
-    summernote: function (targetElement) {
+    summernote: function () {
         /*
             ...
                 callbacks: {
@@ -2902,7 +2900,6 @@ CommonJS.Editor = {
     },
     /**
      * Toast Editor
-     * @param {Element} targetElement 
      * @link https://ui.toast.com/tui-editor
      * 
      * @description
@@ -2929,7 +2926,7 @@ CommonJS.Editor = {
      * @description
      * jQuery 필수 아니라서 사용 안할려고 구글링 하면서 아주 발악을... fetch 아직은 너무도 어색한 그대...
      */
-    toastEditor: function (targetElement) {
+    toastEditor: function () {
         /*
                 hooks: {
                     addImageBlobHook: function (blob, callback) {
