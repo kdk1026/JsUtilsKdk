@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 4.8
+ * @version 4.9
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  * @description 파일명을 common-util.js 로 변경해서 사용
@@ -33,9 +33,10 @@
  * @property {object} CommonJS.Discount - 2021.07.16 추가
  * @property {object} CommonJS.Print - 2021.07.21 추가 (CommonJS 에서 printTheArea 분리하고, 추가)
  * @property {object} CommonJS.Scroll - 2022.02.10 추가
+ * @property {object} CommonJS.Masking - 2022.08.12 추가
  * @property {method} prototype
  */
-var CommonJS = {
+ var CommonJS = {
     /**
      * 팝업창 띄우기
      * @param {string} url
@@ -333,6 +334,16 @@ CommonJS.Object = {
 }
 
 CommonJS.Valid = {
+    /**
+     * NULL 체크
+     * @param {*} val 
+     * @returns {boolean} 
+     * @example
+     * CommonJS.Valid.isNull(val);
+     */
+    isNull: function (val) {
+        return typeof val == 'undefined' || val == null || val == '';
+    },
     /**
      * 공백, 빈 문자열 체크 (undefined == null)
      *  - 다음 형태로 대체 가능 (권장)
@@ -3818,6 +3829,165 @@ CommonJS.Scroll = {
                 callback(pageNum);
             }
         });
+    }
+}
+
+CommonJS.Masking = {
+    /**
+     * 이메일 마스킹
+     *  - 원본 데이터 : abcdefg12345@naver.com
+     *  - 변경 데이터 : ab**********@naver.com
+     * @param {string} str 
+     * @returns 
+     * @example
+     * CommonJS.Masking.email1( 'abcdefg12345@naver.com' );
+     */
+    email1: function(str) {
+        let originStr = str;
+        let emailStr = originStr.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
+        let strLength;
+
+        if ( CommonJS.Valid.isBlank(originStr) || CommonJS.Valid.isBlank(emailStr[0]) ) {
+            return originStr;
+        } else {
+            strLength = emailStr.toString().split('@')[0].length - 3;
+            return originStr.toString().replace(new RegExp('.(?=.{0,' + strLength + '}@)', 'g'), '*');
+        }
+    },
+    /**
+     * 이메일 마스킹
+     *  - 원본 데이터 : abcdefg12345@naver.com
+     *  - 변경 데이터 : ab**********@nav******
+     * @param {string} str 
+     * @returns 
+     * @example
+     * CommonJS.Masking.email2( 'abcdefg12345@naver.com' );
+     */
+    email2: function(str) {
+        let originStr = str;
+        let emailStr = originStr.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
+        let strLength;
+
+        if ( CommonJS.Valid.isBlank(originStr) || CommonJS.Valid.isBlank(emailStr[0]) ) {
+            return originStr;
+        } else {
+            strLength = emailStr.toString().split('@')[0].length - 3;
+            return originStr.toString().replace(new RegExp('.(?=.{0,' + strLength + '}@)', 'g'), '*').replace(/.{6}$/, "******");
+        }
+    },
+    /**
+     * 휴대폰 번호 마스킹
+     *  - 원본 데이터 : 01012345678, 변경 데이터 : 010****5678
+     *  - 원본 데이터 : 010-1234-5678, 변경 데이터 : 010-****-5678
+     *  - 원본 데이터 : 0111234567, 변경 데이터 : 011***4567
+     *  - 원본 데이터 : 011-123-4567, 변경 데이터 : 011-***-4567
+     * @param {string} str 
+     * @example
+     * CommonJS.Masking.cellPhone( '01012345678' );
+     */
+    cellPhone: function(str) {
+        let originStr = str;
+        let phoneStr;
+        let maskingStr;
+
+        if ( CommonJS.Valid.isBlank(originStr) ) {
+            return originStr;
+        }
+
+        // '-'가 없는 경우
+        if ( originStr.toString().split('-').length != 3 ) {
+            phoneStr = originStr.length < 11 ? originStr.match(/\d{10}/gi) : originStr.match(/\d{11}/gi);
+            if ( CommonJS.Valid.isBlank(phoneStr[0]) ) {
+                return originStr;
+            }
+
+            if ( originStr.length < 11 ) {
+                // 1.1) 0110000000
+                maskingStr = originStr.toString().replace(phoneStr, phoneStr.toString().replace(/(\d{3})(\d{3})(\d{4})/gi,'$1***$3'));
+            } else {
+                // 1.2) 01000000000
+                maskingStr = originStr.toString().replace(phoneStr, phoneStr.toString().replace(/(\d{3})(\d{4})(\d{4})/gi,'$1****$3'));
+            }
+        } else {
+            // '-'가 있는 경우
+            phoneStr = originStr.match(/\d{2,3}-\d{3,4}-\d{4}/gi);
+            if ( CommonJS.Valid.isBlank(phoneStr[0]) ) {
+                return originStr;
+            }
+
+            if ( /-[0-9]{3}-/.test(phoneStr) ) {
+                // 2.1) 00-000-0000
+                maskingStr = originStr.toString().replace(phoneStr, phoneStr.toString().replace(/-[0-9]{3}-/g, "-***-"));
+            } else {
+                // 2.2) 00-0000-0000
+                maskingStr = originStr.toString().replace(phoneStr, phoneStr.toString().replace(/-[0-9]{4}-/g, "-****-"));
+            }
+        }
+
+        return maskingStr;
+    },
+    /**
+     * 주민등록 번호 마스킹 (Resident Registration Number, RRN Masking)
+     *  - 원본 데이터 : 990101-1234567, 변경 데이터 : 990101-1******
+     *  - 원본 데이터 : 9901011234567, 변경 데이터 : 9901011******
+     * @param {string} str 
+     * @example
+     * CommonJS.Masking.rrn( '990101-1234567' );
+     */
+    rrn: function(str) {
+        let originStr = str;
+        let rrnStr;
+        let maskingStr;
+        let strLength;
+
+        if ( CommonJS.Valid.isBlank(originStr) ) {
+            return originStr;
+        }
+
+        rrnStr = originStr.match(/(?:[0-9]{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[1,2][0-9]|3[0,1]))-[1-4]{1}[0-9]{6}\b/gi);
+
+        if ( !CommonJS.Valid.isNull(rrnStr) ) {
+            strLength = rrnStr.toString().split('-').length;
+            maskingStr = originStr.toString().replace(rrnStr,rrnStr.toString().replace(/(-?)([1-4]{1})([0-9]{6})\b/gi,"$1$2******"));
+        } else {
+            rrnStr = originStr.match(/\d{13}/gi);
+            if ( !CommonJS.Valid.isBlank(rrnStr[0]) ) {
+                strLength = rrnStr.toString().split('-').length;
+                maskingStr = originStr.toString().replace(rrnStr,rrnStr.toString().replace(/([0-9]{6})$/gi,"******"));
+            } else {
+                return originStr;
+            }
+        }
+
+        return maskingStr;
+    },
+    /**
+     * 이름 마스킹
+     *  - 원본 데이터 : 갓댐희, 변경 데이터 : 갓댐*
+     *  - 원본 데이터 : 하늘에수, 변경 데이터 : 하늘**
+     *  - 원본 데이터 : 갓댐, 변경 데이터 : 갓*
+     * @param {string} str 
+     * @example
+     * CommonJS.Masking.name(str);
+     */
+    name: function(str) {
+        let originStr = str;
+		let maskingStr;
+		let strLength;
+
+        if ( CommonJS.Valid.isBlank(originStr) ) {
+            return originStr;
+        }
+
+        strLength = originStr.length;
+
+        if ( strLength < 3 ) {
+            maskingStr = originStr.replace(/(?<=.{1})./gi, "*");
+        } else {
+            maskingStr = originStr.replace(/(?<=.{2})./gi, "*");
+        }
+
+        return maskingStr;
     }
 }
 
