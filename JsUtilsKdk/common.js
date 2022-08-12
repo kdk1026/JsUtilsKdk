@@ -1571,7 +1571,7 @@ CommonJS.Byte = {
             }
         }
 
-        return (totalByte > _maxByte);
+        return (_totalByte > _maxByte);
     }
 }
 
@@ -1735,7 +1735,7 @@ CommonJS.BrowserInfo = {
 			return acc;
 		}, {});
 
-        return (headers[key] === chkStr);
+        return (_headers[key] === chkStr);
     },
     /**
      * 브라우저 언어 확인
