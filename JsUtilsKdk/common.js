@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 4.9
+ * @version 5.0
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  * @description 파일명을 common-util.js 로 변경해서 사용
@@ -3288,6 +3288,8 @@ CommonJS.Code = {
  *   : 검수요청 필수 (제공 정보 활용처 확인 - 이미지, 서비스 적용 형태 확인 - 이미지)
  * 
  * ※ 나름 중요한 데이터 이므로 const 최대 활용
+ * 
+ * ※ https://github.com/kdk1026/SocialLogin
  * ********************************************************************
  */
 CommonJS.SocialLogin = {
@@ -3622,12 +3624,6 @@ CommonJS.SocialLogin = {
             </body>
         */
     }
-    /*
-        으아아!
-        인스타그램 (페이스북, 계정만 다른가?), 라인, 트위터, 애플
-        뭔놈의 소셜 로그인이 이리 많아 ㅡㅡ 미쳐 버리겄네.. 추후 천천히..
-        애플은 원노트 참고
-    */
 }
 
 CommonJS.Addr = {
