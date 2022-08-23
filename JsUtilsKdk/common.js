@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 5.0
+ * @version 5.1
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  * @description 파일명을 common-util.js 로 변경해서 사용
@@ -34,6 +34,7 @@
  * @property {object} CommonJS.Print - 2021.07.21 추가 (CommonJS 에서 printTheArea 분리하고, 추가)
  * @property {object} CommonJS.Scroll - 2022.02.10 추가
  * @property {object} CommonJS.Masking - 2022.08.12 추가
+ * @property {object} CommonJS.Time - 2022.08.23 추가
  * @property {method} prototype
  */
  var CommonJS = {
@@ -3955,6 +3956,38 @@ CommonJS.Masking = {
         }
 
         return maskingStr;
+    }
+}
+
+CommonJS.Time = {
+    /**
+     * 해당 시간 기준으로 방금 전 ~ 년 전
+     * @param {Date} createdAt 
+     * @returns 
+     */
+    displayedAt: function(createdAt) {
+        const milliSeconds = new Date() - createdAt;
+  
+        const seconds = milliSeconds / 1000;
+        if (seconds < 60) return `방금 전`
+        
+        const minutes = seconds / 60;
+        if (minutes < 60) return `${Math.floor(minutes)}분 전`
+        
+        const hours = minutes / 60;
+        if (hours < 24) return `${Math.floor(hours)}시간 전`
+        
+        const days = hours / 24;
+        if (days < 7) return `${Math.floor(days)}일 전`
+        
+        const weeks = days / 7;
+        if (weeks < 5) return `${Math.floor(weeks)}주 전`
+        
+        const months = days / 30;
+        if (months < 12) return `${Math.floor(months)}개월 전`
+        
+        const years = days / 365;
+        return `${Math.floor(years)}년 전`
     }
 }
 
