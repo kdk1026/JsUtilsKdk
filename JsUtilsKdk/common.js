@@ -3879,7 +3879,7 @@ CommonJS.Masking = {
             strLength = emailStr.toString().split('@')[0].length - 5;
             return originStr.toString().replace(new RegExp('.(?=.{0,' + strLength + '}@)', 'g'), '*').replace(/.{9}$/, "******");
         }
-    }
+    },
     /**
      * 휴대폰 번호 마스킹
      *  - 원본 데이터 : 01012345678, 변경 데이터 : 010****5678
