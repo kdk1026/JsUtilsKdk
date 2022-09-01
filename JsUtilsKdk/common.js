@@ -3862,7 +3862,7 @@ CommonJS.Masking = {
     /**
      * 이메일 마스킹
      *  - 원본 데이터 : abcdefg12345@naver.com
-     *  - 변경 데이터 : abcd********@*********
+     *  - 변경 데이터 : abcd********@******
      * @param {string} str 
      * @returns 
      * @example
@@ -3877,7 +3877,8 @@ CommonJS.Masking = {
             return originStr;
         } else {
             strLength = emailStr.toString().split('@')[0].length - 5;
-            return originStr.toString().replace(new RegExp('.(?=.{0,' + strLength + '}@)', 'g'), '*').replace(/.{9}$/, "******");
+            let emailPrefix = originStr.toString().replace(new RegExp('.(?=.{0,' + strLength + '}@)', 'g'), '*').split('@')[0];
+            return emailPrefix + '@' + '******';
         }
     },
     /**
