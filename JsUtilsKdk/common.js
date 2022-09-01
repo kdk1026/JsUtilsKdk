@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 5.2
+ * @version 5.3
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  * @description 파일명을 common-util.js 로 변경해서 사용
@@ -3859,6 +3859,27 @@ CommonJS.Masking = {
             return originStr.toString().replace(new RegExp('.(?=.{0,' + strLength + '}@)', 'g'), '*').replace(/.{6}$/, "******");
         }
     },
+    /**
+     * 이메일 마스킹
+     *  - 원본 데이터 : abcdefg12345@naver.com
+     *  - 변경 데이터 : abcd********@*********
+     * @param {string} str 
+     * @returns 
+     * @example
+     * CommonJS.Masking.email3( 'abcdefg12345@naver.com' );
+     */
+    email3: function(str) {
+        let originStr = str;
+        let emailStr = originStr.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
+        let strLength;
+
+        if ( CommonJS.Valid.isBlank(originStr) || CommonJS.Valid.isBlank(emailStr[0]) ) {
+            return originStr;
+        } else {
+            strLength = emailStr.toString().split('@')[0].length - 5;
+            return originStr.toString().replace(new RegExp('.(?=.{0,' + strLength + '}@)', 'g'), '*').replace(/.{9}$/, "******");
+        }
+    }
     /**
      * 휴대폰 번호 마스킹
      *  - 원본 데이터 : 01012345678, 변경 데이터 : 010****5678
