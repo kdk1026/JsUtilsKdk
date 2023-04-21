@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 5.5
+ * @version 5.6
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  * @description 파일명을 common-util.js 로 변경해서 사용
@@ -280,6 +280,50 @@ CommonJS.Text = {
         for (let i=0; i < num; i++) {
             str += Math.floor(Math.random() * 10);
         }
+        return str;
+    },
+    /**
+     * 좌측 문자열 채우기
+     * padStart() 를 브라우저 버전 때문에 지원 안하는 경우
+     * @param {string} str 
+     * @param {number} padLen 
+     * @param {string} padStr 
+     * @returns 
+     * @example
+     * CommonJS.Text.lpad('1', 5, '0');
+     */
+    lpad(str, padLen, padStr) {
+        if ( padStr.length > padLen ) {
+            return str;
+        }
+        str += '';
+        padStr += '';
+        while(str.length < padLen) {
+            str = padStr + str;
+        }
+        str = str.length >= padLen ? str.substring(0, padLen) : str;
+        return str;
+    },
+    /**
+     * 우측 문자열 채우기
+     * padEnd() 를 브라우저 버전 때문에 지원 안하는 경우
+     * @param {string} str 
+     * @param {number} padLen 
+     * @param {string} padStr 
+     * @returns 
+     * @example
+     * CommonJS.Text.rpad('1', 5, '0');
+     */
+    rpad(str, padLen, padStr) {
+        if ( padStr.length > padLen ) {
+            return str;
+        }
+        str += '';
+        padStr += '';
+        while(str.length < padLen) {
+            str += padStr;
+        }
+        str = str.length >= padLen ? str.substring(0, padLen) : str;
         return str;
     }
 },
