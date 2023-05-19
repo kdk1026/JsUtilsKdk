@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 5.6
+ * @version 5.7
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  * @description 파일명을 common-util.js 로 변경해서 사용
@@ -4032,7 +4032,7 @@ CommonJS.Masking = {
      * CommonJS.Masking.name(str);
      */
     name: function(str) {
-        let originStr = str;
+        let originStr = str.split('');
 		let maskingStr;
 		let strLength;
 
@@ -4043,11 +4043,16 @@ CommonJS.Masking = {
         strLength = originStr.length;
 
         if ( strLength < 3 ) {
-            maskingStr = originStr.replace(/(?<=.{1})./gi, "*");
+            for (let i=1; i < strLength; i++) {
+                originStr[i] = '*';
+            }
         } else {
-            maskingStr = originStr.replace(/(?<=.{2})./gi, "*");
+            for (let i=2; i < strLength; i++) {
+                originStr[i] = '*';
+            }
         }
 
+        maskingStr = originStr.join('');
         return maskingStr;
     }
 }
