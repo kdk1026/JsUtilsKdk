@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 5.7
+ * @version 5.8
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  * @description 파일명을 common-util.js 로 변경해서 사용
@@ -4024,36 +4024,31 @@ CommonJS.Masking = {
     },
     /**
      * 이름 마스킹
-     *  - 원본 데이터 : 갓댐희, 변경 데이터 : 갓댐*
-     *  - 원본 데이터 : 하늘에수, 변경 데이터 : 하늘**
+     *  - 원본 데이터 : 갓댐희, 변경 데이터 : 갓*희
+     *  - 원본 데이터 : 하늘에수, 변경 데이터 : 하**수
      *  - 원본 데이터 : 갓댐, 변경 데이터 : 갓*
      * @param {string} str 
      * @example
      * CommonJS.Masking.name(str);
      */
     name: function(str) {
-        let originStr = str.split('');
-		let maskingStr;
-		let strLength;
+        let frsName = userName.substring(0, 1);
 
-        if ( CommonJS.Valid.isBlank(originStr) ) {
-            return originStr;
+        let midName = userName.substring(1, userName.length -1);
+
+        let cnvMidName = '';
+        for (let i=0; i < midName.length; i++) {
+            cnvMidName += '*';
         }
 
-        strLength = originStr.length;
+        let lstName = userName.substring(userName.length -1, userName.length);
 
-        if ( strLength < 3 ) {
-            for (let i=1; i < strLength; i++) {
-                originStr[i] = '*';
-            }
-        } else {
-            for (let i=2; i < strLength; i++) {
-                originStr[i] = '*';
-            }
+        let maskingName = frsName + cnvMidName + lstName;
+        if ( userName.length == 2 ) {
+            maskingName = frsName + '*';
         }
 
-        maskingStr = originStr.join('');
-        return maskingStr;
+        return maskingName;
     }
 }
 
