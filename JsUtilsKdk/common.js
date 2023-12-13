@@ -1556,7 +1556,7 @@ CommonJS.Byte = {
         for (let i=0; i < _textLen; i++) {
             const eachChar = _textVal.charCodeAt(i);
 
-            if ( eachChar.length > 127 ) {
+            if ( eachChar > 127 ) {
                 if (isEucKr) {
                     _totalByte += 2;
                 } else {
@@ -1617,7 +1617,7 @@ CommonJS.Byte = {
         for (let i=0; i < _textLen; i++) {
             const eachChar = _textVal.charCodeAt(i);
 
-            if ( eachChar.length > 127 ) {
+            if ( eachChar > 127 ) {
                 if (isEucKr) {
                     _totalByte += 2;
                 } else {
