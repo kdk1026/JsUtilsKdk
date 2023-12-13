@@ -37,7 +37,7 @@
  * @property {object} CommonJS.Time - 2022.08.23 추가
  * @property {method} prototype
  */
- var CommonJS = {
+var CommonJS = {
     /**
      * 팝업창 띄우기
      * @param {string} url
@@ -88,18 +88,18 @@
     },
     /**
      * 현재 위치정보 출력
-     * 
+     *
      * @description SSL인 경우에만 가져올 수 있다. 로컬은 예외인 듯
-     * 
+     *
      * @example
      * CommonJS.getLocation(fnLocationSuc, fnLocationErr);
-     * 
+     *
      * function fnLocationSuc(position) {
      *      console.log(position.coords);
      *      console.log(position.coords.latitude);  // 위도
      *      console.log(position.coords.longitude); // 경도
      * }
-     * 
+     *
      * function fnLocationErr(error) {
      *      console.log(error);
      * }
@@ -117,7 +117,7 @@
      * @param {string} beforeFuncNm - 특정 함수가 실행 되기전 실행할 함수
      * @param {string} funcNm - 실행할 특정 함수
      * @param {undefined|?} parent - 함수의 위치
-     * 
+     *
      * @description 개발 당시에는 몰라도 분석할 때는 헷갈릴 듯...
      * @example
      * CommonJS.scriptHook(fnValid, fnSubmit);
@@ -136,9 +136,9 @@
     },
     /**
      * 인자로 받은 Array를 병합한 Array 반환
-     * @param {Array} arr 
-     * @param  {...any} sources 
-     * @returns 
+     * @param {Array} arr
+     * @param  {...any} sources
+     * @returns
      * @example
      * CommonJS.mergeArray(arr1, arr2, arr3);
      */
@@ -147,23 +147,23 @@
     },
     /**
      * Class 구분
-     * @param {any} any 
+     * @param {any} any
      * @returns
      * @example
      * console.log( CommonJS.getClassType([]) );//"Array"
      * console.log( CommonJS.getClassType({}) );//"Object"
      * console.log( CommonJS.getClassType(1) );//"Number"
      * console.log( CommonJS.getClassType(new Date()) );//"Date"
-     * 
-     * @link https://owenjeon.github.io/2016/08/12/array-object/ 
+     *
+     * @link https://owenjeon.github.io/2016/08/12/array-object/
      */
     getClassType: function(any) {
         return Object.prototype.toString.call(any).slice(8, -1);
     },
    /**
     * 이미지를 base64 인코딩된 data URI로 반환
-    * @param {Element} img 
-    * @returns 
+    * @param {Element} img
+    * @returns
     * @example
     * CommonJS.getImageToDataUrl( document.querySelector('#img') );
     */
@@ -207,9 +207,9 @@ CommonJS.Text = {
     },
     /**
      * 문자열이 Blank / Undefined 이면 defaultStr 반환
-     * @param {string} string 
-     * @param {string} defaultStr 
-     * @returns 
+     * @param {string} string
+     * @param {string} defaultStr
+     * @returns
      * @example
      * CommonJS.Text.defaultString('', '치환');
      */
@@ -223,11 +223,11 @@ CommonJS.Text = {
     /**
      * 클립보드 복사하기
      *   - IE 10 이하 고려 안함
-     * @param {undefined|Element} textElement 
-     * @param {undefined|string} string 
+     * @param {undefined|Element} textElement
+     * @param {undefined|string} string
      * @example
      * 클릭 이벤트 시에만 동작 (onload 시에는 불가)
-     * 
+     *
      * CommonJS.Text.copyToClipBoard( document.querySelector(셀렉터) );
      * CommonJS.Text.copyToClipBoard( null, '복사할 내용' );
      */
@@ -271,7 +271,7 @@ CommonJS.Text = {
     /**
      * 난수 생성
      * @param {number} num
-     * @returns 
+     * @returns
      * @example
      * CommonJS.Text.generateRandomCode(12);
      */
@@ -285,10 +285,10 @@ CommonJS.Text = {
     /**
      * 좌측 문자열 채우기
      * padStart() 를 브라우저 버전 때문에 지원 안하는 경우
-     * @param {string} str 
-     * @param {number} padLen 
-     * @param {string} padStr 
-     * @returns 
+     * @param {string} str
+     * @param {number} padLen
+     * @param {string} padStr
+     * @returns
      * @example
      * CommonJS.Text.lpad('1', 5, '0');
      */
@@ -307,10 +307,10 @@ CommonJS.Text = {
     /**
      * 우측 문자열 채우기
      * padEnd() 를 브라우저 버전 때문에 지원 안하는 경우
-     * @param {string} str 
-     * @param {number} padLen 
-     * @param {string} padStr 
-     * @returns 
+     * @param {string} str
+     * @param {number} padLen
+     * @param {string} padStr
+     * @returns
      * @example
      * CommonJS.Text.rpad('1', 5, '0');
      */
@@ -331,7 +331,7 @@ CommonJS.Text = {
 CommonJS.Object = {
     /**
      * 인자로 받은 Object를 병합한 Object 반환
-     * @param  {...any} sources 
+     * @param  {...any} sources
      * @returns
      * @example
      * CommonJS.Object.mergeObject(obj1, obj2, obj3);
@@ -344,10 +344,10 @@ CommonJS.Object = {
      * Object를 전송 가능한 Data로 만듬
      *   - jQuery serialize()와 동일하나 Form은 지원하지 않음
      *   - Form serialize는 아래 링크 참고
-     * @param {Object} obj 
+     * @param {Object} obj
      * @example
      * CommonJS.Object.makeFormBody(obj);
-     * 
+     *
      * @link https://code.google.com/archive/p/form-serialize/downloads
      * @link https://gist.github.com/icetee/d650eb8195e1329903ac38818e5befa5
      */
@@ -359,8 +359,8 @@ CommonJS.Object = {
     },
     /**
      * Object를 QueryString 으로 반환
-     * @param {Object} obj 
-     * @returns 
+     * @param {Object} obj
+     * @returns
      * @example
      * CommonJS.Object.objectToQueryString(obj);
      */
@@ -372,8 +372,8 @@ CommonJS.Object = {
 CommonJS.Valid = {
     /**
      * NULL 체크
-     * @param {*} val 
-     * @returns {boolean} 
+     * @param {*} val
+     * @returns {boolean}
      * @example
      * CommonJS.Valid.isNull(val);
      */
@@ -452,8 +452,8 @@ CommonJS.Valid = {
     },
     /**
      * Object가 비어있는지 체크
-     * @param {Object} param 
-     * @returns 
+     * @param {Object} param
+     * @returns
      * @example
      * CommonJS.Valid.isEmptyObject(val);
      */
@@ -462,8 +462,8 @@ CommonJS.Valid = {
     },
     /**
      * Array가 비어있는지 체크
-     * @param {Array} param 
-     * @returns 
+     * @param {Array} param
+     * @returns
      * @example
      * CommonJS.Valid.isEmptyArray(val);
      */
@@ -475,7 +475,7 @@ CommonJS.Valid = {
 /**
  * ********************************************************************
  * CommonJS.DateTime.함수 대신 Moment.js 적극 권장
- * 
+ *
  * @link https://momentjs.com/
  * @link https://github.com/kdk1026/node_utils/blob/main/libs/date.js
  * ********************************************************************
@@ -821,8 +821,8 @@ CommonJS.FormatValid = {
     },
     /**
      * 비밀번호 형식 체크 (영문, 숫자, 특수문자 조합 8자 이상)
-     * @param {*} val 
-     * @returns 
+     * @param {*} val
+     * @returns
      * @example
      * CommonJS.FormatValid.isPassword(val);
      */
@@ -832,8 +832,8 @@ CommonJS.FormatValid = {
     },
     /**
      * URL 형식 체크
-     * @param {*} val 
-     * @returns 
+     * @param {*} val
+     * @returns
      * @example
      * CommonJS.FormatValid.isUrl(val);
      */
@@ -843,8 +843,8 @@ CommonJS.FormatValid = {
     },
     /**
      * IP 형식 체크
-     * @param {*} val 
-     * @returns 
+     * @param {*} val
+     * @returns
      * @example
      * CommonJS.FormatValid.isIp(val);
      */
@@ -899,7 +899,7 @@ CommonJS.File = {
      * document.getElementById('file').addEventListener('change', function() {
      *      fileObj = CommonJS.File.getFileInfo(this);
      * });
-     * 
+     *
      * // 파일 로드 후
      * var fileObj = CommonJS.File.getFileInfo( document.getElementById('file') );
      *
@@ -909,7 +909,7 @@ CommonJS.File = {
      * $('#file').on('change', function() {
      *      fileObj = CommonJS.File.getFileInfo(this);
      * });
-     * 
+     *
      * // 파일 로드 후
      * var fileObj = CommonJS.File.getFileInfo( $('#file')[0] );
      *
@@ -991,17 +991,17 @@ CommonJS.File = {
     },
     /**
      * 동영상 미리보기
-     * @param {Element} fileElement 
+     * @param {Element} fileElement
      * @param {Element} videoElement
      * @example
      * <video id="myVideo" width="300" height="300" autoplay controls></video>
-     * 
+     *
      * [JavaScript]
      * CommonJS.File.previewVideo(document.querySelector('#file'), document.querySelector('#myVideo'));
-     * 
+     *
      * [jQuery]
      * CommonJS.File.previewVideo($('#file')[0], $('#myVideo')[0]);
-     * 
+     *
      * <참고 - 버튼 클릭 이벤트 시, 일시 정지>
      *      document.querySelector('#myVideo').pause();
      */
@@ -1013,17 +1013,17 @@ CommonJS.File = {
     },
     /**
      * 음악 미리듣기
-     * @param {Element} fileElement 
-     * @param {Element} audioElement 
+     * @param {Element} fileElement
+     * @param {Element} audioElement
      * @example
      * <audio id="myAudio" autoplay controls></audio>
-     * 
+     *
      * [JavaScript]
      * CommonJS.File.previewVideo(document.querySelector('#file'), document.querySelector('#myAudio'));
-     * 
+     *
      * [jQuery]
      * CommonJS.File.previewVideo($('#file')[0], $('#myAudio')[0]);
-     * 
+     *
      * <참고 - 버튼 클릭 이벤트 시, 일시 정지>
      *      document.querySelector('#myAudio').pause();
      */
@@ -1035,14 +1035,14 @@ CommonJS.File = {
     },
     /**
      * 파일 다운로드
-     * @param {Element} Element 
-     * @param {undefined|string} fileName 
+     * @param {Element} Element
+     * @param {undefined|string} fileName
      * @returns
      * @example
      * [JavaScript]
      * CommonJS.File.downloadFile( document.querySelector(셀렉터) );
      * CommonJS.File.downloadFile( document.querySelector(셀렉터), 파일명 );
-     * 
+     *
      * [jQuery]
      * CommonJS.File.downloadFile( $(셀렉터) );
      * CommonJS.File.downloadFile( $(셀렉터), 파일명 );
@@ -1154,13 +1154,13 @@ CommonJS.File = {
      * 엑셀 파일 다운로드
      *   - 파일이 손상되지만 무시하면 열림
      *   - exportExcelBySheetJS 적극 권장
-     * @param {string} fileName 
-     * @param {string} sheetName 
+     * @param {string} fileName
+     * @param {string} sheetName
      * @param {string} sheetHtml
      * @example
      * [JavaScript]
      * CommonJS.File.exportExcel( '엑셀파일명.xls', '시트', document.querySelector('#tb1').outerHTML );
-     * 
+     *
      * [jQuery]
      * CommonJS.File.exportExcel( '엑셀파일명.xls', '시트', $('#tb1').clone().wrapAll('<div/>').parent().html() );
      */
@@ -1213,21 +1213,21 @@ CommonJS.File = {
     },
     /**
      * 엑셀 파일 다운로드
-     * @param {string} fileName 
-     * @param {string} sheetName 
-     * @param {Element} sheetElement 
+     * @param {string} fileName
+     * @param {string} sheetName
+     * @param {Element} sheetElement
      * @returns
      * @example
      * [JavaScript]
      * CommonJS.File.exportExcelBySheetJS( '엑셀파일명.xlsx', '시트', document.querySelector('#tb1') );
-     * 
+     *
      * [jQuery]
      * CommonJS.File.exportExcelBySheetJS( '엑셀파일명.xlsx', '시트', $('#tb1') );
-     * 
+     *
      * @link https://mesonia.tistory.com/m/110
      * @link https://sheetjs.com/demo/table.html
      * @link https://github.com/SheetJS/sheetjs/tree/master/dist
-     * 
+     *
      * @description
      * xlsx.full.min.js 만 있으면 됨
      */
@@ -1260,20 +1260,20 @@ CommonJS.File = {
     },
     /**
      * PDF 파일 다운로드
-     * @param {string} fileName 
-     * @param {Element} pdfElement 
-     * @returns 
+     * @param {string} fileName
+     * @param {Element} pdfElement
+     * @returns
      * @example
      * [JavaScript]
      * CommonJS.File.exportPdf( '테스트.pdf', document.querySelector('#pdfDiv') );
-     * 
+     *
      * [jQuery]
      * CommonJS.File.exportPdf( '테스트.pdf', $('#pdfDiv')[0] );
-     * 
+     *
      * @link https://chichi-story.tistory.com/10
      * @link https://html2canvas.hertzen.com/
      * @link https://parall.ax/products/jspdf
-     * 
+     *
      * @description
      * html2canvas.min.js, jspdf.min.js
      */
@@ -1368,9 +1368,9 @@ CommonJS.FileValid = {
     },
     /**
      * 지원 파일 체크 (커스텀)
-     * @param {Object} fileObj 
-     * @param {Array} arrAllowExt 
-     * @returns 
+     * @param {Object} fileObj
+     * @param {Array} arrAllowExt
+     * @returns
      * @example
      * CommonJS.FileValid.isAllowCustom(fileObj, arrAllowExt);
      */
@@ -1396,9 +1396,9 @@ CommonJS.FileValid = {
     },
     /**
      * 지원 파일 체크 (동영상 웹 표준)
-     * @param {Object} fileObj 
-     * @returns 
-     * 
+     * @param {Object} fileObj
+     * @returns
+     *
      * @link https://kutar37.tistory.com/entry/HTML5-video-audio-%ED%83%9C%EA%B7%B8
      */
     isVideoStandard: function (fileObj) {
@@ -1408,8 +1408,8 @@ CommonJS.FileValid = {
     },
     /**
      * 지원 파일 체크 (동영상 웹 추천)
-     * @param {Object} fileObj 
-     * @returns 
+     * @param {Object} fileObj
+     * @returns
      */
     isVideoRecomend: function (fileObj) {
         var _ext = CommonJS.File.getFileExt(fileObj);
@@ -1417,8 +1417,8 @@ CommonJS.FileValid = {
     },
     /**
      * 지원 파일 체크 (오디오 웹 추천)
-     * @param {Object} fileObj 
-     * @returns 
+     * @param {Object} fileObj
+     * @returns
      */
     isAudioRecomend: function (fileObj) {
         var _ext = CommonJS.File.getFileExt(fileObj);
@@ -1440,7 +1440,7 @@ CommonJS.Cookie = {
      setCookie: function (name, value, expireSec, domain) {
         var _date = new Date();
         _date.setSeconds(_date.getSeconds() + Number(expireSec));
-        
+
         if (domain) {
             var cookie_str = name + '=' + escape(value) + '; path=/; expires=' + _date.toGMTString() + ';';
             cookie_str += 'domain=' + escape(domain);
@@ -1525,21 +1525,21 @@ CommonJS.Byte = {
     },
     /**
      * input text/textarea의 Byte를 체크하여 nowByteEle에 표시
-     * @param {Element - this} obj 
-     * @param {Element} nowByteEle 
-     * @param {(undefined|boolean)} isEucKr 
+     * @param {Element - this} obj
+     * @param {Element} nowByteEle
+     * @param {boolean} isEucKr
      * @example
      * <input type="text" id="temp" />
      * <span id="nowByte">0</span>/100bytes
-     * 
+     *
      * [JavaScript]
      * document.querySelector('#temp').addEventListener('keyup', function() {
-     *      CommonJS.Byte.checkByte( this, document.querySelector('#nowByte') );
+     *      CommonJS.Byte.checkByte( this, document.querySelector('#nowByte'), false );
      * });
-     * 
+     *
      * [jQuery]
      * $('#temp').keyup(function() {
-     *      CommonJS.Byte.checkByte( $(this), $('#nowByte') );
+     *      CommonJS.Byte.checkByte( $(this), $('#nowByte'), false );
      * });
      */
     checkByte: function(obj, nowByteEle, isEucKr) {
@@ -1575,22 +1575,22 @@ CommonJS.Byte = {
     },
     /**
      * input text/textarea의 Byte를 체크하여 maxByte 초과 체크
-     * @param {Element - this} obj 
-     * @param {(undefined|number)} maxByte 
-     * @param {(undefined|boolean)} isEucKr 
-     * @returns 
+     * @param {Element - this} obj
+     * @param {(undefined|number)} maxByte
+     * @param {boolean} isEucKr
+     * @returns
      * @example
      * <!-- 심플한 방식 : data-code="abcd" -->
      * <input type="text" id="temp" data-max-byte="20" />
-     * 
+     *
      * [JavaScript]
      * document.querySelector('#temp').addEventListener('keyup', function() {
-     *      CommonJS.Byte.isOverMaxByte( this );
+     *      CommonJS.Byte.isOverMaxByte( this, undefined, false );
      * });
-     * 
+     *
      * [jQuery]
      * $('#temp').keyup(function() {
-     *      CommonJS.Byte.isOverMaxByte( $(this) );
+     *      CommonJS.Byte.isOverMaxByte( $(this), undefined, false );
      * });
      */
     isOverMaxByte: function(obj, maxByte, isEucKr) {
@@ -1629,6 +1629,78 @@ CommonJS.Byte = {
         }
 
         return (_totalByte > _maxByte);
+    },
+    /**
+     * input text/textarea의 Byte를 체크하여 nowByteEle에 표시
+     * input text/textarea의 Byte를 체크하여 maxByte 초과하면 자르기
+     * @param {Element - this} obj 
+     * @param {number} maxByte 
+     * @param {Element} nowByteEle 
+     * @param {boolean} isEucKr 
+     * @example
+     * <input type="text" id="temp" />
+     * <span id="nowByte">0</span>/100bytes
+     *
+     * [JavaScript]
+     * document.querySelector('#temp').addEventListener('keyup', function() {
+     *      CommonJS.Byte.checkByteOverLimit( this, 1000, document.querySelector('#nowByte'), false );
+     * });
+     *
+     * [jQuery]
+     * $('#temp').keyup(function() {
+     *      CommonJS.Byte.checkByteOverLimit( $(this), 1000, $('#nowByte'), false );
+     * });
+     */
+    checkByteOverLimit: function(obj, maxByte, nowByteEle, isEucKr) {
+		let _textVal;
+		if ( obj.length === undefined ) {
+			_textVal = obj.value;
+		} else {
+			_textVal = obj.val();
+		}
+
+        const _textLen = _textVal.length;
+
+        let _totalByte = 0;
+        let _rleng = 0;
+
+        for (let i=0; i < _textLen; i++) {
+        	const eachChar = _textVal.charCodeAt(i);
+
+            if ( eachChar > 127 ) {
+                if (isEucKr) {
+                    _totalByte += 2;
+                } else {
+                    _totalByte += 3;
+                }
+            } else {
+                _totalByte += 1;
+            }
+
+            if ( _totalByte <= maxByte ) {
+            	_rleng = i + 1;
+            }
+        }
+
+        if ( _totalByte > maxByte ) {
+        	if ( obj.length === undefined ) {
+        		obj.value = _textVal.substr(0, _rleng);
+        	} else {
+        		obj.val( _textVal.substr(0, _rleng) );
+        	}
+
+    		if ( nowByteEle.length === undefined ) {
+    			nowByteEle.innerText = _totalByte;
+    		} else {
+    			nowByteEle.text( _totalByte );
+    		}
+        } else {
+    		if ( nowByteEle.length === undefined ) {
+    			nowByteEle.innerText = _totalByte;
+    		} else {
+    			nowByteEle.text( _totalByte );
+    		}
+        }
     }
 }
 
@@ -1755,11 +1827,11 @@ CommonJS.BrowserInfo = {
     },
     /**
      * UserAgent 에서 특정 문자열 유무 체크
-     * @param {string} chkStr 
+     * @param {string} chkStr
      * @returns
      * @example
      * CommonJS.BrowserInfo.isCheckUserAgent('KAKAOTALK');
-     * 
+     *
      * @example
      * 주로 모바일 협업 시, 애플리케이션 접속 판별로 사용
      * - 커스터마이징 하지 않는 이상 모바일 웹, WebView 의 UserAgent는 동일
@@ -1771,12 +1843,12 @@ CommonJS.BrowserInfo = {
     /**
      * 응답 헤더 에서 특정 키와 그에 해당하는 문자열 유무 체크
      *   - 주의: 키는 모두 소문자로 체크해야 한다. (브라우저 네트워크탭에서 응답 헤더 복붙해서 소문자로 변경)
-     * @param {string} key 
-     * @param {string} chkStr 
-     * @returns 
+     * @param {string} key
+     * @param {string} chkStr
+     * @returns
      * @example
      * CommonJS.BrowserInfo.isCheckResponseHeader('vary', 'Origin');
-     * 
+     *
      * @example
      * 애플리케이션 접속 판별로도 사용되고, 요청 헤더에 추가되어 요청이 들어와서 꺼내야 하는 경우 등 사용
      */
@@ -1802,7 +1874,7 @@ CommonJS.BrowserInfo = {
     },
     /**
      * 공인 IP 가져오기
-     * @returns 
+     * @returns
      */
     getPublicIp: function() {
         var _retJson = CommonJS.Http.commonAjax(false, 'get', 'https://api.ipify.org?format=json', null, {}, null);
@@ -1825,7 +1897,7 @@ CommonJS.Input = {
      * [JavaScript]
      * CommonJS.Input.onlyNum( document.querySelector(셀렉터) );
      * CommonJS.Input.onlyNum( null, 아이디_셀렉터 );
-     * 
+     *
      * [jQuery]
      * CommonJS.Input.onlyNum( $(셀렉터) );
      * CommonJS.Input.onlyNum( null, 셀렉터 );
@@ -1863,7 +1935,7 @@ CommonJS.Input = {
      * [JavaScript]
      * CommonJS.Input.onlyFormatNum( document.querySelector(셀렉터) );
      * CommonJS.Input.onlyFormatNum( null, 아이디_셀렉터 );
-     * 
+     *
      * [jQuery]
      * CommonJS.Input.onlyFormatNum( $(셀렉터) );
      * CommonJS.Input.onlyFormatNum( null, 셀렉터 );
@@ -1912,7 +1984,7 @@ CommonJS.Input = {
      * [JavaScript]
      * CommonJS.Input.onlyEng( document.querySelector(셀렉터) );
      * CommonJS.Input.onlyEng( null, 아이디_셀렉터 );
-     * 
+     *
      * [jQuery]
      * CommonJS.Input.onlyEng( $(셀렉터) );
      * CommonJS.Input.onlyEng( null, 셀렉터 );
@@ -1950,7 +2022,7 @@ CommonJS.Input = {
      * [JavaScript]
      * CommonJS.Input.onlyEngUnder( document.querySelector(셀렉터) );
      * CommonJS.Input.onlyEngUnder( null, 아이디_셀렉터 );
-     * 
+     *
      * [jQuery]
      * CommonJS.Input.onlyEngUnder( $(셀렉터) );
      * CommonJS.Input.onlyEngUnder( null, 셀렉터 );
@@ -1988,7 +2060,7 @@ CommonJS.Input = {
      * [JavaScript]
      * CommonJS.Input.onlyEngNum( document.querySelector(셀렉터) );
      * CommonJS.Input.onlyEngNum( null, 아이디_셀렉터 );
-     * 
+     *
      * [jQuery]
      * CommonJS.Input.onlyEngNum( $(셀렉터) );
      * CommonJS.Input.onlyEngNum( null, 셀렉터 );
@@ -2026,7 +2098,7 @@ CommonJS.Input = {
      * [JavaScript]
      * CommonJS.Input.onlyEngBlank( document.querySelector(셀렉터) );
      * CommonJS.Input.onlyEngBlank( null, 아이디_셀렉터 );
-     * 
+     *
      * [jQuery]
      * CommonJS.Input.onlyEngBlank( $(셀렉터) );
      * CommonJS.Input.onlyEngBlank( null, 셀렉터 );
@@ -2064,7 +2136,7 @@ CommonJS.Input = {
      * [JavaScript]
      * CommonJS.Input.onlyHangul( document.querySelector(셀렉터) );
      * CommonJS.Input.onlyHangul( null, 아이디_셀렉터 );
-     * 
+     *
      * [jQuery]
      * CommonJS.Input.onlyHangul( $(셀렉터) );
      * CommonJS.Input.onlyHangul( null, 셀렉터 );
@@ -2102,7 +2174,7 @@ CommonJS.Input = {
      * [JavaScript]
      * CommonJS.Input.onlyHangulBlank( document.querySelector(셀렉터) );
      * CommonJS.Input.onlyHangulBlank( null, 아이디_셀렉터 );
-     * 
+     *
      * [jQuery]
      * CommonJS.Input.onlyHangulBlank( $(셀렉터) );
      * CommonJS.Input.onlyHangulBlank( null, 셀렉터 );
@@ -2140,7 +2212,7 @@ CommonJS.Input = {
      * [JavaScript]
      * CommonJS.Input.onlyHanEngNum( document.querySelector(셀렉터) );
      * CommonJS.Input.onlyHanEngNum( null, 아이디_셀렉터 );
-     * 
+     *
      * [jQuery]
      * CommonJS.Input.onlyHanEngNum( $(셀렉터) );
      * CommonJS.Input.onlyHanEngNum( null, 셀렉터 );
@@ -2178,7 +2250,7 @@ CommonJS.Input = {
      * [JavaScript]
      * CommonJS.Input.blockingHangul( document.querySelector(셀렉터) );
      * CommonJS.Input.blockingHangul( null, 아이디_셀렉터 );
-     * 
+     *
      * [jQuery]
      * CommonJS.Input.blockingHangul( $(셀렉터) );
      * CommonJS.Input.blockingHangul( null, 셀렉터 );
@@ -2205,7 +2277,7 @@ CommonJS.Input = {
                 $(document).on('keyup', inputElementStr, function (e) {
                     $(this).val(e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, ''));
                 });
-            } 
+            }
         }
     },
     /**
@@ -2215,7 +2287,7 @@ CommonJS.Input = {
      * @example
      * [JavaScript]
      * CommonJS.Input.enterEventFocus( document.querySelector(셀렉터), document.querySelector(셀렉터) );
-     * 
+     *
      * [jQuery]
      * CommonJS.Input.enterEventFocus( $(셀렉터), $(셀렉터) );
      */
@@ -2243,7 +2315,7 @@ CommonJS.Input = {
      * @example
      * [JavaScript]
      * CommonJS.Input.enterEventCallback( document.querySelector(셀렉터), 함수명 );
-     * 
+     *
      * [jQuery]
      * CommonJS.Input.onlyEngUnder( $(셀렉터), 함수명 );
      */
@@ -2274,7 +2346,7 @@ CommonJS.Input = {
      * [JavaScript]
      * CommonJS.Input.formatHypenPhone( document.querySelector(셀렉터) );
      * CommonJS.Input.formatHypenPhone( null, 아이디_셀렉터 );
-     * 
+     *
      * [jQuery]
      * CommonJS.Input.formatHypenPhone( $(셀렉터) );
      * CommonJS.Input.formatHypenPhone( null, 셀렉터 );
@@ -2425,8 +2497,8 @@ CommonJS.Input = {
 CommonJS.SearchEngine = {
     /**
      * searchGoogle, searchNaver, searchDaum 에서 사용할 form 생성
-     * @param {string} searchKeyword 
-     * @returns 
+     * @param {string} searchKeyword
+     * @returns
      */
     makeNewForm: function (searchKeyword) {
         var _newForm = document.createElement('form');
@@ -2446,7 +2518,7 @@ CommonJS.SearchEngine = {
     },
     /**
      * 구글 검색
-     * @param {string} searchKeyword 
+     * @param {string} searchKeyword
      * @example
      * CommonJS.SearchEngine.searchGoogle('나무위키');
      */
@@ -2505,7 +2577,7 @@ CommonJS.SearchEngine = {
 CommonJS.SnsShare = {
     /**
      * Facebook 공유
-     * @param {string} url 
+     * @param {string} url
      * @example
      * CommonJS.SnsShare.shareFacebook(url);
      */
@@ -2516,7 +2588,7 @@ CommonJS.SnsShare = {
     },
     /**
      * Twitter 공유
-     * @param {string} url 
+     * @param {string} url
      * @example
      * CommonJS.SnsShare.shareTwitter(url);
      */
@@ -2550,8 +2622,8 @@ CommonJS.SnsShare = {
     },
     /**
      * Kakao Story 공유
-     * @param {string} url 
-     * @param {string} title 
+     * @param {string} url
+     * @param {string} title
      * @example
      * CommonJS.SnsShare.shareKakaoStory(url, title);
      */
@@ -2563,7 +2635,7 @@ CommonJS.SnsShare = {
     },
     /**
      * 네이버 블로그 공유
-     * @param {string} url 
+     * @param {string} url
      * @param {string} title
      * @example
      * CommonJS.SnsShare.shareNaver(url, title);
@@ -2585,13 +2657,13 @@ CommonJS.SnsShare = {
  *      <iOS>
  *          webkit.messageHandlers.[WebViewBridge].postMessage(인자);
  *      </iOS>
- * 
+ *
  * WebView 에서 JavaScript 에 값 전달
  *   - JavaScript 에 특이사항은 없음 / 항상 보내는 입장에서만 특이사항이 발생
- * 
+ *
  * 프로젝트에 따라 정석인 JavascriptBridge 대신 다른 방식으로 값 전달할 수 있음 (JS with WebView)
  *   - 모바일 개발자가 원하는 방식대로 맞혀주고, 테스트 해서 전달만 잘되면 된다... 제시한 방식이 편하다는데 어찌할 것인가...
- * 
+ *
  *   예1) location.href="스키마://CallBackValue?" + obj;
  *   예2) alert('스키마://prepaid?value=' + vParamStr);
  * ********************************************************************
@@ -2602,8 +2674,8 @@ CommonJS.Mobile = {
     /**
      * SMS 문자 보내기
      *   - 연락처, 문자 내용 설정된 상태로 문자 보내기 화면으로 이동 시킴
-     * @param {string|number} telNo 
-     * @param {string} content 
+     * @param {string|number} telNo
+     * @param {string} content
      * @example
      * CommonJS.Mobile.sendSMS('010-9924-3732', '테스트');
      * CommonJS.Mobile.sendSMS(null, '테스트');
@@ -2643,12 +2715,12 @@ CommonJS.Mobile = {
      *          : 카메라, 캠코더, 파일
      *   - accept 속성만 있는 경우
      *          accept="image/*" : 작업 선택 - 카메라, 내 파일, 파일
-     * @param {Element} fileElement 
-     * @param {Element} imgElement 
+     * @param {Element} fileElement
+     * @param {Element} imgElement
      * @example
      * [JavaScript]
      * CommonJS.Mobile.runCamera( document.querySelector('#file'), document.querySelector('#img') );
-     * 
+     *
      * [jQuery]
      * CommonJS.Mobile.runCamera( $('#file')[0], $('#img')[0] );
      */
@@ -2674,12 +2746,12 @@ CommonJS.Mobile = {
      *          : 카메라, 캠코더, 파일
      *   - accept 속성만 있는 경우
      *          accept="video/*" : 작업 선택 - 카메라 캠코더, 내 파일, 파일
-     * @param {Element} fileElement 
-     * @param {Element} imgElement 
+     * @param {Element} fileElement
+     * @param {Element} imgElement
      * @example
      * [JavaScript]
      * CommonJS.Mobile.runCamera( document.querySelector('#file'), document.querySelector('#img') );
-     * 
+     *
      * [jQuery]
      * CommonJS.Mobile.runCamera( $('#file')[0], $('#img')[0] );
      */
@@ -2710,7 +2782,7 @@ CommonJS.Mobile = {
      * @example
      * [JavaScript]
      * CommonJS.Mobile.runCamera( document.querySelector('#file'), document.querySelector('#audio') );
-     * 
+     *
      * [jQuery]
      * CommonJS.Mobile.runCamera( $('#file')[0], $('#audio')[0] );
      */
@@ -2733,20 +2805,20 @@ CommonJS.Mobile = {
     },
     /**
      * 안드로이드 앱링크 or 딥링크 URL 생성
-     * @param {string} host 
-     * @param {string} scheme 
-     * @param {string} package 
+     * @param {string} host
+     * @param {string} scheme
+     * @param {string} package
      * @returns
      * @example
      * CommonJS.Mobile.makeAndroidAppLinkUrl('instagram.com', 'https', 'com.instagram.android');
-     * 
+     *
      * 링크 생성 하더라도 작동하려면 다음 설정 필수
      * AndroidManifest.xml
      *  <intent-filter>
      *      <action android:name="android.intent.action.VIEW" />
      *      <category android:name="android.intent.category.DEFAULT" />
      *      <category android:name="android.intent.category.BROWSABLE" />
-     * 
+     *
      *      <data android:host="호스트" android:scheme="스키마" />
      *  </intent-filter>
      */
@@ -2755,16 +2827,16 @@ CommonJS.Mobile = {
     },
     /**
      * 앱링크 or 딥링크 실행
-     * @param {string} androidUrl 
-     * @param {string} iosUrl 
-     * @param {string} iosAppStoreUrl 
+     * @param {string} androidUrl
+     * @param {string} iosUrl
+     * @param {string} iosAppStoreUrl
      * @example
      * [Android]
      * CommonJS.Mobile.runAppLinkUrl('intent://instagram.com/#Intent;package=com.instagram.android;scheme=https;end', '', '');
-     * 
+     *
      * [iOS]
      * CommonJS.Mobile.runAppLinkUrl('', 'instagram://media', 'https://itunes.apple.com/kr/app/instagram/id389801252?mt=8');
-     * 
+     *
      * @description iOS는 구글링한 결과... 예전에 프로젝트때 누군가 해놓은거는 한 3초 설정해놓았던거 같은데... 1초도 상관 없는듯
      * @link https://gomest.tistory.com/7
      */
@@ -2791,7 +2863,7 @@ CommonJS.Mobile = {
  * ********************************************************************
  * GoogleMap - Geocoding 유료
  *   > https://cloud.google.com/maps-platform/pricing?hl=ko
- * 
+ *
  *   > 기본 지도 : 위도, 경도에 따라 지도는 바뀌지만 경고 팝업 뜸 (콘솔 로그는 주저리 주저리 하는데, 결국 결제하라는 소리)
  *   > 무료 버전에서 Geocoding은 아예 동작하지 않음
  * ********************************************************************
@@ -2799,11 +2871,11 @@ CommonJS.Mobile = {
 CommonJS.Map = {
     /**
      * 해당 주소로 카카오 지도 표시
-     * @param {Element} mapElement 
-     * @param {string} addr 
+     * @param {Element} mapElement
+     * @param {string} addr
      * @example
      * CommonJS.Map.searchKakaoMap( document.querySelector('#map'), '경기도 성남시 삼평동 대왕판교로645번길 16' );
-     * 
+     *
      * @link https://apis.map.kakao.com/web/sample/addr2coord/
      */
     searchKakaoMap: function (mapElement, addr) {
@@ -2813,7 +2885,7 @@ CommonJS.Map = {
             level: 3
         };
 
-        // 지도를 생성합니다  
+        // 지도를 생성합니다
         var map = new kakao.maps.Map(container, options);
 
         // 주소-좌표 변환 객체를 생성합니다
@@ -2821,7 +2893,7 @@ CommonJS.Map = {
 
         // 주소로 좌표를 검색합니다
         geocoder.addressSearch(addr, function (result, status) {
-            // 정상적으로 검색이 완료됐으면 
+            // 정상적으로 검색이 완료됐으면
             if (status === kakao.maps.services.Status.OK) {
                 var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
@@ -2838,11 +2910,11 @@ CommonJS.Map = {
     },
     /**
      * 해당 주소로 네이버 지도 표시
-     * @param {string} mapElementId 
+     * @param {string} mapElementId
      * @param {string} addr
      * @example
      * CommonJS.Map.searchNaverMap('map', '제주특별자치도 제주시 첨단로 242');
-     * 
+     *
      * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-2-Getting-Started.html
      * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-Geocoder-Geocoding.html
      * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-3-geocoder-geocoding.example.html
@@ -2883,22 +2955,22 @@ CommonJS.Editor = {
     /**
      * CK Editor
      * @link https://ckeditor.com/ckeditor-5/online-builder/
-     * 
+     *
      * @example
      * [부분 유료]
      * 'Commercial feature' 플러그인만 사용 안하면 무료로 가능
-     * 
+     *
      * @example
      * [복사]
      *   - 파일 : ckeditor.js, ckeditor.js.map
-     * 
+     *
      * [이미지 업로드 처리]
      * @link https://ckeditor.com/docs/ckeditor5/latest/framework/guides/deep-dive/upload-adapter.html#implementing-a-custom-upload-adapter
      *   - The complete implementation - URL만 변경
-     * 
+     *
      * <파일 생성 후, import>
      * ckeditor_custom_upload.js
-     * 
+     *
      * [이미지 업로드 Backend 처리]
      * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/EditorUploadController.java
      */
@@ -2910,26 +2982,26 @@ CommonJS.Editor = {
      * Summernote
      * @link https://summernote.org/getting-started/#requires-html5-doctype
      * @link https://summernote.org/getting-started/#without-bootstrap
-     * 
+     *
      * @description
      * Oops! jQuery 필수 (JQuery Lite 에서도 이상이 없을려나?)
-     * 
+     *
      * @example
      * [복사]
      *   - 폴더 : font, lang, plugin
      *   - 파일 : summernote-lite.min.css, summernote-lite.min.js, summernote-lite.min.js.map
-     * 
+     *
      *      ※ Bootstrap 환경에서는 summernote.min.css, summernote.min.js, summernote.min.js.map
-     * 
+     *
      * @example
      * [추가 옵션]
      * lang: "ko-KR",
-     * 
+     *
      * @example
      * [이미지 업로드 처리]
      * @link https://summernote.org/deep-dive/#custom-toolbar-popover
      *   - onImageUpload - 하단 참고
-     * 
+     *
      * [이미지 업로드 Backend 처리]
      * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/EditorUploadController.java
      */
@@ -2971,28 +3043,28 @@ CommonJS.Editor = {
     /**
      * Toast Editor
      * @link https://ui.toast.com/tui-editor
-     * 
+     *
      * @description
      * NHN에서 만든 오픈소스 에디터 / Markdown 기반 지원 / npm 환경 최적화
-     * 
+     *
      * @example
      * [CDN 다운로드 후 복사]
      *   - https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js
      *   - https://uicdn.toast.com/editor/latest/toastui-editor.min.css
-     * 
+     *
      * [Editor is not defined]
      * @link https://velog.io/@khw970421/Toast-UI-%EC%82%AC%EC%9A%A9%EB%B2%95-%EA%B8%B0%EB%B3%B8%EB%B2%95
      *   - new Editor -> new toastui.Editor
-     * 
+     *
      * [이미지 업로드 처리]
      * @link https://velog.io/@unani92/Vue-toast-ui-editor-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0
      * @link https://nhn.github.io/tui.editor/latest/ToastUIEditorCore#addHook
      *   - addImageBlobHook - 하단 참고
      * @link https://kodepaper.tistory.com/31
-     * 
+     *
      * [이미지 업로드 Backend 처리]
      * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/EditorUploadController.java
-     * 
+     *
      * @description
      * jQuery 필수 아니라서 사용 안할려고 구글링 하면서 아주 발악을... fetch 아직은 너무도 어색한 그대...
      */
@@ -3039,23 +3111,23 @@ CommonJS.Http = {
     /**
      * 공통 JavaScript Ajax 처리
      *   - jQuery 사용하는 경우에는 jQuery Ajax 사용할 것 (commonJquery.js 링크 참고)
-     * 
+     *
      * @link https://github.com/kdk1026/JsUtilsKdk/blob/master/JsUtilsKdk/commonJquery.js
-     * 
-     * @param {boolean} isAsync 
-     * @param {string} method 
-     * @param {string} url 
+     *
+     * @param {boolean} isAsync
+     * @param {string} method
+     * @param {string} url
      * @param {(undefined|Object)} header
      *   - param, callback 없는 경우만 생략 가능 / 없으면 {} 로 넘길 것
      * @param {(undefined|Object|Element)} param
      *   - form인 경우에만 Element로 넘길 것
-     * @param {(undefined|Function)} callback 
-     * @returns 
+     * @param {(undefined|Function)} callback
+     * @returns
      * @example
      * CommonJS.Http.commonAjax(isAsync, method, url, header, param, callback);
-     * 
+     *
      * @link https://202psj.tistory.com/1647
-     * 
+     *
      * @link http://tcpschool.com/ajax/ajax_server_xmlhttprequest
      * @description 놀랍도다... 어째든 Ajax를 IE 5 시절부터 사용했다는 말...
      *      윈도우 3.1, 95 시절에는 인터넷 존재를 몰라서... 플로피디스크 게임이나 주구장창 하던 시절인데...
@@ -3147,28 +3219,28 @@ CommonJS.Http = {
     },
     /**
      * 공통 Fetch 처리
-     * 
+     *
      * @link https://developer.mozilla.org/ko/docs/Web/API/Fetch_API
      * @link https://www.daleseo.com/js-window-fetch/
-     * 
+     *
      * @description IE는 지원하지 않음. 속 썩이던 IE 잘가~ 이제 슬슬 사라질 때 되지 않았나?
      * @description 비동기만 지원
-     * 
-     * @param {string} method 
-     * @param {string} url 
-     * @param {(null|Headers)} header 
-     * @param {({}|Object)} param 
-     * @param {Function} callback 
+     *
+     * @param {string} method
+     * @param {string} url
+     * @param {(null|Headers)} header
+     * @param {({}|Object)} param
+     * @param {Function} callback
      * @example
      * CommonJS.Http.commonFetch(method, url, header, param, callback);
-     * 
+     *
      * @example
      * 나름 신기술이라 var 대신 const, let 사용 / 화살표 함수 사용
-     * 
+     *
      * [화살표 함수]
-     * (response) => 
+     * (response) =>
      *      console.log(response)
-     * 
+     *
      * function(response) {
      *      console.log(response)
      * }
@@ -3241,30 +3313,30 @@ CommonJS.Code = {
      * 바코드 생성
      *   - 라이브러리 사용법이 간단해서 굳이 공통 함수로 만들지는 않음
      * @link https://barcode-coder.com/en/barcode-jquery-plugin-201.html
-     * 
+     *
      * @description
      * jQuery 필수
      */
     makeBarcode: function () {},
     /**
      * QR 코드 생성
-     * @param {Element} qrCodeDivElement 
-     * @param {string} text 
+     * @param {Element} qrCodeDivElement
+     * @param {string} text
      * @param {(undefined|number)} width
-     * @param {(undefined|number)} height 
+     * @param {(undefined|number)} height
      * @link https://github.com/davidshimjs/qrcodejs
-     * 
+     *
      * @example
      * [복사]
      *   - 파일 : qrcode.min.js
-     * 
+     *
      * @description 색상 옵션도 제공하지만 딱히 필요 없을거 같아서 생략함
-     * 
+     *
      * @example
      * [JavaScript]
      * CommonJS.Code.makeQrCode(document.querySelector( ID or Class ), 'http://www.naver.com');
      * CommonJS.Code.makeQrCode(document.querySelector( ID or Class ), 'http://www.naver.com', 128, 128);
-     * 
+     *
      * [jQuery]
      * CommonJS.Code.makeQrCode($( ID or Class ), '대한민국');
      * CommonJS.Code.makeQrCode($( ID or Class ), '대한민국', 128, 128);
@@ -3292,24 +3364,24 @@ CommonJS.Code = {
     },
     /**
      * QR 코드, 바코드 스캐너
-     * @param {Function} scanSuccCallBack 
-     * @param {Function} scanErrCallBack 
+     * @param {Function} scanSuccCallBack
+     * @param {Function} scanErrCallBack
      * @link https://blog.minhazav.dev/research/html5-qrcode
-     * 
+     *
      * @link https://github.com/mebjas/html5-qrcode
      *  - dist/html5-qrcode.min.js
-     * 
+     *
      * @link https://github.com/mebjas/html5-qrcode/tree/master/examples/html5
-     * 
+     *
      * @example
      * https://test-a9f7e.web.app/scanner.html
-     * 
+     *
      * @description 내부적으로는 이걸 이용한다고 한다. (안드로이드 사용하는 라이브러리의 JS 버전)
      *      https://zxing-js.github.io/library/
-     * 
+     *
      * @example
      * https://test-a9f7e.web.app/zxing.html
-     * 
+     *
      * @description QR코드는 그래도 쓸만
      *  바코드는 QR코드 넓이와 비슷한 것만 인식 가능
      */
@@ -3340,38 +3412,38 @@ CommonJS.Code = {
 /**
  * ********************************************************************
  * 소셜 로그인은 정확한 처리 방법을 아직 모름...
- * 
+ *
  * 로그인 > 토큰 할당 > DB / LocalStorage / SessionStorage 에 저장해서 시간 체크해서 갱신 해주는게 맞는거 같기는 한데...
  * 현재까지는 토큰은 무시하고, 사용자 정보 가져오기 > 회원가입/로그인 처리
- * 
+ *
  * <참고>
  * ※ 개발자 계정, 추가 등록 계정 외에 로그인 위한 설정
- * 
+ *
  * - 카카오
  *   : 도메인 추가 가능
  *   : 앱 로고 등록, 사업자 등록번호 등록, OAuth Redirect URI 설정
  *   : 로그인 필수 동의 항목 (프로필 정보(닉네임/프로필 사진), 카카오계정(이메일) 외에는 선택 동의는 가능하지만 필수 동의는 검수 필요)
- * 
+ *
  * - 네이버
  *   : 환경별로 각갇 등록
  *   : 앱 로고 등록
  *   : 검수요청 필수 (제공 정보 활용처 확인 - 이미지, 서비스 적용 형태 확인 - 이미지)
- * 
+ *
  * ※ 나름 중요한 데이터 이므로 const 최대 활용
- * 
+ *
  * ※ https://github.com/kdk1026/SocialLogin
  * ********************************************************************
  */
 CommonJS.SocialLogin = {
     /**
      * 카카오 로그인
-     * 
-     * @param {Function} userMeSucCallBack 
-     * @param {Function} userMeFailCallBak 
+     *
+     * @param {Function} userMeSucCallBack
+     * @param {Function} userMeFailCallBak
      * @param {Function} loginFailCallBack
-     * 
+     *
      * @link https://developers.kakao.com/docs/latest/ko/kakaologin/js
-     * 
+     *
      * @example
      * CommonJS.SocialLogin.loginWithKakao(userMeSucCallBack, userMeFailCallBak, loginFailCallBack);
      */
@@ -3406,9 +3478,9 @@ CommonJS.SocialLogin = {
     },
     /**
      * 카카오 로그아웃
-     * @param {Function} logoutCallBack 
+     * @param {Function} logoutCallBack
      * @returns
-     *  
+     *
      * @example
      * CommonJS.SocialLogin.logoutWithKakao(logoutCallBack);
      */
@@ -3427,26 +3499,26 @@ CommonJS.SocialLogin = {
     },
     /**
      * 네이버 로그인
-     * @param {string} ClientId 
-     * @param {string} CallBackUrl 
-     * @param {string} serviceDoamin 
-     * 
+     * @param {string} ClientId
+     * @param {string} CallBackUrl
+     * @param {string} serviceDoamin
+     *
      * @link https://developers.naver.com/docs/login/web/web.md
      * @description SDK 버전 1
-     * 
+     *
      * @link https://developers.naver.com/docs/login/sdks/sdks.md
      * @description SDK 버전 2
-     * 
+     *
      * @link https://triplexlab.tistory.com/45
-     * 
+     *
      * @see SDK 버전2로 변경
-     * 
+     *
      * @example
      * <!-- 네이버아이디로로그인 버튼 노출 영역 -->
      * <div id="naverIdLogin" style="display: none;"></div>
-     * 
+     *
      * document.querySelector('#naverIdLogin').firstChild.click();
-     * 
+     *
      * CommonJS.SocialLogin.loginWithNaver(ClientId, 'http://127.0.0.1:5500/test/naver_login_callback.html');
      */
     loginWithNaver: function(ClientId, CallBackUrl)  {
@@ -3458,21 +3530,21 @@ CommonJS.SocialLogin = {
                 loginButton: {color: "green", type: 3, height: 60} /* 로그인 버튼의 타입을 지정 */
             }
         );
-    
+
         /* 설정정보를 초기화하고 연동을 준비 */
         naverLogin.init();
     },
     /**
      * 네이버 로그인 콜백
-     * @param {string} ClientId 
+     * @param {string} ClientId
      * @param {string} CallBackUrl
-     * @returns 
-     * 
+     * @returns
+     *
      * @see SDK 버전2로 변경
-     * 
+     *
      * @example
      * const naverIdLogin = CommonJS.SocialLogin.loginWithNaverCallBack(ClientId, 'http://127.0.0.1:5500/test/naver_login_callback.html');
-     * 
+     *
      * // Callback의 처리. 정상적으로 Callback 처리가 완료될 경우 main page로 redirect(또는 Popup close)
      * window.addEventListener('load', function () {
      * 		naverLogin.getLoginStatus(function (status) {
@@ -3481,14 +3553,14 @@ CommonJS.SocialLogin = {
      * 				const email = naverLogin.user.getEmail();
      * 				const name = naverLogin.user.getName();
      * 				const mobile = naverLogin.user.getMobile();
-     * 	
+     *
      * 				const profileObj = {};
      * 				profileObj.email = email;
      * 				profileObj.name = name;
      * 				profileObj.mobile = mobile;
-     * 
+     *
      * 				window.opener.getProfileSucCallBack(profileObj);
-     * 				window.close();	
+     * 				window.close();
      * 			} else {
      * 				console.log("callback 처리에 실패하였습니다.");
      * 			}
@@ -3505,27 +3577,27 @@ CommonJS.SocialLogin = {
                 /* callback 페이지가 분리되었을 경우에 callback 페이지에서는 callback처리를 해줄수 있도록 설정합니다. */
             }
         );
-    
+
         /* 네아로 로그인 정보를 초기화하기 위하여 init을 호출 */
         naverLogin.init();
-    
+
         return naverLogin;
     },
     // 네이버 로그아웃은 JavaScript로 제공하지 않으므로 REST API 이용해야 함 (접근 토큰 삭제)
 
     /**
      * 구글 로그인
-     * 
+     *
      * @link https://developers.google.com/identity/sign-in/web/sign-in#before_you_begin
      * @link https://developers.google.com/identity/sign-in/web/reference#gapiauth2initparams
-     * 
+     *
      * @example
      * - 구글은 구현 이전에 설정부터 복잡하다...
      * - 설정 시, URI 입력하는 부분이 있는데 IP로 입력하면 구글 로그인이 안된다.
      *   예) http://127.0.0.1:5500 (X), http://localhost:5500 (O)
-     * 
+     *
      * - 유틸로 만들 수가 없다... 아래 링크의 블로그 주인장분이 너무 정리를 잘해주셨지만... 구현 방법만 정리해 놓음
-     * 
+     *
      * @link https://tyrannocoding.tistory.com/51
      */
     loginWithGoogle: function() {
@@ -3548,7 +3620,7 @@ CommonJS.SocialLogin = {
 
                             options = new gapi.auth2.SigninOptionsBuilder();
                             options.setPrompt('select_account');
-                            options.setScope('profile').setScope('email'); 
+                            options.setScope('profile').setScope('email');
 
                             gapi.auth2.getAuthInstance().attachClickHandler('GgCustomLogin', options, googleSignIn, googleSignFailure);
                         });
@@ -3559,7 +3631,7 @@ CommonJS.SocialLogin = {
 
                         const method = 'get';
                         const url = 'https://people.googleapis.com/v1/people/me';
-                        
+
                         const param = {};
                         param.personFields = 'birthdays';
                         param.key = 'API 키';
@@ -3594,39 +3666,39 @@ CommonJS.SocialLogin = {
     },
     /**
      * 페이스북 로그인
-     * 
+     *
      * @link https://developers.facebook.com/docs/facebook-login/web?locale=ko_KR
-     * 
+     *
      * @example
      * - 구글에 비하면 양반인듯
      * - 유틸로 만들 수가 없다... 구글 로그인 참고 블로그 주인장 분이 페이스북 로그인도 정리를 잘해주셔서... 구현 방법만 정리해 놓음
      * - 버전에 따라 구현 방식이 조금씩 달라지는듯 한데, 공식 레퍼런스 참고하면 된다. (구글에 비하면 천국임)
-     * 
+     *
      * @link https://tyrannocoding.tistory.com/50
-     * 
+     *
      * @description SDK 임포트 URL > 코드 받기
      *      나머지 내용 훑어보고, 전체 코드 예시 참고
      * @link https://developers.facebook.com/docs/facebook-login/web#loginbutton
-     * 
+     *
      * @description Language는 URL 참고 후, Locales URL 참고
      * @link https://developers.facebook.com/docs/javascript/advanced-setup
      * @link http://fbdevwiki.com/wiki/Locales
-     * 
+     *
      * @description 버전도 다르지만 따라할 수는 없으니 참고만 해서 진행하다 보면
      *      콘솔에 이런 오류가 발생한다. 그냥 한마디로 https 쓰라는거다...
      *      sdk.js?hash=8fdbc8422dc2ce03b58408150cdadd42:49 The Login Button plugin no longer works on http pages. Please update your site to use https for Facebook Login
-     * 
+     *
      *      링크를 통해 VS코드 Live Server에 https 적용
      * @link https://uiyoji-journal.tistory.com/89
-     * 
+     *
      * @description VS코드 settings.json 파일 열기 참고
      * @link https://velog.io/@devyang97/VScode-settings.json
-     * 
+     *
      * @description 안드로이드의 경우, 네이티브로 개발해야 함 (웹뷰 방식 중단)
-     * 
+     *
      * @example
      * 아이고야...까탑스럽구만...
-     * 
+     *
      * 기본설정: 기본 설정 열기(JSON)
      * liveServer.settings.https 검색 복사
      * 기본설정: 설정 열기(JSON)
@@ -3649,13 +3721,13 @@ CommonJS.SocialLogin = {
                 <script>
                     window.fbAsyncInit = function() {
                         FB.init({
-                            appId            : '앱ID',    
-                            autoLogAppEvents : true, 
+                            appId            : '앱ID',
+                            autoLogAppEvents : true,
                             xfbml            : true,
                             version          : 'v11.0'
                         });
 
-                        FB.getLoginStatus(function(response) { 
+                        FB.getLoginStatus(function(response) {
                             statusChangeCallback(response);
                         });
                     });
@@ -3667,7 +3739,7 @@ CommonJS.SocialLogin = {
                         });
                     }
 
-                    function statusChangeCallback(response) { 
+                    function statusChangeCallback(response) {
                         if (response.status === 'connected') {
                             callgetProfileAPI();
                         } else if (response.status === 'not_authorized') {
@@ -3699,18 +3771,18 @@ CommonJS.SocialLogin = {
 CommonJS.Addr = {
     /**
      * 다음(카카오) 주소찾기
-     * @param {Element} zipcodeEl 
-     * @param {Element} roadAddrEl 
-     * @param {Element} jibunAddrEl 
-     * 
+     * @param {Element} zipcodeEl
+     * @param {Element} roadAddrEl
+     * @param {Element} jibunAddrEl
+     *
      * @link https://postcode.map.daum.net/guide#sample
-     * 
+     *
      * @description 신청 과정 없이 그냥 사용
-     * 
+     *
      * @example
      * [JavaScript]
      * CommonJS.Addr.daumPostcode( document.querySelector('#zipcode'), document.querySelector('#roadAddr'), document.querySelector('#jibunAddr') );
-     * 
+     *
      * [jQuery]
      * CommonJS.Addr.daumPostcode( $('#zipcode'), $('#roadAddr'), $('#jibunAddr') );
      */
@@ -3743,11 +3815,11 @@ CommonJS.Addr = {
     },
     /**
      * 도로명주소 API
-     * 
+     *
      * @link https://www.juso.go.kr/addrlink/devCenterEventBoardDetail.do?regSn=731&noticeType=T&currentPage=1&keyword=&searchType=
-     * 
+     *
      * @description URL 별로 신청해야 함 - 운영(본인인증 O) / 개발(본인인증 X, 기간 제한)
-     * 
+     *
      * @example
      * - JavaScript는 지원하지 않지만 참고하기 위해 명시해 놓음
      * - 서버 사이드만 지원 (JSP | PHP | ASP)
@@ -3761,18 +3833,18 @@ CommonJS.Addr = {
 CommonJS.Discount = {
     /**
      * 할인율 구하기
-     * @param {number} originPrice 
-     * @param {number} salePrice 
-     * @returns 
+     * @param {number} originPrice
+     * @param {number} salePrice
+     * @returns
      */
     calcRate: function(originPrice, salePrice) {
         return Math.round(100 - ((salePrice / originPrice) * 100))
     },
     /**
      * 할인가 구하기
-     * @param {number}} originPrice 
-     * @param {float|double} rate 
-     * @returns 
+     * @param {number}} originPrice
+     * @param {float|double} rate
+     * @returns
      */
     clacSalePrice: function(originPrice, rate) {
         var _savePrice = originPrice * (rate / 100);
@@ -3783,13 +3855,13 @@ CommonJS.Discount = {
 CommonJS.Print = {
     /**
      * 해당 영역안의 내용만 프린트 출력 (주로 div, textarea)
-     * @param {Element} Element 
+     * @param {Element} Element
      * @description CSS 먹지 않음
-     * 
+     *
      * @example
      * [JavaScript]
      * CommonJS.Print.printTheArea( document.querySelector(셀렉터) );
-     * 
+     *
      * [jQuery]
      * CommonJS.Print.printTheArea( $(셀렉터) );
      */
@@ -3811,17 +3883,17 @@ CommonJS.Print = {
     },
     /**
      * 해당 영역안의 내용만 프린트 출력 (주로 div, textarea)
-     * @param {Element} Element 
+     * @param {Element} Element
      * @description CSS 먹음, 프린트 이후 어쩔 수 없이 자동 새로고침
      * @description body에 CSS가 있는 경우, 안먹을 듯...
-     * 
+     *
      * @example
      * [JavaScript]
      * CommonJS.Print.printAsItIs( document.querySelector(셀렉터) );
-     * 
+     *
      * [jQuery]
      * CommonJS.Print.printAsItIs( $(셀렉터) );
-     * 
+     *
      * @link http://lemon421.cafe24.com/blog/textyle/23385
      */
     printAsItIs: function (Element) {
@@ -3845,24 +3917,24 @@ CommonJS.Print = {
 CommonJS.Scroll = {
     /**
      * CommonJS.Scroll.scrollPagingDiv( document.querySelector(셀렉터), pageNum, callback );
-     * 
+     *
      * @description
      * function fnCallback(pageNum) {
      *      console.log( pageNum );
-     * 
+     *
      *      if ( totCnt > pageNum * pageSize ) {
      *          조회
      *      }
      * }
-     * 
-     * @param {*} divElement 
-     * @param {*} pageNum 
-     * @param {*} callback 
+     *
+     * @param {*} divElement
+     * @param {*} pageNum
+     * @param {*} callback
      */
     scrollPagingDiv: function(divElement, pageNum, callback) {
         divElement.addEventListener('scroll', function() {
-            var _scroll = this.scrollTop + this.clientHeight;  
-            var _height = this.scrollHeight; 
+            var _scroll = this.scrollTop + this.clientHeight;
+            var _height = this.scrollHeight;
 
             if ( _scroll >= _height ) {
                 pageNum ++;
@@ -3877,8 +3949,8 @@ CommonJS.Masking = {
      * 이메일 마스킹
      *  - 원본 데이터 : abcdefg12345@naver.com
      *  - 변경 데이터 : ab**********@naver.com
-     * @param {string} str 
-     * @returns 
+     * @param {string} str
+     * @returns
      * @example
      * CommonJS.Masking.email1( 'abcdefg12345@naver.com' );
      */
@@ -3898,8 +3970,8 @@ CommonJS.Masking = {
      * 이메일 마스킹
      *  - 원본 데이터 : abcdefg12345@naver.com
      *  - 변경 데이터 : ab**********@nav******
-     * @param {string} str 
-     * @returns 
+     * @param {string} str
+     * @returns
      * @example
      * CommonJS.Masking.email2( 'abcdefg12345@naver.com' );
      */
@@ -3919,8 +3991,8 @@ CommonJS.Masking = {
      * 이메일 마스킹
      *  - 원본 데이터 : abcdefg12345@naver.com
      *  - 변경 데이터 : abcd********@******
-     * @param {string} str 
-     * @returns 
+     * @param {string} str
+     * @returns
      * @example
      * CommonJS.Masking.email3( 'abcdefg12345@naver.com' );
      */
@@ -3943,7 +4015,7 @@ CommonJS.Masking = {
      *  - 원본 데이터 : 010-1234-5678, 변경 데이터 : 010-****-5678
      *  - 원본 데이터 : 0111234567, 변경 데이터 : 011***4567
      *  - 원본 데이터 : 011-123-4567, 변경 데이터 : 011-***-4567
-     * @param {string} str 
+     * @param {string} str
      * @example
      * CommonJS.Masking.cellPhone( '01012345678' );
      */
@@ -3992,7 +4064,7 @@ CommonJS.Masking = {
      * 주민등록 번호 마스킹 (Resident Registration Number, RRN Masking)
      *  - 원본 데이터 : 990101-1234567, 변경 데이터 : 990101-1******
      *  - 원본 데이터 : 9901011234567, 변경 데이터 : 9901011******
-     * @param {string} str 
+     * @param {string} str
      * @example
      * CommonJS.Masking.rrn( '990101-1234567' );
      */
@@ -4025,7 +4097,7 @@ CommonJS.Masking = {
      *  - 원본 데이터 : 갓댐희, 변경 데이터 : 갓*희
      *  - 원본 데이터 : 하늘에수, 변경 데이터 : 하**수
      *  - 원본 데이터 : 갓댐, 변경 데이터 : 갓*
-     * @param {string} str 
+     * @param {string} str
      * @example
      * CommonJS.Masking.name(str);
      */
@@ -4053,30 +4125,30 @@ CommonJS.Masking = {
 CommonJS.Time = {
     /**
      * 해당 시간 기준으로 방금 전 ~ 년 전
-     * @param {Date} createdAt 
-     * @returns 
+     * @param {Date} createdAt
+     * @returns
      */
     displayedAt: function(createdAt) {
         const milliSeconds = new Date() - createdAt;
-  
+
         const seconds = milliSeconds / 1000;
         if (seconds < 60) return `방금 전`
-        
+
         const minutes = seconds / 60;
         if (minutes < 60) return `${Math.floor(minutes)}분 전`
-        
+
         const hours = minutes / 60;
         if (hours < 24) return `${Math.floor(hours)}시간 전`
-        
+
         const days = hours / 24;
         if (days < 7) return `${Math.floor(days)}일 전`
-        
+
         const weeks = days / 7;
         if (weeks < 5) return `${Math.floor(weeks)}주 전`
-        
+
         const months = days / 30;
         if (months < 12) return `${Math.floor(months)}개월 전`
-        
+
         const years = days / 365;
         return `${Math.floor(years)}년 전`
     }
