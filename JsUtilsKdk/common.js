@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 5.9
+ * @version 6.0
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  * @description 파일명을 common-util.js 로 변경해서 사용
@@ -1803,13 +1803,13 @@ CommonJS.BrowserInfo = {
      * CommonJS.BrowserInfo.isMobile();
      */
     isMobile: function () {
-        var _filter = 'win16|win32|win64|mac';
-        if (navigator.platform) {
-            if (_filter.indexOf(navigator.platform.toLowerCase()) < 0) {
-                return true;
-            } else {
-                return false;
-            }
+        var _filter = 'windows|macos|win16|win32|win64|macintel';
+        var _platform = navigator.userAgentData?.platform || navigator?.platform;
+
+        if( _filter.indexOf(_platform.toLowerCase()) < 0 ) {
+            return true;
+        } else {
+            return false;
         }
     },
     /**
