@@ -366,14 +366,6 @@ CommonJS.Object = {
      */
     objectToQueryString: function (obj) {
         return '?' + CommonJS.Object.makeFormBody(obj);
-    },
-    /**
-     * Object가 비어있는지 확인
-     * @param {Object} obj 
-     * @returns 
-     */
-    isObjectEmpty: function (obj) {
-        return Object.keys(obj).length == 0;
     }
 }
 
