@@ -838,7 +838,7 @@ CommonJS.FormatValid = {
      * CommonJS.FormatValid.isUrl(val);
      */
     isUrl: function (val) {
-        var _re = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+        var _re = _re = /^(https?:\/\/)([\w-]+(\.[\w-]+)+)(:\d+)?(\/\S*)?$/;
         return _re.test(val);
     },
     /**
