@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 6.0
+ * @version 6.1
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  * @description 파일명을 common-util.js 로 변경해서 사용
@@ -21,6 +21,7 @@
  * @property {object} CommonJS.Escape
  * @property {object} CommonJS.BrowserInfo
  * @property {object} CommonJS.Input - 2021.06.21 추가
+ * @property {object} CommonJS.FormatValue - 2024.11.21 추가
  * @property {object} CommonJS.SearchEngine - 2021.07.10 추가
  * @property {object} CommonJS.SnsShare - 2021.07.10 추가
  * @property {object} CommonJS.Mobile - 2021.07.10 추가
@@ -2339,153 +2340,199 @@ CommonJS.Input = {
         }
     },
     /**
-     * 전화번호 하이픈(-) 자동입력
-     * @param {Element} inputElement
-     * @param {(undefined|string)} inputElementStr
+     * 휴대폰 번호 하이픈(-) 자동입력
+     * @param {Element} inputElement 
      * @example
      * [JavaScript]
-     * CommonJS.Input.formatHypenPhone( document.querySelector(셀렉터) );
-     * CommonJS.Input.formatHypenPhone( null, 아이디_셀렉터 );
+     * CommonJS.Input.formatCellPhoneNumber( document.querySelector(셀렉터) );
      *
      * [jQuery]
-     * CommonJS.Input.formatHypenPhone( $(셀렉터) );
-     * CommonJS.Input.formatHypenPhone( null, 셀렉터 );
+     * CommonJS.Input.formatCellPhoneNumber( $(셀렉터) );
      */
-    formatHypenPhone: function (inputElement, inputElementStr) {
-        if (inputElement !== null) {
-            if (inputElement.length === undefined) {
-                inputElement.addEventListener('keyup', function (e) {
-                    fnTemp(e, inputElement);
-                });
-            } else {
-                inputElement.keyup(function(e) {
-                    fnTemp(e, inputElement);
-                });
+    formatCellPhoneNumber: function (inputElement) {
+        if (inputElement.length === undefined) {
+            inputElement.addEventListener('keyup', function (e) {
+                const value = e.target.value;
+                const phoneNumber = value.replace(/[^\d]/g, '');
+                const phoneNumberLength = phoneNumber.length;
+                if (phoneNumberLength < 4) {
+                    inputElement.value = phoneNumber;
+                    return;
+                }
+                if (phoneNumberLength < 8) {
+                    inputElement.value = `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
+                    return;
+                }
+                inputElement.value = `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`;
+            });
+        } else {
+            inputElement.keyup(function(e) {
+                const value = e.target.value;
+                const phoneNumber = value.replace(/[^\d]/g, '');
+                const phoneNumberLength = phoneNumber.length;
+                if (phoneNumberLength < 4) {
+                    inputElement.val(phoneNumber);
+                    return;
+                }
+                if (phoneNumberLength < 8) {
+                    inputElement.val(`${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`);
+                    return;
+                }
+                inputElement.val(`${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`);
+            });
+        }
+    },
+    /**
+     * 전화번호 하이픈(-) 자동입력
+     * @param {Element} inputElement 
+    * @example
+     * [JavaScript]
+     * CommonJS.Input.formatPhoneNumber( document.querySelector(셀렉터) );
+     *
+     * [jQuery]
+     * CommonJS.Input.formatPhoneNumber( $(셀렉터) );
+     */
+    formatPhoneNumber: function (inputElement) {
+        if (inputElement.length === undefined) {
+            inputElement.addEventListener('keyup', function (e) {
+                const value = e.target.value;
+                const phoneNumber = value.replace(/[^\d]/g, '');
+                const phoneNumberLength = phoneNumber.length;
+                if (phoneNumber.startsWith('02')) {
+                    if (phoneNumberLength > 2 && phoneNumberLength <= 6) {
+                        inputElement.value = `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2)}`;
+                        return;
+                    } else if (phoneNumberLength > 6 && phoneNumberLength <= 9) {
+                        inputElement.value = `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 5)}-${phoneNumber.slice(5)}`;
+                        return;
+                    } else if (phoneNumberLength > 9) {
+                        inputElement.value = `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 6)}-${phoneNumber.slice(6)}`;
+                        return;
+                    }
+                } else {
+                    if (phoneNumberLength > 3 && phoneNumberLength <= 7) {
+                        inputElement.value = `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
+                        return;
+                    } else if (phoneNumberLength > 7 && phoneNumberLength <= 11) {
+                        if (phoneNumberLength === 10) {
+                            inputElement.value = `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`;
+                            return;
+                        } else {
+                            inputElement.value = `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7)}`;
+                            return;
+                        }
+                    }
+                }
+                inputElement.value = phoneNumber;
+            });
+        } else {
+            inputElement.keyup(function(e) {
+                const value = e.target.value;
+                const phoneNumber = value.replace(/[^\d]/g, '');
+                const phoneNumberLength = phoneNumber.length;
+                if (phoneNumber.startsWith('02')) {
+                    if (phoneNumberLength > 2 && phoneNumberLength <= 6) {
+                        inputElement.val(`${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2)}`);
+                        return;
+                    } else if (phoneNumberLength > 6 && phoneNumberLength <= 9) {
+                        inputElement.val(`${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 5)}-${phoneNumber.slice(5)}`);
+                        return;
+                    } else if (phoneNumberLength > 9) {
+                        inputElement.val(`${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 6)}-${phoneNumber.slice(6)}`);
+                        return;
+                    }
+                } else {
+                    if (phoneNumberLength > 3 && phoneNumberLength <= 7) {
+                        inputElement.val(`${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`);
+                        return;
+                    } else if (phoneNumberLength > 7 && phoneNumberLength <= 11) {
+                        if (phoneNumberLength === 10) {
+                            inputElement.val(`${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`);
+                            return;
+                        } else {
+                            inputElement.val(`${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7)}`);
+                            return;
+                        }
+                    }
+                }
+                inputElement.val(phoneNumber);
+            });
+        }
+    }
+}
+
+CommonJS.FormatValue = {
+    /**
+     * 휴대폰 번호 하이픈(-) 자동입력
+     * @param {number} value
+     * @example
+     * [JavaScript]
+     * const inputElement = document.querySelector(셀렉터);
+     * inputElement.addEventListener('keyup', function(e) {
+     *      const formattedPhoneNumber = CommonJS.FormatValue.formatCellPhoneNumber(e.target.value);
+     *      e.target.value = formattedPhoneNumber;
+     * });
+     *
+     * [jQuery]
+     * const inputElement = $(셀렉터);
+     * inputElement.keyup(function(e) {
+     *      const formattedPhoneNumber = CommonJS.FormatValue.formatCellPhoneNumber(e.target.value);
+     *      $(e.target).val(formattedPhoneNumber);
+     * });
+     */
+    formatCellPhoneNumber: function (value) {
+        if (!value) return value;
+        const phoneNumber = value.replace(/[^\d]/g, '');
+        const phoneNumberLength = phoneNumber.length;
+        if (phoneNumberLength < 4) return phoneNumber;
+        if (phoneNumberLength < 8) {
+            return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
+        }
+        return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`;
+    },
+    /**
+     * 전화번호 하이픈(-) 자동입력
+     * @param {number} value 
+     * @returns 
+     * @example
+     * [JavaScript]
+     * const inputElement = document.querySelector(셀렉터);
+     * inputElement.addEventListener('keyup', function(e) {
+     *      const formattedPhoneNumber = CommonJS.FormatValue.formatPhoneNumber(e.target.value);
+     *      e.target.value = formattedPhoneNumber;
+     * });
+     *
+     * [jQuery]
+     * const inputElement = $(셀렉터);
+     * inputElement.keyup(function(e) {
+     *      const formattedPhoneNumber = CommonJS.FormatValue.formatPhoneNumber(e.target.value);
+     *      $(e.target).val(formattedPhoneNumber);
+     * });
+     */
+    formatPhoneNumber: function (value) {
+        if (!value) return value;
+        const phoneNumber = value.replace(/[^\d]/g, '');
+        const phoneNumberLength = phoneNumber.length;
+        if (phoneNumber.startsWith('02')) {
+            if (phoneNumberLength > 2 && phoneNumberLength <= 6) {
+                return `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2)}`;
+            } else if (phoneNumberLength > 6 && phoneNumberLength <= 9) {
+                return `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 5)}-${phoneNumber.slice(5)}`;
+            } else if (phoneNumberLength > 9) {
+                return `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 6)}-${phoneNumber.slice(6)}`;
             }
         } else {
-            if (document.querySelector(inputElementStr).length === undefined) {
-                let inputElement = document.querySelector(inputElementStr);
-
-                document.addEventListener('keyup', function (e) {
-                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
-                        fnTemp(e, inputElement);
-                    }
-                });
-            } else {
-                let inputElement = $(inputElementStr);
-
-                $(document).on('keyup', inputElementStr, function (e) {
-                    fnTemp(e, inputElement);
-                });
-            }
-        }
-
-        function fnTemp(e, inputElement) {
-            var _type;
-            if (inputElement.length === undefined) {
-                _type = 0;
-            } else {
-                _type = 1;
-            }
-
-            var _str;
-            if (_type === 0) {
-                _str = inputElement.value;
-            } else {
-                _str = inputElement.val();
-            }
-
-            _str = _str.replace(/[^0-9]/g, '');
-
-            var tmp = '';
-
-            if (_str.substring(0, 2) == 02) {
-                // 서울 전화번호일 경우 10자리까지만 나타나고 그 이상의 자리수는 자동삭제
-                if (_str.length < 3) {
-                    if (_type === 0) {
-                        inputElement.value = _str;
-                    } else {
-                        inputElement.val(_str);
-                    }
-                } else if (_str.length < 6) {
-                    tmp += _str.substr(0, 2);
-                    tmp += '-';
-                    tmp += _str.substr(2);
-
-                    if (_type === 0) {
-                        inputElement.value = tmp;
-                    } else {
-                        inputElement.val(tmp);
-                    }
-                } else if (_str.length < 10) {
-                    tmp += _str.substr(0, 2);
-                    tmp += '-';
-                    tmp += _str.substr(2, 3);
-                    tmp += '-';
-                    tmp += _str.substr(5);
-
-                    if (_type === 0) {
-                        inputElement.value = tmp;
-                    } else {
-                        inputElement.val(tmp);
-                    }
+            if (phoneNumberLength > 3 && phoneNumberLength <= 7) {
+                return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
+            } else if (phoneNumberLength > 7 && phoneNumberLength <= 11) {
+                if (phoneNumberLength === 10) {
+                    return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`;
                 } else {
-                    tmp += _str.substr(0, 2);
-                    tmp += '-';
-                    tmp += _str.substr(2, 4);
-                    tmp += '-';
-
-                    if (_type === 0) {
-                        inputElement.value = tmp;
-                    } else {
-                        inputElement.val(tmp);
-                    }
-                }
-            } else {
-                // 핸드폰 및 다른 지역 전화번호 일 경우
-                if (_str.length < 4) {
-                    if (_type === 0) {
-                        inputElement.value = _str;
-                    } else {
-                        inputElement.val(_str);
-                    }
-                } else if (_str.length < 7) {
-                    tmp += _str.substr(0, 3);
-                    tmp += '-';
-                    tmp += _str.substr(3);
-
-                    if (_type === 0) {
-                        inputElement.value = tmp;
-                    } else {
-                        inputElement.val(tmp);
-                    }
-                } else if (_str.length < 11) {
-                    tmp += _str.substr(0, 3);
-                    tmp += '-';
-                    tmp += _str.substr(3, 3);
-                    tmp += '-';
-                    tmp += _str.substr(6);
-
-                    if (_type === 0) {
-                        inputElement.value = tmp;
-                    } else {
-                        inputElement.val(tmp);
-                    }
-                } else {
-                    tmp += _str.substr(0, 3);
-                    tmp += '-';
-                    tmp += _str.substr(3, 4);
-                    tmp += '-';
-                    tmp += _str.substr(7);
-
-                    if (_type === 0) {
-                        inputElement.value = tmp;
-                    } else {
-                        inputElement.val(tmp);
-                    }
+                    return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7)}`;
                 }
             }
         }
+        return phoneNumber;
     }
 }
 
