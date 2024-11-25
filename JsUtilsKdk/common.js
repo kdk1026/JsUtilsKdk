@@ -2409,6 +2409,26 @@ CommonJS.Input = {
                         inputElement.value = `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 6)}-${phoneNumber.slice(6)}`;
                         return;
                     }
+                } else if (phoneNumber.startsWith('0505')) {
+                    if (phoneNumberLength > 4 && phoneNumberLength <= 7) {
+                        inputElement.value = `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`;
+                        return;
+                    } else {
+                        inputElement.value = `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7)}`;
+                        return;
+                    }
+                } else if (phoneNumber.startsWith('0507')) {
+                    if (phoneNumberLength > 4 && phoneNumberLength <= 7) {
+                        inputElement.value = `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`;
+                        return;
+                    }
+                    else if (phoneNumberLength === 11) {
+                        inputElement.value = `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7)}`;
+                        return;
+                    } else {
+                        inputElement.value = `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 8)}-${phoneNumber.slice(8)}`;
+                        return;
+                    }
                 } else {
                     if (phoneNumberLength > 3 && phoneNumberLength <= 7) {
                         inputElement.value = `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
@@ -2439,6 +2459,26 @@ CommonJS.Input = {
                         return;
                     } else if (phoneNumberLength > 9) {
                         inputElement.val(`${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 6)}-${phoneNumber.slice(6)}`);
+                        return;
+                    }
+                } else if (phoneNumber.startsWith('0505')) {
+                    if (phoneNumberLength > 4 && phoneNumberLength <= 7) {
+                        inputElement.val(`${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`);
+                        return;
+                    } else {
+                        inputElement.val(`${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7)}`);
+                        return;
+                    }
+                } else if (phoneNumber.startsWith('0507')) {
+                    if (phoneNumberLength > 4 && phoneNumberLength <= 7) {
+                        inputElement.val(`${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`);
+                        return;
+                    }
+                    else if (phoneNumberLength === 11) {
+                        inputElement.val(`${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7)}`);
+                        return;
+                    } else {
+                        inputElement.val(`${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 8)}-${phoneNumber.slice(8)}`);
                         return;
                     }
                 } else {
@@ -2520,6 +2560,21 @@ CommonJS.FormatValue = {
                 return `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 5)}-${phoneNumber.slice(5)}`;
             } else if (phoneNumberLength > 9) {
                 return `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 6)}-${phoneNumber.slice(6)}`;
+            }
+        } else if (phoneNumber.startsWith('0505')) {
+            if (phoneNumberLength > 4 && phoneNumberLength <= 7) {
+                return `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`;
+            } else {
+                return `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7)}`;
+            }
+        } else if (phoneNumber.startsWith('0507')) {
+            if (phoneNumberLength > 4 && phoneNumberLength <= 7) {
+                return `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`;
+            }
+            else if (phoneNumberLength === 11) {
+                return `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7)}`;
+            } else {
+                return `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 8)}-${phoneNumber.slice(8)}`;
             }
         } else {
             if (phoneNumberLength > 3 && phoneNumberLength <= 7) {
