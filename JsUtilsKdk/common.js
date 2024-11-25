@@ -767,10 +767,10 @@ CommonJS.FormatValid = {
             041-충남, 042-대전, 043-충복, 044-세종
             051-부산, 052-울산, 053-대구, 054-경북, 055-경남
             061-전남, 062-광주, 063-전북, 064-제주
-            0505-평생번호/인터넷 팩스 번호, 0507-안심번호
             070-인터넷 전화
+            0502~0507-가상 전화번호
         */
-        var _re = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|505|507|70))-?(\d{3,4})-?(\d{4})$/;
+        var _re = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|502|503|504|505|506|507|70))-?(\d{3,4})-?(\d{4})$/;
         return _re.test(_val);
     },
     /**
@@ -2409,7 +2409,7 @@ CommonJS.Input = {
                         inputElement.value = `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 6)}-${phoneNumber.slice(6, 10)}`;
                         return;
                     }
-                } else if (phoneNumber.startsWith('0505') || phoneNumber.startsWith('0507')) {
+                } else if (phoneNumber.startsWith('050') && phoneNumber.charAt(3) >= '2' && phoneNumber.charAt(3) <= '7') {
                     if (phoneNumberLength > 4 && phoneNumberLength <= 7) {
                         inputElement.value = `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`;
                         return;
@@ -2449,7 +2449,7 @@ CommonJS.Input = {
                         inputElement.val(`${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 6)}-${phoneNumber.slice(6, 10)}`);
                         return;
                     }
-                } else if (phoneNumber.startsWith('0505') || phoneNumber.startsWith('0507')) {
+                } else if (phoneNumber.startsWith('050') && phoneNumber.charAt(3) >= '2' && phoneNumber.charAt(3) <= '7') {
                     if (phoneNumberLength > 4 && phoneNumberLength <= 7) {
                         inputElement.val(`${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`);
                         return;
@@ -2538,7 +2538,7 @@ CommonJS.FormatValue = {
             } else if (phoneNumberLength > 9) {
                 return `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 6)}-${phoneNumber.slice(6, 10)}`;
             }
-        } else if (phoneNumber.startsWith('0505') || phoneNumber.startsWith('0507')) {
+        } else if (phoneNumber.startsWith('050') && phoneNumber.charAt(3) >= '2' && phoneNumber.charAt(3) <= '7') {
             if (phoneNumberLength > 4 && phoneNumberLength <= 7) {
                 return `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`;
             } else {
