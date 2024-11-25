@@ -2421,8 +2421,7 @@ CommonJS.Input = {
                     if (phoneNumberLength > 4 && phoneNumberLength <= 7) {
                         inputElement.value = `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`;
                         return;
-                    }
-                    else if (phoneNumberLength === 11) {
+                    } else if (phoneNumberLength === 11) {
                         inputElement.value = `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7)}`;
                         return;
                     } else {
@@ -2476,8 +2475,7 @@ CommonJS.Input = {
                     if (phoneNumberLength > 4 && phoneNumberLength <= 7) {
                         inputElement.val(`${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`);
                         return;
-                    }
-                    else if (phoneNumberLength === 11) {
+                    } else if (phoneNumberLength === 11) {
                         inputElement.val(`${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7)}`);
                         return;
                     } else {
@@ -2577,8 +2575,7 @@ CommonJS.FormatValue = {
         } else if (phoneNumber.startsWith('0507')) {
             if (phoneNumberLength > 4 && phoneNumberLength <= 7) {
                 return `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`;
-            }
-            else if (phoneNumberLength === 11) {
+            } else if (phoneNumberLength === 11) {
                 return `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7)}`;
             } else {
                 return `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 8)}-${phoneNumber.slice(8)}`;
