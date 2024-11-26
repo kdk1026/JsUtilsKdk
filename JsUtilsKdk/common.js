@@ -1893,17 +1893,14 @@ CommonJS.Input = {
     /**
      * 숫자만 입력
      * @param {Element} inputElement
-     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyNum( document.querySelector(셀렉터) );
-     * CommonJS.Input.onlyNum( null, 아이디_셀렉터 );
      *
      * [jQuery]
      * CommonJS.Input.onlyNum( $(셀렉터) );
-     * CommonJS.Input.onlyNum( null, 셀렉터 );
      */
-    onlyNum: function (inputElement, inputElementStr) {
+    onlyNum: function (inputElement) {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
@@ -1914,34 +1911,19 @@ CommonJS.Input = {
                     $(this).val(e.target.value.replace(/[^0-9]/gi, ''));
                 });
             }
-        } else {
-            if (document.querySelector(inputElementStr).length === undefined) {
-                document.addEventListener('keyup', function (e) {
-                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
-                        this.value = e.target.value.replace(/[^0-9]/gi, '');
-                    }
-                });
-            } else {
-                $(document).on('keyup', inputElementStr, function (e) {
-                    $(this).val(e.target.value.replace(/[^0-9]/gi, ''));
-                });
-            }
         }
     },
     /**
      * 숫자만 입력 + 세 자리마다 콤마 자동 입력
      * @param {Element} inputElement
-     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyFormatNum( document.querySelector(셀렉터) );
-     * CommonJS.Input.onlyFormatNum( null, 아이디_셀렉터 );
      *
      * [jQuery]
      * CommonJS.Input.onlyFormatNum( $(셀렉터) );
-     * CommonJS.Input.onlyFormatNum( null, 셀렉터 );
      */
-    onlyFormatNum: function (inputElement, inputElementStr) {
+    onlyFormatNum: function (inputElement) {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
@@ -1949,18 +1931,6 @@ CommonJS.Input = {
                 });
             } else {
                 inputElement.keyup(function(e) {
-                    $(this).val( fnTemp(e) );
-                });
-            }
-        } else {
-            if (document.querySelector(inputElementStr).length === undefined) {
-                document.addEventListener('keyup', function (e) {
-                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
-                        this.value = fnTemp(e);
-                    }
-                });
-            } else {
-                $(document).on('keyup', inputElementStr, function (e) {
                     $(this).val( fnTemp(e) );
                 });
             }
@@ -1980,17 +1950,14 @@ CommonJS.Input = {
     /**
      * 영문만 입력
      * @param {Element} inputElement
-     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyEng( document.querySelector(셀렉터) );
-     * CommonJS.Input.onlyEng( null, 아이디_셀렉터 );
      *
      * [jQuery]
      * CommonJS.Input.onlyEng( $(셀렉터) );
-     * CommonJS.Input.onlyEng( null, 셀렉터 );
      */
-    onlyEng: function (inputElement, inputElementStr) {
+    onlyEng: function (inputElement) {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
@@ -2001,34 +1968,19 @@ CommonJS.Input = {
                     $(this).val(e.target.value.replace(/[^a-zA-Z]/gi, ''));
                 });
             }
-        } else {
-            if (document.querySelector(inputElementStr).length === undefined) {
-                document.addEventListener('keyup', function (e) {
-                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
-                        this.value = e.target.value.replace(/[^a-zA-Z]/gi, '');
-                    }
-                });
-            } else {
-                $(document).on('keyup', inputElementStr, function (e) {
-                    $(this).val(e.target.value.replace(/[^a-zA-Z]/gi, ''));
-                });
-            }
         }
     },
     /**
      * 영문 + '_' 만 입력
      * @param {Element} inputElement
-     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyEngUnder( document.querySelector(셀렉터) );
-     * CommonJS.Input.onlyEngUnder( null, 아이디_셀렉터 );
      *
      * [jQuery]
      * CommonJS.Input.onlyEngUnder( $(셀렉터) );
-     * CommonJS.Input.onlyEngUnder( null, 셀렉터 );
      */
-    onlyEngUnder: function (inputElement, inputElementStr) {
+    onlyEngUnder: function (inputElement) {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
@@ -2039,34 +1991,19 @@ CommonJS.Input = {
                     $(this).val(e.target.value.replace(/[^a-zA-Z_]/gi, ''));
                 });
             }
-        } else {
-            if (document.querySelector(inputElementStr).length === undefined) {
-                document.addEventListener('keyup', function (e) {
-                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
-                        this.value = e.target.value.replace(/[^a-zA-Z_]/gi, '');
-                    }
-                });
-            } else {
-                $(document).on('keyup', inputElementStr, function (e) {
-                    $(this).val(e.target.value.replace(/[^a-zA-Z_]/gi, ''));
-                });
-            }
         }
     },
     /**
      * 영문 + 숫자만 입력
      * @param {Element} inputElement
-     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyEngNum( document.querySelector(셀렉터) );
-     * CommonJS.Input.onlyEngNum( null, 아이디_셀렉터 );
      *
      * [jQuery]
      * CommonJS.Input.onlyEngNum( $(셀렉터) );
-     * CommonJS.Input.onlyEngNum( null, 셀렉터 );
      */
-    onlyEngNum: function (inputElement, inputElementStr) {
+    onlyEngNum: function (inputElement) {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
@@ -2077,34 +2014,19 @@ CommonJS.Input = {
                     $(this).val(e.target.value.replace(/[^a-zA-Z0-9]/gi, ''));
                 });
             }
-        } else {
-            if (document.querySelector(inputElementStr).length === undefined) {
-                document.addEventListener('keyup', function (e) {
-                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
-                        this.value = e.target.value.replace(/[^a-zA-Z0-9]/gi, '');
-                    }
-                });
-            } else {
-                $(document).on('keyup', inputElementStr, function (e) {
-                    $(this).val(e.target.value.replace(/[^a-zA-Z0-9]/gi, ''));
-                });
-            }
         }
     },
     /**
      * 영문 + SPACE 입력
      * @param {Element} inputElement
-     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyEngBlank( document.querySelector(셀렉터) );
-     * CommonJS.Input.onlyEngBlank( null, 아이디_셀렉터 );
      *
      * [jQuery]
      * CommonJS.Input.onlyEngBlank( $(셀렉터) );
-     * CommonJS.Input.onlyEngBlank( null, 셀렉터 );
      */
-    onlyEngBlank: function (inputElement, inputElementStr) {
+    onlyEngBlank: function (inputElement) {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
@@ -2115,34 +2037,19 @@ CommonJS.Input = {
                     $(this).val(e.target.value.replace(/[^a-zA-Z\s]/gi, ''));
                 });
             }
-        } else {
-            if (document.querySelector(inputElementStr).length === undefined) {
-                document.addEventListener('keyup', function (e) {
-                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
-                        this.value = e.target.value.replace(/[^a-zA-Z\s]/gi, '');
-                    }
-                });
-            } else {
-                $(document).on('keyup', inputElementStr, function (e) {
-                    $(this).val(e.target.value.replace(/[^a-zA-Z\s]/gi, ''));
-                });
-            }
         }
     },
     /**
      * 한글만 입력
      * @param {Element} inputElement
-     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyHangul( document.querySelector(셀렉터) );
-     * CommonJS.Input.onlyHangul( null, 아이디_셀렉터 );
      *
      * [jQuery]
      * CommonJS.Input.onlyHangul( $(셀렉터) );
-     * CommonJS.Input.onlyHangul( null, 셀렉터 );
      */
-    onlyHangul: function (inputElement, inputElementStr) {
+    onlyHangul: function (inputElement) {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
@@ -2153,34 +2060,19 @@ CommonJS.Input = {
                     $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/gi, ''));
                 });
             }
-        } else {
-            if (document.querySelector(inputElementStr).length === undefined) {
-                document.addEventListener('keyup', function (e) {
-                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
-                        this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
-                    }
-                });
-            } else {
-                $(document).on('keyup', inputElementStr, function (e) {
-                    $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/gi, ''));
-                });
-            }
         }
     },
     /**
      * 한글 + SPACE 입력
      * @param {Element} inputElement
-     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyHangulBlank( document.querySelector(셀렉터) );
-     * CommonJS.Input.onlyHangulBlank( null, 아이디_셀렉터 );
      *
      * [jQuery]
      * CommonJS.Input.onlyHangulBlank( $(셀렉터) );
-     * CommonJS.Input.onlyHangulBlank( null, 셀렉터 );
      */
-    onlyHangulBlank: function (inputElement, inputElementStr) {
+    onlyHangulBlank: function (inputElement) {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
@@ -2191,34 +2083,19 @@ CommonJS.Input = {
                     $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ\s]/gi, ''));
                 });
             }
-        } else {
-            if (document.querySelector(inputElementStr).length === undefined) {
-                document.addEventListener('keyup', function (e) {
-                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
-                        this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ\s]/gi, '');
-                    }
-                });
-            } else {
-                $(document).on('keyup', inputElementStr, function (e) {
-                    $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ\s]/gi, ''));
-                });
-            }
         }
     },
     /**
      * 한글 + 영문 + 숫자 입력
      * @param {Element} inputElement
-     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.onlyHanEngNum( document.querySelector(셀렉터) );
-     * CommonJS.Input.onlyHanEngNum( null, 아이디_셀렉터 );
      *
      * [jQuery]
      * CommonJS.Input.onlyHanEngNum( $(셀렉터) );
-     * CommonJS.Input.onlyHanEngNum( null, 셀렉터 );
      */
-    onlyHanEngNum: function (inputElement, inputElementStr) {
+    onlyHanEngNum: function (inputElement) {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
@@ -2229,34 +2106,19 @@ CommonJS.Input = {
                     $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/gi, ''));
                 });
             }
-        } else {
-            if (document.querySelector(inputElementStr).length === undefined) {
-                document.addEventListener('keyup', function (e) {
-                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
-                        this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/gi, '');
-                    }
-                });
-            } else {
-                $(document).on('keyup', inputElementStr, function (e) {
-                    $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/gi, ''));
-                });
-            }
         }
     },
     /**
      * 한글 입력 막기
      * @param {Element} inputElement
-     * @param {(undefined|string)} inputElementStr
      * @example
      * [JavaScript]
      * CommonJS.Input.blockingHangul( document.querySelector(셀렉터) );
-     * CommonJS.Input.blockingHangul( null, 아이디_셀렉터 );
      *
      * [jQuery]
      * CommonJS.Input.blockingHangul( $(셀렉터) );
-     * CommonJS.Input.blockingHangul( null, 셀렉터 );
      */
-    blockingHangul: function (inputElement, inputElementStr) {
+    blockingHangul: function (inputElement) {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
@@ -2264,18 +2126,6 @@ CommonJS.Input = {
                 });
             } else {
                 inputElement.keyup(function(e) {
-                    $(this).val(e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, ''));
-                });
-            }
-        } else {
-            if (document.querySelector(inputElementStr).length === undefined) {
-                document.addEventListener('keyup', function (e) {
-                    if ( e.target && e.target.id === inputElementStr.replace('#', '') ) {
-                        this.value = e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, '');
-                    }
-                });
-            } else {
-                $(document).on('keyup', inputElementStr, function (e) {
                     $(this).val(e.target.value.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]/gi, ''));
                 });
             }
@@ -2352,33 +2202,13 @@ CommonJS.Input = {
     formatCellPhoneNumber: function (inputElement) {
         if (inputElement.length === undefined) {
             inputElement.addEventListener('keyup', function (e) {
-                const value = e.target.value;
-                const phoneNumber = value.replace(/[^\d]/g, '');
-                const phoneNumberLength = phoneNumber.length;
-                if (phoneNumberLength < 4) {
-                    inputElement.value = phoneNumber;
-                    return;
-                }
-                if (phoneNumberLength < 8) {
-                    inputElement.value = `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
-                    return;
-                }
-                inputElement.value = `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`;
+                const formattedPhoneNumber = CommonJS.FormatValue.formatCellPhoneNumber(e.target.value);
+                e.target.value = formattedPhoneNumber;
             });
         } else {
             inputElement.keyup(function(e) {
-                const value = e.target.value;
-                const phoneNumber = value.replace(/[^\d]/g, '');
-                const phoneNumberLength = phoneNumber.length;
-                if (phoneNumberLength < 4) {
-                    inputElement.val(phoneNumber);
-                    return;
-                }
-                if (phoneNumberLength < 8) {
-                    inputElement.val(`${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`);
-                    return;
-                }
-                inputElement.val(`${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`);
+                const formattedPhoneNumber = CommonJS.FormatValue.formatCellPhoneNumber(e.target.value);
+                $(e.target).val(formattedPhoneNumber);
             });
         }
     },
@@ -2395,83 +2225,13 @@ CommonJS.Input = {
     formatPhoneNumber: function (inputElement) {
         if (inputElement.length === undefined) {
             inputElement.addEventListener('keyup', function (e) {
-                const value = e.target.value;
-                const phoneNumber = value.replace(/[^\d]/g, '');
-                const phoneNumberLength = phoneNumber.length;
-                if (phoneNumber.startsWith('02')) {
-                    if (phoneNumberLength > 2 && phoneNumberLength <= 6) {
-                        inputElement.value = `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2)}`;
-                        return;
-                    } else if (phoneNumberLength > 6 && phoneNumberLength <= 9) {
-                        inputElement.value = `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 5)}-${phoneNumber.slice(5, 9)}`;
-                        return;
-                    } else if (phoneNumberLength > 9) {
-                        inputElement.value = `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 6)}-${phoneNumber.slice(6, 10)}`;
-                        return;
-                    }
-                } else if (phoneNumber.startsWith('050') && phoneNumber.charAt(3) >= '2' && phoneNumber.charAt(3) <= '7') {
-                    if (phoneNumberLength > 4 && phoneNumberLength <= 7) {
-                        inputElement.value = `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`;
-                        return;
-                    } else {
-                        inputElement.value = `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7, 11)}`;
-                        return;
-                    }
-                } else {
-                    if (phoneNumberLength > 3 && phoneNumberLength <= 7) {
-                        inputElement.value = `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
-                        return;
-                    } else if (phoneNumberLength > 7 && phoneNumberLength <= 11) {
-                        if (phoneNumberLength === 10) {
-                            inputElement.value = `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
-                            return;
-                        } else {
-                            inputElement.value = `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`;
-                            return;
-                        }
-                    }
-                }
-                inputElement.value = phoneNumber;
+                const formattedPhoneNumber = CommonJS.FormatValue.formatPhoneNumber(e.target.value);
+                e.target.value = formattedPhoneNumber;
             });
         } else {
             inputElement.keyup(function(e) {
-                const value = e.target.value;
-                const phoneNumber = value.replace(/[^\d]/g, '');
-                const phoneNumberLength = phoneNumber.length;
-                if (phoneNumber.startsWith('02')) {
-                    if (phoneNumberLength > 2 && phoneNumberLength <= 6) {
-                        inputElement.val(`${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2)}`);
-                        return;
-                    } else if (phoneNumberLength > 6 && phoneNumberLength <= 9) {
-                        inputElement.val(`${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 5)}-${phoneNumber.slice(5, 9)}`);
-                        return;
-                    } else if (phoneNumberLength > 9) {
-                        inputElement.val(`${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 6)}-${phoneNumber.slice(6, 10)}`);
-                        return;
-                    }
-                } else if (phoneNumber.startsWith('050') && phoneNumber.charAt(3) >= '2' && phoneNumber.charAt(3) <= '7') {
-                    if (phoneNumberLength > 4 && phoneNumberLength <= 7) {
-                        inputElement.val(`${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`);
-                        return;
-                    } else {
-                        inputElement.val(`${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7, 11)}`);
-                        return;
-                    }
-                } else {
-                    if (phoneNumberLength > 3 && phoneNumberLength <= 7) {
-                        inputElement.val(`${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`);
-                        return;
-                    } else if (phoneNumberLength > 7 && phoneNumberLength <= 11) {
-                        if (phoneNumberLength === 10) {
-                            inputElement.val(`${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`);
-                            return;
-                        } else {
-                            inputElement.val(`${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`);
-                            return;
-                        }
-                    }
-                }
-                inputElement.val(phoneNumber);
+                const formattedPhoneNumber = CommonJS.FormatValue.formatPhoneNumber(e.target.value);
+                $(e.target).val(formattedPhoneNumber);
             });
         }
     }
@@ -2543,6 +2303,12 @@ CommonJS.FormatValue = {
                 return `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`;
             } else {
                 return `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7, 11)}`;
+            }
+        }  else if (phoneNumber.startsWith('070')) {
+            if (phoneNumberLength > 3 && phoneNumberLength <= 7) {
+                return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
+            } else {
+                return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`;
             }
         } else {
             if (phoneNumberLength > 3 && phoneNumberLength <= 7) {
@@ -2907,7 +2673,6 @@ CommonJS.Mobile = {
      * [iOS]
      * CommonJS.Mobile.runAppLinkUrl('', 'instagram://media', 'https://itunes.apple.com/kr/app/instagram/id389801252?mt=8');
      *
-     * @description iOS는 구글링한 결과... 예전에 프로젝트때 누군가 해놓은거는 한 3초 설정해놓았던거 같은데... 1초도 상관 없는듯
      * @link https://gomest.tistory.com/7
      */
     runAppLinkUrl: function (androidUrl, iosUrl, iosAppStoreUrl) {
