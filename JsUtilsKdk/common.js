@@ -423,7 +423,7 @@ CommonJS.Valid = {
      * CommonJS.Valid.isSpecial(val);
      */
     isSpecial: function (val) {
-        var _re = /[`~!@#$%^&*()-_=+{}|;:'\",.<>?]+$/;
+        var _re = /[`~!@#$%^&*()\-_=+{}|;:'",.<>/?[\]]+$/;
         return _re.test(val);
     },
     /**
@@ -448,7 +448,7 @@ CommonJS.Valid = {
      * CommonJS.Valid.isNotHangul(val);
      */
     isNotHangul: function (val) {
-        var _re = /[a-zA-Z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g;
+        var _re = /[a-zA-Z0-9]|[ [\]{}()<>/?|`~!@#$%^&*-_+=,.;:"'\\]/g;
         return _re.test(val);
     },
     /**
