@@ -2662,6 +2662,20 @@ CommonJS.Mobile = {
         return 'intent://' + host + '/#Intent;package=' + package + ';scheme=' + scheme + ';end';
     },
     /**
+     * IOS 앱링크 or 딥링크 URL 생성
+     *   - URL 스킴 방식
+     *      1. info.plist 에 URL Types 항목 추가
+     *      2. Identifier와 URL Schemes에 적절한 값을 입력
+     * @param {string} host 
+     * @param {string} scheme 
+     * @returns
+     * @example
+     * CommonJS.Mobile.makeURLSchemeIOSAppLinkUrl('instagram.com', 'https');
+     */
+    makeURLSchemeIOSAppLinkUrl: function (host, scheme) {
+        return scheme + '://' + host;
+    },
+    /**
      * 앱링크 or 딥링크 실행
      * @param {string} androidUrl
      * @param {string} iosUrl
