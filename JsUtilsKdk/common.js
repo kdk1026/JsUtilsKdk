@@ -2040,6 +2040,29 @@ CommonJS.Input = {
         }
     },
     /**
+     * 영문 + 숫자 + SPACE 입력
+     * @param {Element} inputElement
+     * @example
+     * [JavaScript]
+     * CommonJS.Input.onlyEngNumBlank( document.querySelector(셀렉터) );
+     *
+     * [jQuery]
+     * CommonJS.Input.onlyEngNumBlank( $(셀렉터) );
+     */
+    onlyEngNumBlank: function (inputElement) {
+        if (inputElement !== null) {
+            if (inputElement.length === undefined) {
+                inputElement.addEventListener('keyup', function (e) {
+                    this.value = e.target.value.replace(/[^a-zA-Z0-9\s]/gi, '');
+                });
+            } else {
+                inputElement.keyup(function(e) {
+                    $(this).val(e.target.value.replace(/[^a-zA-Z0-9\s]/gi, ''));
+                });
+            }
+        }
+    },
+    /**
      * 한글만 입력
      * @param {Element} inputElement
      * @example
@@ -2096,6 +2119,29 @@ CommonJS.Input = {
      * CommonJS.Input.onlyHanEngNum( $(셀렉터) );
      */
     onlyHanEngNum: function (inputElement) {
+        if (inputElement !== null) {
+            if (inputElement.length === undefined) {
+                inputElement.addEventListener('keyup', function (e) {
+                    this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/gi, '');
+                });
+            } else {
+                inputElement.keyup(function(e) {
+                    $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/gi, ''));
+                });
+            }
+        }
+    },
+    /**
+     * 한글 + 영문 + 숫자 + SPACE 입력
+     * @param {Element} inputElement
+     * @example
+     * [JavaScript]
+     * CommonJS.Input.onlyHanEngNumBlank( document.querySelector(셀렉터) );
+     *
+     * [jQuery]
+     * CommonJS.Input.onlyHanEngNumBlank( $(셀렉터) );
+     */
+    onlyHanEngNumBlank: function (inputElement) {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
