@@ -478,7 +478,7 @@ CommonJS.Valid = {
  * CommonJS.DateTime.함수 대신 Moment.js 적극 권장
  *
  * @link https://momentjs.com/
- * @link https://github.com/kdk1026/node_utils/blob/main/libs/date.js
+ * @link https://github.com/kdk1026/vite-util/blob/master/src/utils/date.js
  * ********************************************************************
  */
 CommonJS.DateTime = {
