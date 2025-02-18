@@ -326,6 +326,27 @@ CommonJS.Text = {
         }
         str = str.length >= padLen ? str.substring(0, padLen) : str;
         return str;
+    },
+    /**
+     * 모던한 방법으로 클립보드 복사하기
+     * @param {string} string 
+     * @param {undefined|string} title 
+     * @param {undefined|string} text
+     * 
+     * CommonJS.Text.copyToClipBoard(window.location.href);
+     */
+    copyToClipBoardMorden: function (string, title, text) {
+        let clipboardContent = string;
+        if (title) clipboardContent = `${title}\n${clipboardContent}`;
+        if (text) clipboardContent = `${text}\n${clipboardContent}`;
+
+        navigator.clipboard.writeText(clipboardContent)
+        .then(() => {
+            alert('클립보드에 복사되었습니다.');
+        })
+        .catch((error) => {
+            alert('클립보드 복사 중 오류 발생: ' + error);
+        });
     }
 },
 
