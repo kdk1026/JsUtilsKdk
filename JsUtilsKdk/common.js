@@ -333,7 +333,8 @@ CommonJS.Text = {
      * @param {string} string 
      * @param {undefined|null|string} title 
      * @param {undefined|null|string} text
-     * 
+     * @returns 
+     * @example
      * CommonJS.Text.copyToClipBoard(window.location.href);
      */
     copyToClipBoardMorden: function (string, title, text) {
@@ -4082,7 +4083,9 @@ CommonJS.Url = {
      * URL 공유
      * @param {undefined|null|string} title 
      * @param {undefined|null|string} text 
-     * @returns 
+     * @returns
+     * @example
+     * CommonJS.Url.shareUrl();
      */
     shareUrl: function(title, text) {
         const currentURL = window.location.href;
