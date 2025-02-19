@@ -36,6 +36,7 @@
  * @property {object} CommonJS.Scroll - 2022.02.10 추가
  * @property {object} CommonJS.Masking - 2022.08.12 추가
  * @property {object} CommonJS.Time - 2022.08.23 추가
+ * @property {object} CommonJS.Url - 2025.02.19 추가
  * @property {method} prototype
  */
 var CommonJS = {
@@ -330,12 +331,18 @@ CommonJS.Text = {
     /**
      * 모던한 방법으로 클립보드 복사하기
      * @param {string} string 
-     * @param {undefined|string} title 
-     * @param {undefined|string} text
+     * @param {undefined|null|string} title 
+     * @param {undefined|null|string} text
      * 
      * CommonJS.Text.copyToClipBoard(window.location.href);
      */
     copyToClipBoardMorden: function (string, title, text) {
+        const currentURL = window.location.href;
+        if ( !currentURL.startsWith('https://') && !currentURL.includes('localhost') && !currentURL.includes('127.0.0.1') ) {
+            alert('URL은 localhost, 127.0.0.1 또는 HTTPS여야 합니다.');
+            return;
+        }
+
         let clipboardContent = string;
         if (title) clipboardContent = `${title}\n${clipboardContent}`;
         if (text) clipboardContent = `${text}\n${clipboardContent}`;
@@ -4067,6 +4074,42 @@ CommonJS.Time = {
 
         const years = days / 365;
         return `${Math.floor(years)}년 전`
+    }
+}
+
+CommonJS.Url = {
+    /**
+     * URL 공유
+     * @param {undefined|null|string} title 
+     * @param {undefined|null|string} text 
+     * @returns 
+     */
+    shareUrl: function(title, text) {
+        const currentURL = window.location.href;
+        if ( !currentURL.startsWith('https://') && !currentURL.includes('localhost') && !currentURL.includes('127.0.0.1') ) {
+            alert('URL은 localhost, 127.0.0.1 또는 HTTPS여야 합니다.');
+            return;
+        }
+
+        if ( navigator.share ) {
+            navigator.share({
+                title: title || '',
+                text: text || '',
+                url: window.location.href
+            })
+            .then(() => {
+                console.log('콘텐츠가 성공적으로 공유되었습니다.');
+            })
+            .catch((error) => {
+                if (error.name === 'AbortError') {
+                    alert('사용자가 공유를 취소했습니다.');
+                } else {
+                    alert('콘텐츠 공유 중 오류 발생: ' + error);
+                }
+            });
+        } else {
+            alert('공유 API가 지원되지 않는 브라우저입니다.');
+        }
     }
 }
 
