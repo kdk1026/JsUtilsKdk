@@ -488,7 +488,8 @@ CommonJS.Valid = {
      * CommonJS.Valid.isEmptyObject(val);
      */
     isEmptyObject: function (param) {
-        return Object.keys(param).length === 0 && param.constructor === Object;
+        //return Object.keys(param).length === 0 && param.constructor === Object;
+        return Object.keys(param).length === 0;
     },
     /**
      * Array가 비어있는지 체크
@@ -498,7 +499,8 @@ CommonJS.Valid = {
      * CommonJS.Valid.isEmptyArray(val);
      */
     isEmptyArray: function (param) {
-        return Object.keys(param).length === 0 && param.constructor === Array;
+        //return Object.keys(param).length === 0 && param.constructor === Array;
+        return Array.isArray(param) && param.length === 0;
     }
 }
 
