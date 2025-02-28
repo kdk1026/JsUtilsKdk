@@ -1845,6 +1845,37 @@ CommonJS.BrowserInfo = {
         }
     },
     /**
+     * 모바일 브라우저 여부 체크 (브라우저 모바일 모드도 모바일로 인식)
+     * @returns {boolean}
+     * @example
+     * CommonJS.BrowserInfo.isUserAgentMobile();
+     */
+    isUserAgentMobile: function () {
+        const userAgent = navigator.userAgent || window.opera;
+    
+        if (/android/i.test(userAgent)) {
+            return true;
+        }
+    
+        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            return true;
+        }
+    
+        if (/blackberry|bb10|playbook/i.test(userAgent)) {
+            return true;
+        }
+    
+        if (/windows phone/i.test(userAgent)) {
+            return true;
+        }
+    
+        if (/webos|touchpad|hpwos/i.test(userAgent)) {
+            return true;
+        }
+    
+        return false;
+    },
+    /**
      * Android, iOS 여부 체크
      * @returns {boolean}
      * @example
