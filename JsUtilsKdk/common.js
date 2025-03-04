@@ -2771,7 +2771,7 @@ CommonJS.Mobile = {
         if ( !screen ) {
             return 'intent://' + host + '/#Intent;package=' + package + ';scheme=' + scheme + ';end';
         } else {
-            return 'intent://' + host + '/#Intent;package=' + packageName + ';scheme=' + scheme + ';S.screen=' + screen + ';end';
+            return 'intent://' + host + '/#Intent;package=' + package + ';scheme=' + scheme + ';S.screen=' + screen + ';end';
         }
     },
     /**
