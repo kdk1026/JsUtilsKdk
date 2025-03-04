@@ -2752,6 +2752,7 @@ CommonJS.Mobile = {
      * @param {string} host
      * @param {string} scheme
      * @param {string} package
+     * @param {undefined|screen} screen
      * @returns
      * @example
      * CommonJS.Mobile.makeAndroidAppLinkUrl('instagram.com', 'https', 'com.instagram.android');
@@ -2766,8 +2767,12 @@ CommonJS.Mobile = {
      *      <data android:host="호스트" android:scheme="스키마" />
      *  </intent-filter>
      */
-    makeAndroidAppLinkUrl: function (host, scheme, package) {
-        return 'intent://' + host + '/#Intent;package=' + package + ';scheme=' + scheme + ';end';
+    makeAndroidAppLinkUrl: function (host, scheme, package, screen) {
+        if ( !screen ) {
+            return 'intent://' + host + '/#Intent;package=' + package + ';scheme=' + scheme + ';end';
+        } else {
+            return 'intent://' + host + '/#Intent;package=' + packageName + ';scheme=' + scheme + ';S.screen=' + screen + ';end';
+        }
     },
     /**
      * IOS 앱링크 or 딥링크 URL 생성
@@ -2776,12 +2781,17 @@ CommonJS.Mobile = {
      *      2. Identifier와 URL Schemes에 적절한 값을 입력
      * @param {string} host 
      * @param {string} scheme 
+     * @param {undefined|screen} screen
      * @returns
      * @example
      * CommonJS.Mobile.makeURLSchemeIOSAppLinkUrl('instagram.com', 'https');
      */
-    makeURLSchemeIOSAppLinkUrl: function (host, scheme) {
-        return scheme + '://' + host;
+    makeURLSchemeIOSAppLinkUrl: function (host, scheme, screen) {
+        if ( !screen ) {
+            return scheme + '://' + host;
+        } else {
+            return scheme + '://' + host + '?screen=' + screen;
+        }
     },
     /**
      * 앱링크 or 딥링크 실행
