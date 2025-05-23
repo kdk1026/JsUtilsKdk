@@ -895,7 +895,11 @@ CommonJS.JSON = {
      * CommonJS.JSON.jsonToObject(jsonStr);
      */
     jsonToObject: function (jsonStr) {
-        return JSON.parse(jsonStr);
+        try {
+            return JSON.parse(jsonStr);
+        } catch (error) {
+            console.error("JSON 파싱 실패:", error);  
+        }
     },
     /**
      * Object를 JSON String으로 변환
@@ -905,7 +909,11 @@ CommonJS.JSON = {
      * CommonJS.JSON.objectToJsonString(obj);
      */
     objectToJsonString: function (obj) {
-        return JSON.stringify(obj);
+        try {
+            return JSON.stringify(obj);
+        } catch (error) {
+            console.error("JSON 문자열 변환 실패:", error);  
+        }
     },
     /**
      * Object를 Tree 구조의 JSON String으로 변환
@@ -915,7 +923,11 @@ CommonJS.JSON = {
      * CommonJS.JSON.objectToJsonStringPretty(obj);
      */
     objectToJsonStringPretty: function (obj) {
-        return JSON.stringify(obj, null, 2);
+        try {
+            return JSON.stringify(obj, null, 2);
+        } catch (error) {
+            console.error("JSON 문자열 변환 실패:", error);  
+        }
     }
 }
 
