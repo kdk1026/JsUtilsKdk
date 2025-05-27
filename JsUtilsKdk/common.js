@@ -883,6 +883,17 @@ CommonJS.FormatValid = {
     isIp: function (val) {
         var _re = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]|\*)\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]|\*)$/;
         return _re.test(val);
+    },
+    /**
+     * 안전한 URL인지 체크 (상대 경로, https://, http:// 만 허용)
+     *  - 상대 경로는 '/'로 시작하는 경우
+     * @param {*} val 
+     * @example
+     * CommonJS.FormatValid.isSafeUrl(val);
+     */
+    isSafeUrl: function (val) {
+        var _re = /^(\/[\w-]+(\/[\w-]*)*|https?:\/\/[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?)$/;
+        return _re.test(val);
     }
 }
 
