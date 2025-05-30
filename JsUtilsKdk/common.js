@@ -1,7 +1,7 @@
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
- * @version 6.1
+ * @version 6.2
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 함수 모음
  * @description 버전업 기준 : 수정 / 함수 추가 -> 프로젝트 적용 여부
  * @description 파일명을 common-util.js 로 변경해서 사용
@@ -401,17 +401,18 @@ CommonJS.Object = {
 
 CommonJS.Valid = {
     /**
-     * NULL 체크
+     * null 체크
+     * - ( !val ) 으로 체크 가능
      * @param {*} val
      * @returns {boolean}
      * @example
      * CommonJS.Valid.isNull(val);
      */
     isNull: function (val) {
-        return typeof val == 'undefined' || val == null || val == '';
+        return typeof val == 'undefined' || val === null || val === '';
     },
     /**
-     * 공백, 빈 문자열 체크 (undefined == null)
+     * 공백, 빈 문자열 체크
      *  - 다음 형태로 대체 가능 (권장)
      *   [JavaScript] if ( !셀렉터.value.trim() ) { ... }
      *   [jQuery] if ( !셀렉터.val().trim() ) { ... }
@@ -421,7 +422,7 @@ CommonJS.Valid = {
      * CommonJS.Valid.isBlank(val);
      */
     isBlank: function (val) {
-        return (val == null || val.replace(/ /gi, '') == '');
+        return (val && val.replace(/ /gi, '') === '');
     },
     /**
      * undefined 체크 ('undefined' 포함)
@@ -431,7 +432,7 @@ CommonJS.Valid = {
      * CommonJS.Valid.isUndefined(val);
      */
     isUndefined: function (val) {
-        return (val == undefined || val === 'undefined');
+        return (typeof val === 'undefined' || val === null || val === '');
     },
     /**
      * 숫자 체크
@@ -441,8 +442,121 @@ CommonJS.Valid = {
      * CommonJS.Valid.isNumber(val);
      */
     isNumber: function (val) {
-        var _re = /^[0-9]+$/;
-        return _re.test(val);
+        if ( !val ) {
+            console.error('val is not defined.');
+        } else if (typeof val !== 'number') {
+            console.error('val is not a number.');
+        }
+    
+        return /^[0-9]+$/.test(val);
+    },
+    /**
+     * 영문 체크
+     * @param {*} val 
+     * @returns 
+     * @example
+     * CommonJS.Valid.isEnglish(val);
+     */
+    isEnglish: function (val) {
+        if ( !val || !val.trim() ) {
+            console.error('val is empty or null.');
+            return false;
+        } else if (typeof val !== 'string') {
+            console.error('val is not a string.');
+            return false;
+        }
+    
+        return /^[a-zA-Z]+$/.test(val);
+    },
+    /**
+     * 영문, 공백 체크
+     * @param {*} val 
+     * @returns 
+     * @example
+     * CommonJS.Valid.isEngBlank(val);
+     */
+    isEngBlank: function (val) {
+        if ( !val || !val.trim() ) {
+            console.error('val is empty or null.');
+            return false;
+        } else if (typeof val !== 'string') {
+            console.error('val is not a string.');
+            return false;
+        }
+    
+        return /^[a-zA-Z\s]+$/.test(val);
+    },
+    /**
+     * 영문, 숫자 체크
+     * @param {*} val 
+     * @returns 
+     * @example
+     * CommonJS.Valid.isEngNum(val);
+     */
+    isEngNum: function (val) {
+        if ( !val || !val.trim() ) {
+            console.error('val is empty or null.');
+            return false;
+        } else if (typeof val !== 'string') {
+            console.error('val is not a string.');
+            return false;
+        }
+    
+        return /^[a-zA-Z0-9]+$/.test(val);
+    },
+    /**
+     * 한글 체크
+     * @param {*} val 
+     * @returns 
+     * @example
+     * CommonJS.Valid.isHangul(val);
+     */
+    isHangul: function (val) {
+        if ( !val || !val.trim() ) {
+            console.error('val is empty or null.');
+            return false;
+        } else if (typeof val !== 'string') {
+            console.error('val is not a string.');
+            return false;
+        }
+    
+        return /^[가-힣]+$/.test(val);
+    },
+    /**
+     * 한글, 공백 체크
+     * @param {*} val 
+     * @returns 
+     * @example
+     * CommonJS.Valid.isHanBlank(val);
+     */
+    isHanBlank: function (val) {
+        if ( !val || !val.trim() ) {
+            console.error('val is empty or null.');
+            return false;
+        } else if (typeof val !== 'string') {
+            console.error('val is not a string.');
+            return false;
+        }
+    
+        return /^[가-힣\s]+$/.test(val);
+    },
+    /**
+     * 한글, 영문 체크
+     * @param {*} val 
+     * @returns 
+     * @example
+     * CommonJS.Valid.isHanEng(val);
+     */
+    isHanEng: function (val) {
+        if ( !val || !val.trim() ) {
+            console.error('val is empty or null.');
+            return false;
+        } else if (typeof val !== 'string') {
+            console.error('val is not a string.');
+            return false;
+        }
+    
+        return /^[가-힣a-zA-Z]+$/.test(val);
     },
     /**
      * 특수문자 체크
@@ -452,8 +566,15 @@ CommonJS.Valid = {
      * CommonJS.Valid.isSpecial(val);
      */
     isSpecial: function (val) {
-        var _re = /[`~!@#$%^&*()\-_=+{}|;:'",.<>/?[\]]+$/;
-        return _re.test(val);
+        if ( !val || !val.trim() ) {
+            console.error('val is empty or null.');
+            return false;
+        } else if (typeof val !== 'string') {
+            console.error('val is not a string.');
+            return false;
+        }
+    
+        return /[\W]+$/.test(val);
     },
     /**
      * 공백 체크
@@ -463,22 +584,68 @@ CommonJS.Valid = {
      * CommonJS.Valid.checkSpace(val);
      */
     checkSpace: function (val) {
-        if (val.search(/\s/) != -1) {
-            return true;
-        } else {
+        if ( !val || !val.trim() ) {
+            console.error('val is empty or null.');
+            return false;
+        } else if (typeof val !== 'string') {
+            console.error('val is not a string.');
             return false;
         }
+    
+        return /\s/.test(val);
     },
     /**
-     * 한글만 입력 체크
+     * 한글이 전혀 포함되어 있지 않은지 체크
      * @param {string} val
      * @returns {boolean}
      * @example
      * CommonJS.Valid.isNotHangul(val);
      */
     isNotHangul: function (val) {
-        var _re = /[a-zA-Z0-9]|[ [\]{}()<>/?|`~!@#$%^&*-_+=,.;:"'\\]/g;
-        return _re.test(val);
+        if ( !val || !val.trim() ) {
+            console.error('val is empty or null.');
+            return false;
+        } else if (typeof val !== 'string') {
+            console.error('val is not a string.');
+            return false;
+        }
+    
+        return /^[^가-힣]+$/.test(val);
+    },
+    /**
+     * 문자열 길이 최소/최대 길이 준수 여부
+     * @param {*} val 
+     * @param {*} minLen 
+     * @param {*} maxLen 
+     * @returns 
+     */
+    isLengthOver: function (val, minLen, maxLen) {
+        if ( !val || !val.trim() ) {
+            console.error('val is empty or null.');
+            return false;
+        } else if (typeof val !== 'string') {
+            console.error('val is not a string.');
+            return false;
+        }
+    
+        if ( !minLen ) {
+            console.error('minLen is not defined.');
+        } else if (typeof minLen !== 'number') {
+            console.error('minLen is not a number.');
+        }
+    
+        if ( !maxLen ) {
+            console.error('maxLen is not defined.');
+        } else if (typeof maxLen !== 'number') {
+            console.error('maxLen is not a number.');
+        }
+    
+        if ( minLen < 0 || maxLen < 0 || minLen > maxLen ) {
+            console.error('minLen or maxLen is invalid.');
+        }
+    
+        const valLen = val.length;
+        return (valLen < minLen || valLen > maxLen);
     },
     /**
      * Object가 비어있는지 체크
@@ -746,8 +913,21 @@ CommonJS.FormatValid = {
      * CommonJS.FormatValid.isDate(val);
      */
     isDate: function (val) {
-        var _re = /^[0-9]{4}-?(0[1-9]|1[012])-?(0[1-9]|1[0-9]|2[0-9]|3[01])+$/;
-        return _re.test(val);
+        const regExp = /^\d{4}-?(0[1-9]|1[012])-?(0[1-9]|[12]\d|3[01])$/;
+        if ( !regExp.test(val) ) {
+            return false;
+        }
+    
+        const dateStr = val.replace(/-/g, '');
+        const year = parseInt(dateStr.substring(0, 4), 10);
+        const month = parseInt(dateStr.substring(4, 6), 10);
+        const day = parseInt(dateStr.substring(6, 8), 10);
+    
+        const date = new Date(year, month - 1, day);
+    
+        return date.getFullYear() === year &&
+            date.getMonth() === month - 1 &&
+            date.getDate() === day;
     },
     /**
      * 시간 형식 체크 (HH24MI, HH24:MI, HH24MISS, HH24:MI:SS)
@@ -757,8 +937,8 @@ CommonJS.FormatValid = {
      * CommonJS.FormatValid.isTime(val);
      */
     isTime: function (val) {
-        var _re = /^([1-9]|[01][0-9]|2[0-3]):?([0-5][0-9])?(:?([0-5][0-9]))+$/;
-        return _re.test(val);
+        const regExp = /^(0\d|1\d|2[0-3]):?([0-5]\d)(:?([0-5]\d))?$/;
+        return regExp.test(val);
     },
     /**
      * 이메일 형식 체크
@@ -769,13 +949,13 @@ CommonJS.FormatValid = {
      * CommonJS.FormatValid.isEmail(val1);
      * CommonJS.FormatValid.isEmail(val1, val2);
      */
-    isEmail: function (val1, val2) {
-        var _val = val1;
-        if (!CommonJS.Valid.isBlank(val2)) {
-            _val = val1 + '@' + val2;
+    isEmail: function (val1, val2) {    
+        let val = val1;
+        if (val2) {
+            val = val1 + '@' + val2;
         }
-        var _re = /^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})+$/;
-        return _re.test(_val);
+        const regExp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+        return regExp.test(val);
     },
     /**
      * 전화번호 형식 체크
@@ -787,10 +967,10 @@ CommonJS.FormatValid = {
      * CommonJS.FormatValid.isPhoneNumber(val1);
      * CommonJS.FormatValid.isPhoneNumber(val1, val2, val3);
      */
-    isPhoneNumber: function (val1, val2, val3) {
-        var _val = val1;
-        if (!CommonJS.Valid.isBlank(val2) && !CommonJS.Valid.isBlank(val3)) {
-            _val = val1 + '-' + val2 + '-' + val3;
+    isPhoneNumber: function (val1, val2, val3) {    
+        let val = val1;
+        if ( val2 && val3 ) {
+            val = val1 + '-' + val2 + '-' + val3;
         }
         /*
             02-서울
@@ -801,8 +981,8 @@ CommonJS.FormatValid = {
             070-인터넷 전화
             0502~0507-가상 전화번호
         */
-        var _re = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|70|502|503|504|505|506|507))-?(\d{3,4})-?(\d{4})$/;
-        return _re.test(_val);
+        const regExp = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|70|50[2-7])|01[016-9])-?(\d{3,4})-?(\d{4})$/;
+        return regExp.test(val);
     },
     /**
      * 휴대폰 번호 형식 체크
@@ -814,16 +994,16 @@ CommonJS.FormatValid = {
      * CommonJS.FormatValid.isCellPhoneNumber(val1);
      * CommonJS.FormatValid.isCellPhoneNumber(val1, val2, val3);
      */
-    isCellPhoneNumber: function (val1, val2, val3) {
-        var _val = val1;
-        if (!CommonJS.Valid.isBlank(val2) && !CommonJS.Valid.isBlank(val3)) {
-            _val = val1 + '-' + val2 + '-' + val3;
+    isCellPhoneNumber: function (val1, val2, val3) {    
+        let val = val1;
+        if ( val2 && val3 ) {
+            val = val1 + '-' + val2 + '-' + val3;
         }
-        var _re = /^(01[016789])-?(\d{3,4})-?(\d{4})+$/;
-        return _re.test(_val);
+        const regExp = /^(01[016789])-?(\d{3, 4})-?(\d{4})+$/;
+        return regExp.test(val);
     },
     /**
-     * 사업자등록번호 형식 체크
+     * 사업자등록번호 형식 체크 (대한민국 3-2-5 또는 10자리 숫자 형식)
      * @param {string} val1
      * @param {(undefined|null|string)} val2
      * @param {(undefined|null|string)} val3
@@ -833,12 +1013,13 @@ CommonJS.FormatValid = {
      * CommonJS.FormatValid.isBusinessRegNumber(val1, val2, val3);
      */
     isBusinessRegNumber: function (val1, val2, val3) {
-        var _val = val1;
-        if (!CommonJS.Valid.isBlank(val2) && !CommonJS.Valid.isBlank(val3)) {
-            _val = val1 + '-' + val2 + '-' + val3;
+        let val = val1;
+        if ( val2 && val3 ) {
+            val = val1 + '-' + val2 + '-' + val3;
         }
-        var _re = /^[(\d{3})-?(\d{2})-?(\d{5})+$]/;
-        return _re.test(_val);
+    
+        const regExp = /^[(\d{3})-?(\d{2})-?(\d{5})+$]/;
+        return regExp.test(val);
     },
     /**
      * 아이디 형식 체크 (첫 글자 영문, 7자 이상 30자 이내)
@@ -847,41 +1028,59 @@ CommonJS.FormatValid = {
      * @example
      * CommonJS.FormatValid.isId(val);
      */
-    isId: function (val) {
-        var _re = /^[a-zA-Z](?=.*[a-zA-Z])(?=.*[0-9]).{6,29}$/;
-        return _re.test(val);
+    isId: function (val) {    
+        const regExp = /^[a-zA-Z][a-zA-Z0-9]{6,29}$/;
+        return regExp.test(val);
     },
     /**
-     * 비밀번호 형식 체크 (영문, 숫자, 특수문자 조합 8자 이상)
-     * @param {*} val
-     * @returns
+     * 비밀번호 형식 체크
+     * - 첫 글자 영문
+     * - 첫 글자 이후 영문, 숫자, 특수문자 조합
+     * - 영문/숫자/특수문자 중 2가지 조합 시, 10자리 이상
+     * - 영문/숫자/특수문자 중 3가지 조합 시, 8자리 이상
+     * @param {string} val 
+     * @returns 
      * @example
      * CommonJS.FormatValid.isPassword(val);
      */
     isPassword: function (val) {
-        var _re = /^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[^\w\s]).{8,}$/;
-        return _re.test(val);
+        // 1. 첫 글자 영문 확인 및 허용 문자 검증
+        const allowedCharsRegExp = /^[a-zA-Z][a-zA-Z0-9\W]*$/;
+        if ( !allowedCharsRegExp.test(val) ) {
+            return false;
+        }
+    
+        // 2. 조합 개수 확인
+        const hasLetter = /[a-zA-Z]/.test(val);      // 영문 포함 여부
+        const hasDigit = /\d/.test(val);             // 숫자 포함 여부
+    
+        // 특수문자 확인: 영문, 숫자, 언더스코어(`_`), 공백을 제외한 문자가 있는지 확인
+        const hasSpecialChar = /[^a-zA-Z0-9\s]/.test(val);
+    
+        let combinationCount = 0;
+        if (hasLetter) combinationCount++;
+        if (hasDigit) combinationCount++;
+        if (hasSpecialChar) combinationCount++;
+    
+        // 3. 길이 조건 최종 확인
+        if (combinationCount === 2) {
+            return val.length >= 10;
+        } else if (combinationCount >= 3) {
+            return val.length >= 8;
+        } else {
+            // 조합이 2가지 미만인 경우 (0 또는 1가지)
+            return false;
+        }
     },
     /**
      * URL 형식 체크
-     * @param {*} val
+     * @param {string} val
      * @returns
      * @example
      * CommonJS.FormatValid.isUrl(val);
      */
     isUrl: function (val) {
         var _re = _re = /^(https?:\/\/)([\w-]+(\.[\w-]+)+)(:\d+)?(\/\S*)?$/;
-        return _re.test(val);
-    },
-    /**
-     * IP 형식 체크
-     * @param {*} val
-     * @returns
-     * @example
-     * CommonJS.FormatValid.isIp(val);
-     */
-    isIp: function (val) {
-        var _re = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]|\*)\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]|\*)$/;
         return _re.test(val);
     },
     /**
