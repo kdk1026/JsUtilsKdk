@@ -655,14 +655,14 @@ CommonJS.DateTime = {
             return false;
         }
 
-        date.setFullYear(val.substring(0, 4));
-        date.setMonth(val.substring(4, 6) - 1);
-        date.setDate(val.substring(6, 8));
+        date.setFullYear(+val.substring(0, 4));
+        date.setMonth(+val.substring(4, 6) - 1);
+        date.setDate(+val.substring(6, 8));
 
         if (val.length == 14) {
-            date.setHours(val.substring(8, 10));
-            date.setMinutes(val.substring(10, 12));
-            date.setSeconds(val.substring(12, 14));
+            date.setHours(+val.substring(8, 10));
+            date.setMinutes(+val.substring(10, 12));
+            date.setSeconds(+val.substring(12, 14));
         }
 
         return date;
