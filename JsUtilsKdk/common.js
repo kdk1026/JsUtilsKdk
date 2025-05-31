@@ -316,7 +316,7 @@ CommonJS.Text = {
         str = str.length >= padLen ? str.substring(0, padLen) : str;
         return str;
     },
-},
+};
 
 CommonJS.Object = {
     /**
@@ -357,7 +357,7 @@ CommonJS.Object = {
     objectToQueryString: function (obj) {
         return '?' + CommonJS.Object.makeFormBody(obj);
     }
-}
+};
 
 CommonJS.Valid = {
     /**
@@ -594,7 +594,7 @@ CommonJS.Valid = {
     isEmptyArray: function (param) {
         return Object.keys(param).length === 0 && param.constructor === Array;
     }
-}
+};
 
 /**
  * ********************************************************************
@@ -783,7 +783,7 @@ CommonJS.DateTime = {
     getLastDayOfMonth: function (date) {
         return new Date(date.getYear(), date.getMonth() + 1, 0).getDate();
     }
-}
+};
 
 CommonJS.Format = {
     /**
@@ -847,7 +847,7 @@ CommonJS.Format = {
         const regExp = /[^\w\sㄱ-ㅎ가-힣]/g;
         return val.replace(regExp, '');
     }
-}
+};
 
 CommonJS.FormatValid = {
     /**
@@ -1039,7 +1039,7 @@ CommonJS.FormatValid = {
         const regExp = /^(?:\/|https?:\/\/(?:[\w-]+\.)+[\w-]+(?::\d+)?)\S*$/;
         return regExp.test(val);
     }
-}
+};
 
 CommonJS.JSON = {
     /**
@@ -1099,7 +1099,7 @@ CommonJS.JSON = {
             console.error("JSON 문자열 변환 실패:", error);  
         }
     }
-}
+};
 
 CommonJS.File = {
     /**
@@ -1517,7 +1517,7 @@ CommonJS.File = {
             doc.save(fileName);
         });
     }
-}
+};
 
 CommonJS.FileValid = {
     /**
@@ -1674,7 +1674,7 @@ CommonJS.FileValid = {
         const ext = CommonJS.File.getFileExt(fileObj);
         return ext === 'mp3'
     }
-}
+};
 
 CommonJS.Cookie = {
     /**
@@ -1730,7 +1730,7 @@ CommonJS.Cookie = {
             document.cookie = name + '=' + '; path=/; expires=' + date.toGMTString() + ';';
         }
     }
-}
+};
 
 CommonJS.Byte = {
     /**
@@ -1960,7 +1960,7 @@ CommonJS.Byte = {
             nowByteEle.text( totalByte );
         }
     }
-}
+};
 
 CommonJS.Escape = {
     /**
@@ -2010,7 +2010,7 @@ CommonJS.Escape = {
 
         return val.replace(/&amp;|&lt;|&gt;|&quot;|&#x27;|&#39;|&#x2F;/g, (entity) => replacements[entity]);
     }
-}
+};
 
 CommonJS.BrowserInfo = {
     /**
@@ -2184,7 +2184,7 @@ CommonJS.BrowserInfo = {
         const retJson = CommonJS.Http.commonAjax(false, 'get', 'https://api.ipify.org?format=json', null, {}, null);
         return retJson.ip;
     }
-}
+};
 
 /**
  * ********************************************************************
@@ -2584,7 +2584,7 @@ CommonJS.Input = {
             });
         }
     }
-}
+};
 
 CommonJS.FormatValue = {
     /**
@@ -2701,7 +2701,7 @@ CommonJS.FormatValue = {
 
         return phoneNumber;
     }
-}
+};
 
 /**
  * ********************************************************************
@@ -2781,7 +2781,7 @@ CommonJS.SearchEngine = {
         newForm.submit();
         document.body.removeChild(newForm);
     }
-}
+};
 
 /**
  * ********************************************************************
@@ -2860,7 +2860,7 @@ CommonJS.SnsShare = {
         const shareURL = "https://share.naver.com/web/shareView?url=" + encodedUrl + "&title=" + encodedTitle;
         document.location = shareURL;
     }
-}
+};
 
 /**
  * ********************************************************************
@@ -3117,7 +3117,7 @@ CommonJS.Mobile = {
             console.log('모바일 플랫폼에서만 사용 가능합니다.');
         }
     }
-},
+};
 
 /**
  * ********************************************************************
@@ -3211,7 +3211,7 @@ CommonJS.Map = {
             });
         });
     }
-}
+};
 
 CommonJS.Editor = {
     /**
@@ -3365,7 +3365,7 @@ CommonJS.Editor = {
 
         // html 모드는 지원 안하는 듯
     }
-}
+};
 
 CommonJS.Http = {
     /**
@@ -3567,7 +3567,7 @@ CommonJS.Http = {
             alert('Error: ' + error)
         )
     }
-}
+};
 
 CommonJS.Code = {
     /**
@@ -3669,7 +3669,7 @@ CommonJS.Code = {
             </script>
         */
     }
-},
+};
 
 /**
  * ********************************************************************
@@ -4020,7 +4020,7 @@ CommonJS.SocialLogin = {
             </body>
         */
     }
-}
+};
 
 CommonJS.Addr = {
     /**
@@ -4082,7 +4082,7 @@ CommonJS.Addr = {
      */
     roadAddrAPI: function() {
     }
-},
+};
 
 CommonJS.Discount = {
     /**
@@ -4104,7 +4104,7 @@ CommonJS.Discount = {
         const savePrice = originPrice * (rate / 100);
         return originPrice - savePrice;
     }
-}
+};
 
 CommonJS.Print = {
     /**
@@ -4170,7 +4170,7 @@ CommonJS.Print = {
         window.print();
         location.reload();
     }
-}
+};
 
 CommonJS.Scroll = {
     /**
@@ -4200,7 +4200,7 @@ CommonJS.Scroll = {
             }
         });
     }
-}
+};
 
 CommonJS.Masking = {
     /**
@@ -4414,7 +4414,7 @@ CommonJS.Masking = {
 
         return maskingName;
     }
-}
+};
 
 CommonJS.Time = {
     /**
@@ -4448,7 +4448,7 @@ CommonJS.Time = {
         const years = days / 365;
         return `${Math.floor(years)}년 전`
     }
-}
+};
 
 CommonJS.Url = {
     /**
@@ -4486,7 +4486,7 @@ CommonJS.Url = {
             alert('공유 API가 지원되지 않는 브라우저입니다.');
         }
     }
-}
+};
 
 CommonJS.Base64 = {
     /**
@@ -4552,4 +4552,4 @@ CommonJS.Base64 = {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
     },
-}
+};
