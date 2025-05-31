@@ -422,11 +422,8 @@ CommonJS.Valid = {
      * CommonJS.Valid.isEnglish(val);
      */
     isEnglish: function (val) {
-        if ( !val?.trim() ) {
+        if ( typeof val !== 'string' || !val?.trim() ) {
             console.error('val is empty or null.');
-            return false;
-        } else if (typeof val !== 'string') {
-            console.error('val is not a string.');
             return false;
         }
     
@@ -440,11 +437,8 @@ CommonJS.Valid = {
      * CommonJS.Valid.isEngBlank(val);
      */
     isEngBlank: function (val) {
-        if ( !val?.trim() ) {
+        if ( typeof val !== 'string' || !val?.trim() ) {
             console.error('val is empty or null.');
-            return false;
-        } else if (typeof val !== 'string') {
-            console.error('val is not a string.');
             return false;
         }
     
@@ -458,11 +452,8 @@ CommonJS.Valid = {
      * CommonJS.Valid.isEngNum(val);
      */
     isEngNum: function (val) {
-        if ( !val?.trim() ) {
+        if ( typeof val !== 'string' || !val?.trim() ) {
             console.error('val is empty or null.');
-            return false;
-        } else if (typeof val !== 'string') {
-            console.error('val is not a string.');
             return false;
         }
     
@@ -476,11 +467,8 @@ CommonJS.Valid = {
      * CommonJS.Valid.isHangul(val);
      */
     isHangul: function (val) {
-        if ( !val?.trim() ) {
+        if ( typeof val !== 'string' || !val?.trim() ) {
             console.error('val is empty or null.');
-            return false;
-        } else if (typeof val !== 'string') {
-            console.error('val is not a string.');
             return false;
         }
     
@@ -494,11 +482,8 @@ CommonJS.Valid = {
      * CommonJS.Valid.isHanBlank(val);
      */
     isHanBlank: function (val) {
-        if ( !val?.trim() ) {
+        if ( typeof val !== 'string' || !val?.trim() ) {
             console.error('val is empty or null.');
-            return false;
-        } else if (typeof val !== 'string') {
-            console.error('val is not a string.');
             return false;
         }
     
@@ -512,11 +497,8 @@ CommonJS.Valid = {
      * CommonJS.Valid.isHanEng(val);
      */
     isHanEng: function (val) {
-        if ( !val?.trim() ) {
+        if ( typeof val !== 'string' || !val?.trim() ) {
             console.error('val is empty or null.');
-            return false;
-        } else if (typeof val !== 'string') {
-            console.error('val is not a string.');
             return false;
         }
     
@@ -530,11 +512,8 @@ CommonJS.Valid = {
      * CommonJS.Valid.isSpecial(val);
      */
     isSpecial: function (val) {
-        if ( !val?.trim() ) {
+        if ( typeof val !== 'string' || !val?.trim() ) {
             console.error('val is empty or null.');
-            return false;
-        } else if (typeof val !== 'string') {
-            console.error('val is not a string.');
             return false;
         }
     
@@ -548,11 +527,8 @@ CommonJS.Valid = {
      * CommonJS.Valid.checkSpace(val);
      */
     checkSpace: function (val) {
-        if ( !val?.trim() ) {
+        if ( typeof val !== 'string' || !val?.trim() ) {
             console.error('val is empty or null.');
-            return false;
-        } else if (typeof val !== 'string') {
-            console.error('val is not a string.');
             return false;
         }
     
@@ -566,11 +542,8 @@ CommonJS.Valid = {
      * CommonJS.Valid.isNotHangul(val);
      */
     isNotHangul: function (val) {
-        if ( !val?.trim() ) {
+        if ( typeof val !== 'string' || !val?.trim() ) {
             console.error('val is empty or null.');
-            return false;
-        } else if (typeof val !== 'string') {
-            console.error('val is not a string.');
             return false;
         }
     
@@ -584,24 +557,14 @@ CommonJS.Valid = {
      * @returns 
      */
     isLengthOver: function (val, minLen, maxLen) {
-        if ( !val?.trim() ) {
+        if ( typeof val !== 'string' || !val?.trim() ) {
             console.error('val is empty or null.');
             return false;
-        } else if (typeof val !== 'string') {
-            console.error('val is not a string.');
+        }
+    
+        if ( typeof minLen !== 'number' || typeof maxLen !== 'number' ) {
+            console.error('minLen or maxLen is not a number.');
             return false;
-        }
-    
-        if ( !minLen ) {
-            console.error('minLen is not defined.');
-        } else if (typeof minLen !== 'number') {
-            console.error('minLen is not a number.');
-        }
-    
-        if ( !maxLen ) {
-            console.error('maxLen is not defined.');
-        } else if (typeof maxLen !== 'number') {
-            console.error('maxLen is not a number.');
         }
     
         if ( minLen < 0 || maxLen < 0 || minLen > maxLen ) {
@@ -831,7 +794,12 @@ CommonJS.Format = {
      * CommonJS.Format.formatNumber(num);
      */
     formatNumber: function (num) {
-        return (num + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+        if ( typeof value !== 'string' || !num?.trim() ) {
+            console.warn('Invalid input value');
+            return null;
+        }
+    
+        return Number(num.replace(/,/g, '')).toLocaleString();
     },
     /**
      * 전화번호, 휴대폰 번호 형식 변환
@@ -1082,6 +1050,11 @@ CommonJS.JSON = {
      * CommonJS.JSON.jsonToObject(jsonStr);
      */
     jsonToObject: function (jsonStr) {
+        if ( typeof jsonStr !== 'string' || !jsonStr?.trim() ) {
+            console.error("유효하지 않은 JSON 문자열:", jsonStr);  
+            return null;
+        }
+
         try {
             return JSON.parse(jsonStr);
         } catch (error) {
@@ -1096,6 +1069,11 @@ CommonJS.JSON = {
      * CommonJS.JSON.objectToJsonString(obj);
      */
     objectToJsonString: function (obj) {
+        if ( !obj || typeof obj !== 'object' ) {
+            console.error("유효하지 않은 객체:", obj);  
+            return null;
+        }
+
         try {
             return JSON.stringify(obj);
         } catch (error) {
@@ -1110,6 +1088,11 @@ CommonJS.JSON = {
      * CommonJS.JSON.objectToJsonStringPretty(obj);
      */
     objectToJsonStringPretty: function (obj) {
+        if ( !obj || typeof obj !== 'object' ) {
+            console.error("유효하지 않은 객체:", obj);  
+            return null;
+        }
+
         try {
             return JSON.stringify(obj, null, 2);
         } catch (error) {
