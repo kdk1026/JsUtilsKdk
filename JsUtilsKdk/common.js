@@ -4315,7 +4315,7 @@ CommonJS.Masking = {
      */
     cellPhone: function(str) {
         let originStr = str;
-        let phoneStr;
+        let phoneMatchResult;
         let maskingStr;
 
         if ( CommonJS.Valid.isBlank(originStr) ) {
