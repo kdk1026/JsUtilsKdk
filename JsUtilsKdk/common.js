@@ -50,16 +50,16 @@ var CommonJS = {
      * CommonJS.openPopup('http://www.naver.com', 'pop', 500, 500);
      */
     openPopup: function (url, name, width, height) {
-        var _height = (CommonJS.Valid.isUndefined(height)) ? screen.height : Number(height);
-        var _width = (CommonJS.Valid.isUndefined(width)) ? screen.width : Number(width);
-        var _left = (screen.width / 2) - (width / 2);
-        var _top = (screen.height / 2) - (height / 2);
-        var _option = '';
-        _option += 'height=' + _height + ', width=' + _width + ', left=' + _left + ', top=' + _top;
-        _option += 'menubar=no, status=no';
-        _option += 'resizable=no, scrollbars=no, toolbar=no'; // IE only | IE, Firefox, Opera only | IE, Firefox only
+        const popupHeight = (CommonJS.Valid.isUndefined(height)) ? screen.height : Number(height);
+        const popupWidth = (CommonJS.Valid.isUndefined(width)) ? screen.width : Number(width);
+        const left = (screen.width / 2) - (width / 2);
+        const top = (screen.height / 2) - (height / 2);
+        let option = '';
+        option += 'height=' + popupHeight + ', width=' + popupWidth + ', left=' + left + ', top=' + top;
+        option += 'menubar=no, status=no';
+        option += 'resizable=no, scrollbars=no, toolbar=no'; // IE only | IE, Firefox, Opera only | IE, Firefox only
 
-        window.open(url, name, _option);
+        window.open(url, name, option);
     },
     /**
      * F12 버튼 막기 및 우클릭 막기 (추가 : 드래그 방지, 선택 방지)
@@ -73,7 +73,6 @@ var CommonJS = {
         document.onkeydown = function (e) {
             if (e.code === 'F12') {
                 e.preventDefault();
-                e.returnValue = false;
             }
         };
 
@@ -126,10 +125,10 @@ var CommonJS = {
      */
     scriptHook: function (beforeFuncNm, funcNm, parent) {
         if (typeof parent == 'undefined') parent = window;
-        for (var i in parent) {
+        for (let i in parent) {
             if (parent[i] === funcNm) {
                 parent[i] = function () {
-                    var Return = beforeFuncNm();
+                    const Return = beforeFuncNm();
                     if (Return === false) return;
                     return funcNm.apply(this, arguments);
                 }
@@ -162,13 +161,13 @@ var CommonJS = {
     getClassType: function(any) {
         return Object.prototype.toString.call(any).slice(8, -1);
     },
-   /**
-    * 이미지를 base64 인코딩된 data URI로 반환
-    * @param {Element} img
-    * @returns
-    * @example
-    * CommonJS.getImageToDataUrl( document.querySelector('#img') );
-    */
+    /**
+     * 이미지를 base64 인코딩된 data URI로 반환
+     * @param {Element} img
+     * @returns
+     * @example
+     * CommonJS.getImageToDataUrl( document.querySelector('#img') );
+     */
     getImageToDataUrl: function(img) {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
@@ -223,8 +222,7 @@ CommonJS.Text = {
         }
     },
     /**
-     * 클립보드 복사하기
-     *   - IE 10 이하 고려 안함
+     * 모던한 방법으로 클립보드 복사하기
      * @param {undefined|Element} textElement
      * @param {undefined|string} string
      * @example
@@ -234,41 +232,31 @@ CommonJS.Text = {
      * CommonJS.Text.copyToClipBoard( null, '복사할 내용' );
      */
     copyToClipBoard: function (textElement, string) {
-        if (textElement != null) {
-            if (CommonJS.BrowserInfo.isMobileOs().iOS) {
-                var editable = textElement.contentEditable;
-                var readOnly = textElement.readOnly;
-
-                textElement.contentEditable = true;
-                textElement.readOnly = false;
-
-                var range = document.createRange();
-                range.selectNodeContents(textElement);
-
-                var selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange(range);
-
-                textElement.setSelectionRange(0, 999999);
-                textElement.contentEditable = editable;
-                textElement.readOnly = readOnly;
-            } else {
-                textElement.select();
-                document.execCommand("Copy");
-            }
-        } else {
-            const _t = document.createElement("textarea");
-            _t.value = string;
-
-            document.body.appendChild(_t);
-            _t.select();
-            _t.setSelectionRange(0, 9999);  // 셀렉트 범위 설정
-
-            document.execCommand("Copy");
-            document.body.removeChild(_t);
+        const currentURL = window.location.href;
+        if ( !currentURL.startsWith('https://') && !currentURL.includes('localhost') && !currentURL.includes('127.0.0.1') ) {
+            alert('URL은 localhost, 127.0.0.1 또는 HTTPS여야 합니다.');
+            return;
         }
 
-        console.log('클립보드에 복사 되었습니다.');
+        let textToCopy = '';
+
+        if (textElement != null) {
+            textToCopy = textElement.value || textElement.textContent;
+        } else {
+            textToCopy = string;
+        }
+
+        if (textToCopy) {
+            window.navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                console.log('클립보드에 복사 되었습니다.');
+            })
+            .catch(err => {
+                console.error('클립보드 복사 실패:', err);
+            });
+        } else {
+            console.warn('복사할 텍스트가 없습니다.');
+        }
     },
     /**
      * 난수 생성
@@ -328,34 +316,6 @@ CommonJS.Text = {
         str = str.length >= padLen ? str.substring(0, padLen) : str;
         return str;
     },
-    /**
-     * 모던한 방법으로 클립보드 복사하기
-     * @param {string} string 
-     * @param {undefined|null|string} title 
-     * @param {undefined|null|string} text
-     * @returns 
-     * @example
-     * CommonJS.Text.copyToClipBoard(window.location.href);
-     */
-    copyToClipBoardMorden: function (string, title, text) {
-        const currentURL = window.location.href;
-        if ( !currentURL.startsWith('https://') && !currentURL.includes('localhost') && !currentURL.includes('127.0.0.1') ) {
-            alert('URL은 localhost, 127.0.0.1 또는 HTTPS여야 합니다.');
-            return;
-        }
-
-        let clipboardContent = string;
-        if (title) clipboardContent = `${title}\n${clipboardContent}`;
-        if (text) clipboardContent = `${text}\n${clipboardContent}`;
-
-        navigator.clipboard.writeText(clipboardContent)
-        .then(() => {
-            alert('클립보드에 복사되었습니다.');
-        })
-        .catch((error) => {
-            alert('클립보드 복사 중 오류 발생: ' + error);
-        });
-    }
 },
 
 CommonJS.Object = {
@@ -367,8 +327,8 @@ CommonJS.Object = {
      * CommonJS.Object.mergeObject(obj1, obj2, obj3);
      */
     mergeObject: function (...sources) {
-        var _newObj = {};
-        return Object.assign(_newObj, ...sources);
+        const newObj = {};
+        return Object.assign(newObj, ...sources);
     },
     /**
      * Object를 전송 가능한 Data로 만듬
@@ -382,10 +342,10 @@ CommonJS.Object = {
      * @link https://gist.github.com/icetee/d650eb8195e1329903ac38818e5befa5
      */
     makeFormBody: function (obj) {
-        var _query = Object.keys(obj)
+        const query = Object.keys(obj)
             .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]))
             .join('&');
-        return _query;
+        return query;
     },
     /**
      * Object를 QueryString 으로 반환
@@ -688,14 +648,14 @@ CommonJS.DateTime = {
      * CommonJS.DateTime.dateToString(date);
      */
     dateToString: function (date) {
-        var _year = date.getFullYear();
-        var _month = (date.getMonth() + 1);
-        var _day = date.getDate();
+        const year = date.getFullYear();
+        let month = (date.getMonth() + 1);
+        let day = date.getDate();
 
-        _month = CommonJS.Text.addZero(_month);
-        _day = CommonJS.Text.addZero(_day);
+        month = CommonJS.Text.addZero(month);
+        day = CommonJS.Text.addZero(day);
 
-        return [_year, _month, _day].join('-');
+        return [year, month, day].join('-');
     },
     /**
      * 시간을 HH:mm:ss 형식으로 반환
@@ -705,15 +665,15 @@ CommonJS.DateTime = {
      * CommonJS.DateTime.timeToString(date);
      */
     timeToString: function (date) {
-        var _hour = date.getHours();
-        var _minute = date.getMinutes();
-        var _second = date.getSeconds();
+        let hour = date.getHours();
+        let minute = date.getMinutes();
+        let second = date.getSeconds();
 
-        _hour = CommonJS.Text.addZero(hour);
-        _minute = CommonJS.Text.addZero(minute);
-        _second = CommonJS.Text.addZero(second);
+        hour = CommonJS.Text.addZero(hour);
+        minute = CommonJS.Text.addZero(minute);
+        second = CommonJS.Text.addZero(second);
 
-        return [_hour, _minute, _second].join(':');
+        return [hour, minute, second].join(':');
     },
     /**
      * 날짜 형식의 문자열을 Date 객체로 반환
@@ -723,24 +683,24 @@ CommonJS.DateTime = {
      * CommonJS.DateTime.stringToDate(val);
      */
     stringToDate: function (val) {
-        var _date = new Date();
+        const date = new Date();
         val = val.replace(/-|\s|:/gi, '');
 
         if (!/^[\d]+$/.test(val)) {
             return false;
         }
 
-        _date.setFullYear(val.substr(0, 4));
-        _date.setMonth(val.substr(4, 2) - 1);
-        _date.setDate(val.substr(6, 2));
+        date.setFullYear(val.substring(0, 4));
+        date.setMonth(val.substring(4, 6) - 1);
+        date.setDate(val.substring(6, 8));
 
         if (val.length == 14) {
-            _date.setHours(val.substr(8, 2));
-            _date.setMinutes(val.substr(10, 2));
-            _date.setSeconds(val.substr(12, 2));
+            date.setHours(val.substring(8, 10));
+            date.setMinutes(val.substring(10, 12));
+            date.setSeconds(val.substring(12, 14));
         }
 
-        return _date;
+        return date;
     },
     /**
      * 현재 날짜의 이전/이후 날짜를 반환
@@ -752,11 +712,11 @@ CommonJS.DateTime = {
      * CommonJS.DateTime.plusMinusDay(day);
      */
     plusMinusDay: function (day) {
-        var _date = new Date();
-        var _newDate = new Date();
+        const date = new Date();
+        const newDate = new Date();
 
-        _newDate.setDate(_date.getDate() + day);
-        return _newDate;
+        newDate.setDate(date.getDate() + day);
+        return newDate;
     },
     /**
      * 현재 날짜의 이전/이후 날짜를 반환
@@ -768,11 +728,11 @@ CommonJS.DateTime = {
      * CommonJS.DateTime.plusMinusMonth(month);
      */
     plusMinusMonth: function (month) {
-        var _date = new Date();
-        var _newDate = new Date();
+        const date = new Date();
+        const newDate = new Date();
 
-        _newDate.setMonth(_date.getMonth() + month);
-        return _newDate;
+        newDate.setMonth(date.getMonth() + month);
+        return newDate;
     },
     /**
      * 현재 날짜의 이전/이후 날짜를 반환
@@ -784,11 +744,11 @@ CommonJS.DateTime = {
      * CommonJS.DateTime.plusMinusYear(year);
      */
     plusMinusYear: function (year) {
-        var _date = new Date();
-        var _newDate = new Date();
+        const date = new Date();
+        const newDate = new Date();
 
-        _newDate.setFullYear(_date.getFullYear() + year);
-        return _newDate;
+        newDate.setFullYear(date.getFullYear() + year);
+        return newDate;
     },
     /**
      * 현재 시간의 이전/이후 시간을 반환
@@ -800,11 +760,11 @@ CommonJS.DateTime = {
      * CommonJS.DateTime.plusMinusHour(hours);
      */
     plusMinusHour: function (hours) {
-        var _date = new Date();
-        var _newDate = new Date();
+        const date = new Date();
+        const newDate = new Date();
 
-        _newDate.setHours(_date.getHours() + hours);
-        return _newDate;
+        newDate.setHours(date.getHours() + hours);
+        return newDate;
     },
     /**
      * 현재 시간의 이전/이후 시간을 반환
@@ -816,11 +776,11 @@ CommonJS.DateTime = {
      * CommonJS.DateTime.plusMinusMinute(minutes);
      */
     plusMinusMinute: function (minutes) {
-        var _date = new Date();
-        var _newDate = new Date();
+        const date = new Date();
+        const newDate = new Date();
 
-        _newDate.setMinutes(_date.getMinutes() + minutes);
-        return _newDate;
+        newDate.setMinutes(date.getMinutes() + minutes);
+        return newDate;
     },
     /**
      * 현재 시간의 이전/이후 시간을 반환
@@ -832,11 +792,11 @@ CommonJS.DateTime = {
      * CommonJS.DateTime.plusMinusSecond(seconds);
      */
     plusMinusSecond: function (seconds) {
-        var _date = new Date();
-        var _newDate = new Date();
+        const date = new Date();
+        const newDate = new Date();
 
-        _newDate.setSeconds(_date.getSeconds() + seconds);
-        return _newDate;
+        newDate.setSeconds(date.getSeconds() + seconds);
+        return newDate;
     },
     /**
      * 한글 요일 구하기
@@ -846,8 +806,8 @@ CommonJS.DateTime = {
      * CommonJS.DateTime.getKorDayOfWeek(date);
      */
     getKorDayOfWeek: function (date) {
-        var _week = new Array('일', '월', '화', '수', '목', '금', '토');
-        return _week[date.getDay()];
+        const week = new Array('일', '월', '화', '수', '목', '금', '토');
+        return week[date.getDay()];
     },
     /**
      * 현재 월의 마지막 일자를 반환
@@ -899,8 +859,8 @@ CommonJS.Format = {
      * CommonJS.Format.removeSpecial(val);
      */
     removeSpecial: function (val) {
-        var _re = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
-        return val.replace(_re, '');
+        const regExp = /[^\w\sㄱ-ㅎ가-힣]/g;
+        return val.replace(regExp, '');
     }
 }
 
@@ -1080,8 +1040,8 @@ CommonJS.FormatValid = {
      * CommonJS.FormatValid.isUrl(val);
      */
     isUrl: function (val) {
-        var _re = _re = /^(https?:\/\/)([\w-]+(\.[\w-]+)+)(:\d+)?(\/\S*)?$/;
-        return _re.test(val);
+        const regExp = /^(https?:\/\/)([\w-]+(\.[\w-]+)+)(:\d+)?(\/\S*)?$/;
+        return regExp.test(val);
     },
     /**
      * 안전한 URL인지 체크 (상대 경로, https://, http:// 만 허용)
@@ -1091,8 +1051,8 @@ CommonJS.FormatValid = {
      * CommonJS.FormatValid.isSafeUrl(val);
      */
     isSafeUrl: function (val) {
-        var _re = /^(\/[\w-]+(\/[\w-]*)*|https?:\/\/[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?)$/;
-        return _re.test(val);
+        const regExp = /^(\/[\w-]+(\/[\w-]*)*|https?:\/\/[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?)$/;
+        return regExp.test(val);
     }
 }
 
@@ -1170,21 +1130,21 @@ CommonJS.File = {
      * @link https://developer.mozilla.org/en-US/docs/Web/API/File
      */
     getFileInfo: function (fileElement) {
-        var _fileObj;
+        let fileObj;
         if (window.File) {
             // IE 10 이상
-            _fileObj = fileElement.files[0];
+            fileObj = fileElement.files[0];
         } else {
             // IE 9 이하
-            var _fso = new ActiveXObject("Scripting.FileSystemObject")
-            var _fsoFile = _fso.getFile(fileElement.value);
+            const fso = new ActiveXObject("Scripting.FileSystemObject")
+            const fsoFile = fso.getFile(fileElement.value);
 
-            _fileObj = {};
-            _fileObj.name = _fsoFile.name;
-            _fileObj.type = _fsoFile.type;
-            _fileObj.size = _fsoFile.size;
+            fileObj = {};
+            fileObj.name = fsoFile.name;
+            fileObj.type = fsoFile.type;
+            fileObj.size = fsoFile.size;
         }
-        return _fileObj;
+        return fileObj;
     },
     /**
      * 파일 확장자 가져오기
@@ -1194,8 +1154,8 @@ CommonJS.File = {
      * CommonJS.File.getFileExt(fileObj);
      */
     getFileExt: function (fileObj) {
-        var _fileName = fileObj.name;
-        return _fileName.substring(_fileName.lastIndexOf(".") + 1);
+        const fileName = fileObj.name;
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
     },
     /**
      * 파일 용량 단위 구하기
@@ -1206,9 +1166,9 @@ CommonJS.File = {
      */
     readableFileSize: function (size) {
         if (size == 0) return '0';
-        var _arrDataUnits = ['B', 'KB', 'MB', 'GB', 'TB'];
-        var _i = Number(Math.floor(Math.log(size) / Math.log(1024)));
-        return Math.round(size / Math.pow(1024, _i)) + ' ' + _arrDataUnits[_i];
+        const arrDataUnits = ['B', 'KB', 'MB', 'GB', 'TB'];
+        const i = Number(Math.floor(Math.log(size) / Math.log(1024)));
+        return Math.round(size / Math.pow(1024, i)) + ' ' + arrDataUnits[i];
     },
     /**
      * 이미지 미리보기
@@ -1231,11 +1191,11 @@ CommonJS.File = {
         function fnSrc(e) {
             if (window.FileReader) {
                 // IE 10 이상
-                var _reader = new FileReader();
-                _reader.onload = function (e) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
                     imgElement.src = e.target.result;
                 }
-                _reader.readAsDataURL(e.target.files[0]);
+                reader.readAsDataURL(e.target.files[0]);
             } else {
                 // IE 9 이하
                 fileElement.select();
@@ -1261,8 +1221,8 @@ CommonJS.File = {
      */
     previewVideo: function (fileElement, videoElement) {
         fileElement.addEventListener('change', function (e) {
-            var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
-            videoElement.setAttribute('src', _fileUrl);
+            const fileUrl = window.URL.createObjectURL(e.target.files[0]);
+            videoElement.setAttribute('src', fileUrl);
         });
     },
     /**
@@ -1283,8 +1243,8 @@ CommonJS.File = {
      */
     preListenAudio: function (fileElement, audioElement) {
         fileElement.addEventListener('change', function (e) {
-            var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
-            audioElement.setAttribute('src', _fileUrl);
+            const fileUrl = window.URL.createObjectURL(e.target.files[0]);
+            audioElement.setAttribute('src', fileUrl);
         });
     },
     /**
@@ -1302,107 +1262,107 @@ CommonJS.File = {
      * CommonJS.File.downloadFile( $(셀렉터), 파일명 );
      */
     downloadFile: function (Element, fileName) {
-        var _a = document.createElement("a");
-        var _downFileNm;
-        var _tagNmae = Element.nodeName;
+        const a = document.createElement("a");
+        let downFileNm;
+        let tagNmae = Element.nodeName;
 
         if (Element.nodeName === undefined) {
-            _tagNmae = Element.prop('tagName');
+            tagNmae = Element.prop('tagName');
         }
 
-        var _srcArr = ['VIDEO', 'AUDIO', 'IMG'];
-        if (_srcArr.includes(_tagNmae)) {
-            var _src;
+        const srcArr = ['VIDEO', 'AUDIO', 'IMG'];
+        if (srcArr.includes(tagNmae)) {
+            let src;
             if (Element.length === undefined) {
-                _src = Element.getAttribute('src');
+                src = Element.getAttribute('src');
             } else {
-                _src = Element.attr('src');
+                src = Element.attr('src');
             }
 
-            _downFileNm = fileName;
+            downFileNm = fileName;
             if (fileName == undefined) {
-                var _fileExt = _src.substring(_src.lastIndexOf(".") + 1);
-                var _temp = _src.substring(0, _src.lastIndexOf("."));
-                var _fileName = _temp.substring(_src.lastIndexOf("/") + 1);
-                _downFileNm = _fileName + '.' + _fileExt;
+                const fileExt = src.substring(src.lastIndexOf(".") + 1);
+                const temp = src.substring(0, src.lastIndexOf("."));
+                const fileName = temp.substring(src.lastIndexOf("/") + 1);
+                downFileNm = fileName + '.' + fileExt;
             }
 
-            _a.href = _src;
+            a.href = src;
         } else {
-            var _alertMsg = '';
-            _alertMsg += '파일 다운로드는\n(' + 'video, audio, img, textarea, input[type="text"]' + ')';
-            _alertMsg += '\n만 가능합니다.';
+            let alertMsg = '';
+            alertMsg += '파일 다운로드는\n(' + 'video, audio, img, textarea, input[type="text"]' + ')';
+            alertMsg += '\n만 가능합니다.';
 
-            var _srcArr = ['TEXTAREA', 'INPUT', 'DIV'];
-            if (!_srcArr.includes(_tagNmae)) {
-                alert(_alertMsg);
+            const srcArr = ['TEXTAREA', 'INPUT', 'DIV'];
+            if (!srcArr.includes(tagNmae)) {
+                alert(alertMsg);
                 return false;
             } else {
-                if ('INPUT' === _tagNmae) {
-                    var _type;
+                if ('INPUT' === tagNmae) {
+                    let type;
                     if (Element.length === undefined) {
-                        _type = Element.getAttribute('type');
+                        type = Element.getAttribute('type');
                     } else {
-                        _type = Element.attr('type');
+                        type = Element.attr('type');
                     }
 
-                    if ('text' !== _type) {
-                        alert(_alertMsg);
+                    if ('text' !== type) {
+                        alert(alertMsg);
                         return false;
                     }
                 }
             }
 
-            _downFileNm = fileName;
+            downFileNm = fileName;
             if (fileName == undefined) {
-                _downFileNm = 'output.html';
+                downFileNm = 'output.html';
 
-                if ('INPUT' === _tagNmae) {
-                    _downFileNm = 'output.text';
+                if ('INPUT' === tagNmae) {
+                    downFileNm = 'output.text';
                 }
             }
 
-            if ('DIV' !== _tagNmae) {
-                var _mimeType = 'text/html';
-                if ('INPUT' === _tagNmae) {
-                    _mimeType = 'text/plain';
+            if ('DIV' !== tagNmae) {
+                let mimeType = 'text/html';
+                if ('INPUT' === tagNmae) {
+                    mimeType = 'text/plain';
                 }
 
-                var _blob;
+                let blob;
                 if (Element.length === undefined) {
-                    _blob = new Blob([Element.value], {
-                        type: _mimeType
+                    blob = new Blob([Element.value], {
+                        type: mimeType
                     });
                 } else {
-                    _blob = new Blob([Element.val()], {
-                        type: _mimeType
+                    blob = new Blob([Element.val()], {
+                        type: mimeType
                     });
                 }
 
-                var _url = window.URL.createObjectURL(_blob);
-                _a.href = _url;
+                const url = window.URL.createObjectURL(blob);
+                a.href = url;
             } else {
-                var _blob;
+                let blob;
                 if (Element.length === undefined) {
-                    _blob = new Blob([Element.innerHTML], {
+                    blob = new Blob([Element.innerHTML], {
                         type: 'text/html'
                     });
                 } else {
-                    _blob = new Blob([Element.html()], {
+                    blob = new Blob([Element.html()], {
                         type: 'text/html'
                     });
                 }
 
-                var _url = window.URL.createObjectURL(_blob);
-                _a.href = _url;
+                const url = window.URL.createObjectURL(blob);
+                a.href = url;
             }
         }
 
-        _a.download = _downFileNm;
-        _a.target = '_blank';
+        a.download = downFileNm;
+        a.target = '_blank';
 
-        _a.click();
-        _a.remove();
+        a.click();
+        a.remove();
     },
     /**
      * 엑셀 파일 다운로드
@@ -1420,49 +1380,49 @@ CommonJS.File = {
      */
     exportExcel: function (fileName, sheetName, sheetHtml) {
         // 파일 체크
-        var _fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
-        if ('xls' !== _fileExt) {
+        const fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
+        if ('xls' !== fileExt) {
             alert('xls 파일만 가능합니다.');
             return false;
         }
 
-        var _dataType = 'data:application/vnd.ms-excel';
-        var _html = '';
-        _html += '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
-        _html += '<head>';
-        _html += '<meta http-equiv="content-type" content="' + _dataType + '; charset=UTF-8">';
-        _html += '<xml>';
-        _html += '<x:ExcelWorkbook>';
-        _html += '<x:ExcelWorksheets>';
-        _html += '<x:ExcelWorksheet>';
-        _html += '<x:Name>' + sheetName + '</x:Name>';
-        _html += '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions>';
-        _html += '</x:ExcelWorksheet>';
-        _html += '</x:ExcelWorksheets>';
-        _html += '</xml>';
-        _html += '</head>';
-        _html += '<body>';
-        _html += sheetHtml;
-        _html += '</html>';
+        const dataType = 'data:application/vnd.ms-excel';
+        let html = '';
+        html += '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+        html += '<head>';
+        html += '<meta http-equiv="content-type" content="' + dataType + '; charset=UTF-8">';
+        html += '<xml>';
+        html += '<x:ExcelWorkbook>';
+        html += '<x:ExcelWorksheets>';
+        html += '<x:ExcelWorksheet>';
+        html += '<x:Name>' + sheetName + '</x:Name>';
+        html += '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions>';
+        html += '</x:ExcelWorksheet>';
+        html += '</x:ExcelWorksheets>';
+        html += '</xml>';
+        html += '</head>';
+        html += '<body>';
+        html += sheetHtml;
+        html += '</html>';
 
-        var _ua = window.navigator.userAgent;
-        var _blob = new Blob([_html], {
+        const ua = window.navigator.userAgent;
+        const blob = new Blob([html], {
             type: "application/csv;charset=utf-8;"
         });
 
-        if ((_ua.indexOf("MSIE ") > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) && window.navigator.msSaveBlob) {
+        if ((ua.includes("MSIE ") || /Trident.*rv:11\.0/.test(navigator.userAgent)) && window.navigator.msSaveBlob) {
             // ie이고 msSaveBlob 기능을 지원하는 경우
-            navigator.msSaveBlob(_blob, fileName);
+            navigator.msSaveBlob(blob, fileName);
         } else {
             // ie가 아닌 경우 (바로 다운이 되지 않기 때문에 클릭 버튼을 만들어 클릭을 임의로 수행하도록 처리)
-            var _anchor = window.document.createElement('a');
-            _anchor.href = window.URL.createObjectURL(_blob);
-            _anchor.download = fileName;
-            document.body.appendChild(_anchor);
-            _anchor.click();
+            const anchor = window.document.createElement('a');
+            anchor.href = window.URL.createObjectURL(blob);
+            anchor.download = fileName;
+            document.body.appendChild(anchor);
+            anchor.click();
 
             // 클릭(다운) 후 요소 제거
-            document.body.removeChild(_anchor);
+            document.body.removeChild(anchor);
         }
     },
     /**
@@ -1488,29 +1448,29 @@ CommonJS.File = {
     exportExcelBySheetJS: function (fileName, sheetName, sheetElement) {
         // jQuery Element 지원 안함
         if (sheetElement.length != undefined) {
-            var id = sheetElement.attr('id');
+            const id = sheetElement.attr('id');
             sheetElement = document.querySelector('#' + id);
         }
 
         // 파일 체크
-        var _arrAllowExt = ['xls', 'xlsx', 'ods'];
-        var _fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
+        const arrAllowExt = ['xls', 'xlsx', 'ods'];
+        const fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
 
-        if (!_arrAllowExt.includes(_fileExt)) {
+        if (!arrAllowExt.includes(fileExt)) {
             alert('xls, xlsx, ods 만 가능합니다.');
             return false;
         }
 
-        var _type = 'xlsx';
-        if ('ods' === _fileExt) _type = 'ods';
-        if ('xls' === _fileExt) _type = 'biff8';
+        // let type = 'xlsx';
+        // if ('ods' === fileExt) type = 'ods';
+        // if ('xls' === fileExt) type = 'biff8';
 
-        var _wb = XLSX.utils.table_to_book(sheetElement, {
+        const wb = XLSX.utils.table_to_book(sheetElement, {
             sheet: sheetName
         });
-        var _fn = undefined;
+        const fn = undefined;
 
-        XLSX.writeFile(_wb, _fn || fileName);
+        XLSX.writeFile(wb, fn || fileName);
     },
     /**
      * PDF 파일 다운로드
@@ -1533,24 +1493,24 @@ CommonJS.File = {
      */
     exportPdf: function (fileName, pdfElement) {
         // 파일 체크
-        var _fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
+        const fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
 
-        if (_fileExt != 'pdf') {
+        if (fileExt != 'pdf') {
             alert('pdf만 가능합니다.');
             return false;
         }
 
         html2canvas(pdfElement).then(function (canvas) { //저장 영역 div id
             // 캔버스를 이미지로 변환
-            var imgData = canvas.toDataURL('image/png');
+            const imgData = canvas.toDataURL('image/png');
 
-            var imgWidth = 190; // 이미지 가로 길이(mm) / A4 기준 210mm
-            var pageHeight = imgWidth * 1.414; // 출력 페이지 세로 길이 계산 A4 기준
-            var imgHeight = canvas.height * imgWidth / canvas.width;
-            var heightLeft = imgHeight;
-            var margin = 10; // 출력 페이지 여백설정
-            var doc = new jsPDF('p', 'mm');
-            var position = 0;
+            const imgWidth = 190; // 이미지 가로 길이(mm) / A4 기준 210mm
+            const pageHeight = imgWidth * 1.414; // 출력 페이지 세로 길이 계산 A4 기준
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            let heightLeft = imgHeight;
+            const margin = 10; // 출력 페이지 여백설정
+            const doc = new jsPDF('p', 'mm');
+            let position = 0;
 
             // 첫 페이지 출력
             doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
@@ -1579,9 +1539,9 @@ CommonJS.FileValid = {
      * CommonJS.FileValid.isAllowFile(fileObj);
      */
     isAllowFile: function (fileObj) {
-        var _ext = CommonJS.File.getFileExt(fileObj);
-        var _arrAllowExt = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'hwp', 'odt', 'odp', 'ods', 'jpg', 'jpeg', 'gif', 'png'];
-        return _arrAllowExt.includes(_ext);
+        const ext = CommonJS.File.getFileExt(fileObj);
+        const arrAllowExt = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'hwp', 'odt', 'odp', 'ods', 'jpg', 'jpeg', 'gif', 'png'];
+        return arrAllowExt.includes(ext);
     },
     /**
      * 지원 파일 체크 (문서)
@@ -1591,9 +1551,9 @@ CommonJS.FileValid = {
      * CommonJS.FileValid.isAllowDoc(fileObj);
      */
     isAllowDoc: function (fileObj) {
-        var _ext = CommonJS.File.getFileExt(fileObj);
-        var _arrAllowExt = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'hwp', 'odt', 'odp', 'ods'];
-        return _arrAllowExt.includes(_ext);
+        const ext = CommonJS.File.getFileExt(fileObj);
+        const arrAllowExt = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'hwp', 'odt', 'odp', 'ods'];
+        return arrAllowExt.includes(ext);
     },
     /**
      * 지원 파일 체크 (이미지)
@@ -1603,9 +1563,9 @@ CommonJS.FileValid = {
      * CommonJS.FileValid.isAllowImg(fileObj);
      */
     isAllowImg: function (fileObj) {
-        var _ext = CommonJS.File.getFileExt(fileObj);
-        var _arrAllowExt = ['jpg', 'jpeg', 'gif', 'png'];
-        return _arrAllowExt.includes(_ext);
+        const ext = CommonJS.File.getFileExt(fileObj);
+        const arrAllowExt = ['jpg', 'jpeg', 'gif', 'png'];
+        return arrAllowExt.includes(ext);
     },
     /**
      * 지원 파일 체크 (실행 파일)
@@ -1616,9 +1576,9 @@ CommonJS.FileValid = {
      * CommonJS.FileValid.ifRunableFile(fileObj);
      */
     ifRunableFile: function (fileObj) {
-        var _ext = CommonJS.File.getFileExt(fileObj);
-        var extReg = /(bat|bin|cmd|com|cpl|dll|exe|gadget|inf1|ins|isu|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|scr|sct|sh|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf|wsh)$/i;
-        return extReg.test(_ext);
+        const ext = CommonJS.File.getFileExt(fileObj);
+        const extReg = /(bat|bin|cmd|com|cpl|dll|exe|gadget|inf1|ins|isu|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|scr|sct|sh|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf|wsh)$/i;
+        return extReg.test(ext);
     },
     /**
      * 지원 파일 체크 (커스텀)
@@ -1630,8 +1590,8 @@ CommonJS.FileValid = {
      */
     isAllowCustom: function (fileObj, arrAllowExt) {
         if ( Array.isArray(arrAllowExt) ) {
-            var _ext = CommonJS.File.getFileExt(fileObj);
-            return arrAllowExt.includes(_ext);
+            const ext = CommonJS.File.getFileExt(fileObj);
+            return arrAllowExt.includes(ext);
         } else {
             console.log('두 번째 인자가 Array가 아님');
             return false;
@@ -1656,9 +1616,9 @@ CommonJS.FileValid = {
      * @link https://kutar37.tistory.com/entry/HTML5-video-audio-%ED%83%9C%EA%B7%B8
      */
     isVideoStandard: function (fileObj) {
-        var _ext = CommonJS.File.getFileExt(fileObj);
-        var _arrAllowExt = ['mp4', 'webm', 'ogg'];
-        return _arrAllowExt.includes(_ext);
+        const ext = CommonJS.File.getFileExt(fileObj);
+        const arrAllowExt = ['mp4', 'webm', 'ogg'];
+        return arrAllowExt.includes(ext);
     },
     /**
      * 지원 파일 체크 (동영상 웹 추천)
@@ -1666,8 +1626,8 @@ CommonJS.FileValid = {
      * @returns
      */
     isVideoRecomend: function (fileObj) {
-        var _ext = CommonJS.File.getFileExt(fileObj);
-        return _ext === 'mp4'
+        const ext = CommonJS.File.getFileExt(fileObj);
+        return ext === 'mp4'
     },
     /**
      * 지원 파일 체크 (오디오 웹 추천)
@@ -1675,8 +1635,8 @@ CommonJS.FileValid = {
      * @returns
      */
     isAudioRecomend: function (fileObj) {
-        var _ext = CommonJS.File.getFileExt(fileObj);
-        return _ext === 'mp3'
+        const ext = CommonJS.File.getFileExt(fileObj);
+        return ext === 'mp3'
     }
 }
 
@@ -1691,16 +1651,16 @@ CommonJS.Cookie = {
      * CommonJS.Cookie.setCookie(name, value, expireSec);
      * CommonJS.Cookie.setCookie(name, value, expireSec, domain);
      */
-     setCookie: function (name, value, expireSec, domain) {
-        var _date = new Date();
-        _date.setSeconds(_date.getSeconds() + Number(expireSec));
+    setCookie: function (name, value, expireSec, domain) {
+        const date = new Date();
+        date.setSeconds(date.getSeconds() + Number(expireSec));
 
         if (domain) {
-            var cookie_str = name + '=' + escape(value) + '; path=/; expires=' + _date.toGMTString() + ';';
-            cookie_str += 'domain=' + escape(domain);
-            document.cookie = cookie_str;
+            let cookieStr = name + '=' + encodeURIComponent(value) + '; path=/; expires=' + date.toGMTString() + ';';
+            cookieStr += 'domain=' + encodeURIComponent(domain);
+            document.cookie = cookieStr;
         } else {
-	        document.cookie = name + '=' + escape(value) + '; path=/; expires=' + _date.toGMTString() + ';';
+            document.cookie = name + '=' + encodeURIComponent(value) + '; path=/; expires=' + date.toGMTString() + ';';
         }
     },
     /**
@@ -1711,8 +1671,8 @@ CommonJS.Cookie = {
      * CommonJS.Cookie.getCookie(name);
      */
     getCookie: function (name) {
-        var _value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-        return _value ? unescape(_value[2]) : null;
+        const value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+        return value ? decodeURIComponent(value[2]) : null;
     },
     /**
      * 쿠키 삭제
@@ -1723,13 +1683,13 @@ CommonJS.Cookie = {
      * CommonJS.Cookie.deleteCookie(name, domain);
      */
     deleteCookie: function (name, domain) {
-        var _date = new Date();
-        _date.setDate(_date.getDate() - 1);
+        const date = new Date();
+        date.setDate(date.getDate() - 1);
 
         if (domain) {
-        	document.cookie = name + '=' + '; path=/; expires=' + _date.toGMTString() + '; domain=' + escape(domain);
+            document.cookie = name + '=' + '; path=/; expires=' + date.toGMTString() + '; domain=' + encodeURIComponent(domain);
         } else {
-        	document.cookie = name + '=' + '; path=/; expires=' + _date.toGMTString() + ';';
+            document.cookie = name + '=' + '; path=/; expires=' + date.toGMTString() + ';';
         }
     }
 }
@@ -1743,18 +1703,18 @@ CommonJS.Byte = {
      * CommonJS.Byte.getByteLengthUtf8(val);
      */
     getByteLengthUtf8: function (val) {
-        var _char = '';
-        var _nCnt = 0;
+        let char = '';
+        let nCnt = 0;
 
-        for (var i = 0; i < val.length; i++) {
-            _char = val.charCodeAt(i);
-            if (_char > 127) {
-                _nCnt += 3;
+        for (let i = 0; i < val.length; i++) {
+            char = val.charCodeAt(i);
+            if (char > 127) {
+                nCnt += 3;
             } else {
-                _nCnt++;
+                nCnt++;
             }
         }
-        return _nCnt;
+        return nCnt;
     },
     /**
      * Byte 길이 구하기 (EUC_KR)
@@ -1764,18 +1724,18 @@ CommonJS.Byte = {
      * CommonJS.Byte.getByteLengthEucKr(val);
      */
     getByteLengthEucKr: function (val) {
-        var _char = '';
-        var _nCnt = 0;
+        let char = '';
+        let nCnt = 0;
 
-        for (var i = 0; i < val.length; i++) {
-            _char = val.charCodeAt(i);
-            if (_char > 127) {
-                _nCnt += 2;
+        for (let i = 0; i < val.length; i++) {
+            char = val.charCodeAt(i);
+            if (char > 127) {
+                nCnt += 2;
             } else {
-                _nCnt++;
+                nCnt++;
             }
         }
-        return _nCnt;
+        return nCnt;
     },
     /**
      * input text/textarea의 Byte를 체크하여 nowByteEle에 표시
@@ -1797,34 +1757,34 @@ CommonJS.Byte = {
      * });
      */
     checkByte: function(obj, nowByteEle, isEucKr) {
-		let _textVal;
+		let textVal;
 		if ( obj.length === undefined ) {
-			_textVal = obj.value;
+			textVal = obj.value;
 		} else {
-			_textVal = obj.val();
+			textVal = obj.val();
 		}
 
-        const _textLen = _textVal.length;
+        const textLen = textVal.length;
 
-        let _totalByte = 0;
-        for (let i=0; i < _textLen; i++) {
-            const eachChar = _textVal.charCodeAt(i);
+        let totalByte = 0;
+        for (let i=0; i < textLen; i++) {
+            const eachChar = textVal.charCodeAt(i);
 
             if ( eachChar > 127 ) {
                 if (isEucKr) {
-                    _totalByte += 2;
+                    totalByte += 2;
                 } else {
-                    _totalByte += 3;
+                    totalByte += 3;
                 }
             } else {
-                _totalByte += 1;
+                totalByte += 1;
             }
         }
 
 		if ( nowByteEle.length === undefined ) {
-			nowByteEle.innerText = _totalByte;
+			nowByteEle.innerText = totalByte;
 		} else {
-			nowByteEle.text( _totalByte );
+			nowByteEle.text( totalByte );
 		}
     },
     /**
@@ -1848,41 +1808,41 @@ CommonJS.Byte = {
      * });
      */
     isOverMaxByte: function(obj, maxByte, isEucKr) {
-        let _textVal;
-        let _maxByte = maxByte;
+        let textVal;
+        let innerMaxByte = maxByte;
 
 		if ( obj.length === undefined ) {
-			_textVal = obj.value;
+			textVal = obj.value;
 
-			if ( _maxByte === undefined ) {
-				_maxByte = obj.dataset.maxByte;
+			if ( innerMaxByte === undefined ) {
+				innerMaxByte = obj.dataset.maxByte;
 			}
 		} else {
-			_textVal = obj.val();
+			textVal = obj.val();
 
-			if ( _maxByte === undefined ) {
-				_maxByte = obj.data('maxByte');
+			if ( innerMaxByte === undefined ) {
+				innerMaxByte = obj.data('maxByte');
 			}
 		}
 
-        const _textLen = _textVal.length;
+        const textLen = textVal.length;
 
-        let _totalByte = 0;
-        for (let i=0; i < _textLen; i++) {
-            const eachChar = _textVal.charCodeAt(i);
+        let totalByte = 0;
+        for (let i=0; i < textLen; i++) {
+            const eachChar = textVal.charCodeAt(i);
 
             if ( eachChar > 127 ) {
                 if (isEucKr) {
-                    _totalByte += 2;
+                    totalByte += 2;
                 } else {
-                    _totalByte += 3;
+                    totalByte += 3;
                 }
             } else {
-                _totalByte += 1;
+                totalByte += 1;
             }
         }
 
-        return (_totalByte > _maxByte);
+        return (totalByte > innerMaxByte);
     },
     /**
      * input text/textarea의 Byte를 체크하여 nowByteEle에 표시
@@ -1906,54 +1866,54 @@ CommonJS.Byte = {
      * });
      */
     checkByteOverLimit: function(obj, maxByte, nowByteEle, isEucKr) {
-		let _textVal;
+		let textVal;
 		if ( obj.length === undefined ) {
-			_textVal = obj.value;
+			textVal = obj.value;
 		} else {
-			_textVal = obj.val();
+			textVal = obj.val();
 		}
 
-        const _textLen = _textVal.length;
+        const textLen = textVal.length;
 
-        let _totalByte = 0;
-        let _rleng = 0;
+        let totalByte = 0;
+        let rleng = 0;
 
-        for (let i=0; i < _textLen; i++) {
-        	const eachChar = _textVal.charCodeAt(i);
+        for (let i=0; i < textLen; i++) {
+            const eachChar = textVal.charCodeAt(i);
 
             if ( eachChar > 127 ) {
                 if (isEucKr) {
-                    _totalByte += 2;
+                    totalByte += 2;
                 } else {
-                    _totalByte += 3;
+                    totalByte += 3;
                 }
             } else {
-                _totalByte += 1;
+                totalByte += 1;
             }
 
-            if ( _totalByte <= maxByte ) {
-            	_rleng = i + 1;
+            if ( totalByte <= maxByte ) {
+                rleng = i + 1;
             }
         }
 
-        if ( _totalByte > maxByte ) {
-        	if ( obj.length === undefined ) {
-        		obj.value = _textVal.substr(0, _rleng);
-        	} else {
-        		obj.val( _textVal.substr(0, _rleng) );
-        	}
+        if ( totalByte > maxByte ) {
+            if ( obj.length === undefined ) {
+                obj.value = textVal.substr(0, rleng);
+            } else {
+                obj.val( textVal.substr(0, rleng) );
+            }
 
-    		if ( nowByteEle.length === undefined ) {
-    			nowByteEle.innerText = _totalByte;
-    		} else {
-    			nowByteEle.text( _totalByte );
-    		}
+            if ( nowByteEle.length === undefined ) {
+                nowByteEle.innerText = totalByte;
+            } else {
+                nowByteEle.text( totalByte );
+            }
         } else {
-    		if ( nowByteEle.length === undefined ) {
-    			nowByteEle.innerText = _totalByte;
-    		} else {
-    			nowByteEle.text( _totalByte );
-    		}
+            if ( nowByteEle.length === undefined ) {
+                nowByteEle.innerText = totalByte;
+            } else {
+                nowByteEle.text( totalByte );
+            }
         }
     }
 }
@@ -1967,8 +1927,20 @@ CommonJS.Escape = {
      * CommonJS.Escape.escapeHtml(val);
      */
     escapeHtml: function (val) {
-        var _ret = val.replace(/\"/gi, '&quot;').replace(/&/gi, '&amp;').replace(/</gi, '&lt;').replace(/>/gi, '&gt;');
-        return _ret;
+        if (typeof val !== 'string') {
+            return '';
+        }
+
+        const replacements = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#x27;',
+            '/': '&#x2F;'
+        };
+
+        return val.replace(/[&<>"'/]/g, (char) => replacements[char]);
     },
     /**
      * HTML Unescape 처리
@@ -1978,8 +1950,21 @@ CommonJS.Escape = {
      * CommonJS.Escape.unescapeHtml(val);
      */
     unescapeHtml: function (val) {
-        var _ret = val.replace(/&quot;/gi, '\"').replace(/&amp;/gi, '&').replace(/&lt;/gi, '<').replace(/&gt;/gi, '>');
-        return _ret;
+        if (typeof val !== 'string') {
+            return '';
+        }
+
+        const replacements = {
+            '&amp;': '&',
+            '&lt;': '<',
+            '&gt;': '>',
+            '&quot;': '"',
+            '&#x27;': "'",
+            '&#39;': "'",
+            '&#x2F;': '/'
+        };
+
+        return val.replace(/&amp;|&lt;|&gt;|&quot;|&#x27;|&#39;|&#x2F;/g, (entity) => replacements[entity]);
     }
 }
 
@@ -1991,60 +1976,60 @@ CommonJS.BrowserInfo = {
      * CommonJS.BrowserInfo.checkTypeVersion();
      */
     checkTypeVersion: function () {
-        var _agent = navigator.userAgent.toLowerCase();
-        var _re = '';
+        const agent = navigator.userAgent.toLowerCase();
+        let re = '';
 
-        var browser = {
+        let browser = {
             name: null,
             version: null
         };
 
         // IE 체크
         // - IE 12에 해당하는 초장기 Edge 체크 의미 없어져서 제외시킴
-        if (_agent.match(/msie/) || _agent.match(/trident/)) {
+        if (agent.match(/msie/) || agent.match(/trident/)) {
             browser.name = "IE";
 
-            if (_agent.match(/msie/)) {
+            if (agent.match(/msie/)) {
                 // IE 10 이하
-                _re = /msie (\S+)/;
-                browser.version = _re.exec(_agent)[1];
+                re = /msie (\S+)/;
+                browser.version = re.exec(agent)[1];
                 browser.version = browser.version.replace(";", "");
             } else {
                 // IE 11
-                if (_agent.match(/trident/)) {
-                    _re = /rv:(\S+)/;
-                    browser.version = _re.exec(_agent)[1];
+                if (agent.match(/trident/)) {
+                    re = /rv:(\S+)/;
+                    browser.version = re.exec(agent)[1];
                 }
             }
         } else {
             // Chromium 기반이면 Chrome 체크 위에 선언, 아래에 있으면 Chrome 으로 체크됨
 
-            if (_agent.match(/whale/)) {
-                _re = /whale\/(\S+)/;
+            if (agent.match(/whale/)) {
+                re = /whale\/(\S+)/;
                 browser.name = 'Whale'; // Chromium 기반
-            } else if (_agent.match(/edg/)) {
+            } else if (agent.match(/edg/)) {
                 // edge 에서 edg 로 변경됨....
-                _re = /edg\/(\S+)/;
+                re = /edg\/(\S+)/;
                 browser.name = 'Edge'; // Chromium 기반
-            } else if (_agent.match(/opr/)) {
+            } else if (agent.match(/opr/)) {
                 // opera 에서 opr 로 변경됨....
-                _re = /opr\/(\S+)/;
+                re = /opr\/(\S+)/;
                 browser.name = 'Opera'; // Chromium 기반
-            } else if (_agent.match(/chrome/)) {
-                _re = /chrome\/(\S+)/;
+            } else if (agent.match(/chrome/)) {
+                re = /chrome\/(\S+)/;
                 browser.name = 'Chrome'; // Chromium 기반
-            } else if (_agent.match(/firefox/)) {
-                _re = /firefox\/(\S+)/;
+            } else if (agent.match(/firefox/)) {
+                re = /firefox\/(\S+)/;
                 browser.name = 'Firefox';
-            } else if (_agent.match(/safari/)) {
-                _re = /safari\/(\S+)/;
+            } else if (agent.match(/safari/)) {
+                re = /safari\/(\S+)/;
                 browser.name = 'Safari';
             } else {
-                console.log(_agent);
+                console.log(agent);
             }
 
             if (browser.name != null) {
-                browser.version = _re.exec(_agent)[1];
+                browser.version = re.exec(agent)[1];
             }
         }
 
@@ -2057,10 +2042,11 @@ CommonJS.BrowserInfo = {
      * CommonJS.BrowserInfo.isMobile();
      */
     isMobile: function () {
-        var _filter = 'windows|macos|win16|win32|win64|macintel';
-        var _platform = navigator.userAgentData?.platform || navigator?.platform;
+        const filter = 'windows|macos|win16|win32|win64|macintel';
+        // XXX navigator?.platform
+        const platform = navigator.userAgentData?.platform || navigator?.platform;
 
-        if( _filter.indexOf(_platform.toLowerCase()) < 0 ) {
+        if( filter.indexOf(platform.toLowerCase()) < 0 ) {
             return true;
         } else {
             return false;
@@ -2104,11 +2090,11 @@ CommonJS.BrowserInfo = {
      * CommonJS.BrowserInfo.isMobileOs();
      */
     isMobileOs: function () {
-        var _ret = {
+        const ret = {
             Android: navigator.userAgent.match(/Android/i) == null ? false : true,
             iOS: navigator.userAgent.match(/iPhone|iPad|iPod/i) == null ? false : true
         };
-        return _ret;
+        return ret;
     },
     /**
      * UserAgent 에서 특정 문자열 유무 체크
@@ -2122,8 +2108,8 @@ CommonJS.BrowserInfo = {
      * - 커스터마이징 하지 않는 이상 모바일 웹, WebView 의 UserAgent는 동일
      */
     isCheckUserAgent: function(chkStr) {
-        var _agent = navigator.userAgent;
-		return _agent.indexOf(chkStr) > -1;
+        const agent = navigator.userAgent;
+		return agent.indexOf(chkStr) > -1;
     },
     /**
      * 응답 헤더 에서 특정 키와 그에 해당하는 문자열 유무 체크
@@ -2138,18 +2124,18 @@ CommonJS.BrowserInfo = {
      * 애플리케이션 접속 판별로도 사용되고, 요청 헤더에 추가되어 요청이 들어와서 꺼내야 하는 경우 등 사용
      */
     isCheckResponseHeader: function(key, chkStr) {
-		var _req = new XMLHttpRequest();
-		_req.open('GET', document.location, false);
-		_req.send(null);
+		const req = new XMLHttpRequest();
+		req.open('GET', document.location, false);
+		req.send(null);
 
-		var _allResponseHeaders = _req.getAllResponseHeaders().split("\r\n");
-		var _headers = _allResponseHeaders.reduce(function (acc, current, i){
-			var _parts = current.split(': ');
-			acc[_parts[0]] = _parts[1];
+		const allResponseHeaders = req.getAllResponseHeaders().split("\r\n");
+		const headers = allResponseHeaders.reduce(function (acc, current){
+			const parts = current.split(': ');
+			acc[parts[0]] = parts[1];
 			return acc;
 		}, {});
 
-        return (_headers[key] === chkStr);
+        return (headers[key] === chkStr);
     },
     /**
      * 브라우저 언어 확인
@@ -2162,8 +2148,8 @@ CommonJS.BrowserInfo = {
      * @returns
      */
     getPublicIp: function() {
-        var _retJson = CommonJS.Http.commonAjax(false, 'get', 'https://api.ipify.org?format=json', null, {}, null);
-        return _retJson.ip;
+        const retJson = CommonJS.Http.commonAjax(false, 'get', 'https://api.ipify.org?format=json', null, {}, null);
+        return retJson.ip;
     }
 }
 
@@ -2221,14 +2207,14 @@ CommonJS.Input = {
         }
 
         function fnTemp(e) {
-            var _val = e.target.value.replace(/,/g, '').replace(/[^0-9]/gi, '');
-            var _re = /(^[+-]?\d+)(\d{3})/;
+            let val = e.target.value.replace(/,/g, '').replace(/[^0-9]/gi, '');
+            const regExp = /(^[+-]?\d+)(\d{3})/;
 
-            while (_re.test(_val)) {
-                _val = _val.replace(_re, '$1' + ',' + '$2');
+            while (regExp.test(val)) {
+                val = val.replace(regExp, '$1' + ',' + '$2');
             }
 
-            return _val;
+            return val;
         }
     },
     /**
@@ -2667,20 +2653,20 @@ CommonJS.SearchEngine = {
      * @returns
      */
     makeNewForm: function (searchKeyword) {
-        var _newForm = document.createElement('form');
-        _newForm.name = 'form';
-        _newForm.method = 'get';
-        _newForm.action = '';
-        _newForm.target = '_blank';
+        const newForm = document.createElement('form');
+        newForm.name = 'form';
+        newForm.method = 'get';
+        newForm.action = '';
+        newForm.target = '_blank';
 
-        var _input = document.createElement('input');
-        _input.setAttribute('type', 'hidden');
-        _input.setAttribute('name', 'temp');
-        _input.setAttribute('value', searchKeyword);
+        const input = document.createElement('input');
+        input.setAttribute('type', 'hidden');
+        input.setAttribute('name', 'temp');
+        input.setAttribute('value', searchKeyword);
 
-        _newForm.appendChild(_input);
+        newForm.appendChild(input);
 
-        return _newForm;
+        return newForm;
     },
     /**
      * 구글 검색
@@ -2689,15 +2675,15 @@ CommonJS.SearchEngine = {
      * CommonJS.SearchEngine.searchGoogle('나무위키');
      */
     searchGoogle: function (searchKeyword) {
-        var _newForm = this.makeNewForm(searchKeyword);
-        _newForm.action = 'https://www.google.com/search';
+        const newForm = this.makeNewForm(searchKeyword);
+        newForm.action = 'https://www.google.com/search';
 
-        var _field = _newForm.querySelector('input[name="temp"]');
-        _field.setAttribute('name', 'q');
+        const field = newForm.querySelector('input[name="temp"]');
+        field.setAttribute('name', 'q');
 
-        document.body.appendChild(_newForm);
-        _newForm.submit();
-        document.body.removeChild(_newForm);
+        document.body.appendChild(newForm);
+        newForm.submit();
+        document.body.removeChild(newForm);
     },
     /**
      * 네이버 검색
@@ -2706,15 +2692,15 @@ CommonJS.SearchEngine = {
      * CommonJS.SearchEngine.searchNaver('나무위키');
      */
     searchNaver: function (searchKeyword) {
-        var _newForm = this.makeNewForm(searchKeyword);
-        _newForm.action = 'https://search.naver.com/search.naver';
+        const newForm = this.makeNewForm(searchKeyword);
+        newForm.action = 'https://search.naver.com/search.naver';
 
-        var _field = _newForm.querySelector('input[name="temp"]');
-        _field.setAttribute('name', 'query');
+        const field = newForm.querySelector('input[name="temp"]');
+        field.setAttribute('name', 'query');
 
-        document.body.appendChild(_newForm);
-        _newForm.submit();
-        document.body.removeChild(_newForm);
+        document.body.appendChild(newForm);
+        newForm.submit();
+        document.body.removeChild(newForm);
     },
     /**
      * 다음 검색
@@ -2723,15 +2709,15 @@ CommonJS.SearchEngine = {
      * CommonJS.SearchEngine.searchDaum('나무위키');
      */
     searchDaum: function (searchKeyword) {
-        var _newForm = this.makeNewForm(searchKeyword);
-        _newForm.action = 'https://search.daum.net/search';
+        const newForm = this.makeNewForm(searchKeyword);
+        newForm.action = 'https://search.daum.net/search';
 
-        var _field = _newForm.querySelector('input[name="temp"]');
-        _field.setAttribute('name', 'q');
+        const field = newForm.querySelector('input[name="temp"]');
+        field.setAttribute('name', 'q');
 
-        document.body.appendChild(_newForm);
-        _newForm.submit();
-        document.body.removeChild(_newForm);
+        document.body.appendChild(newForm);
+        newForm.submit();
+        document.body.removeChild(newForm);
     }
 }
 
@@ -2776,14 +2762,14 @@ CommonJS.SnsShare = {
      * @link https://developers.kakao.com/docs/latest/ko/getting-started/sdk-js
      * @link https://developers.kakao.com/docs/latest/ko/message/js-link
      */
-     shareKakaoText: function (text, webUrl, mobileWebUrl) {
+    shareKakaoText: function (text, webUrl, mobileWebUrl) {
         Kakao.Link.sendDefault({
             objectType: 'text',
             text: text,
-		  	link: {
-		    	mobileWebUrl: mobileWebUrl,
-		    	webUrl: webUrl,
-		  	},
+            link: {
+                mobileWebUrl: mobileWebUrl,
+                webUrl: webUrl,
+            },
         });
     },
     /**
@@ -2807,10 +2793,10 @@ CommonJS.SnsShare = {
      * CommonJS.SnsShare.shareNaver(url, title);
      */
     shareNaver: function (url, title) {
-        var _url = encodeURI(encodeURIComponent(url));
-        var _title = encodeURI(title);
-        var _shareURL = "https://share.naver.com/web/shareView?url=" + _url + "&title=" + _title;
-        document.location = _shareURL;
+        const encodedUrl = encodeURI(url);
+        const encodedTitle = encodeURIComponent(title);
+        const shareURL = "https://share.naver.com/web/shareView?url=" + encodedUrl + "&title=" + encodedTitle;
+        document.location = shareURL;
     }
 }
 
@@ -2848,12 +2834,12 @@ CommonJS.Mobile = {
      */
     sendSMS: function (telNo, content) {
         if (CommonJS.BrowserInfo.isMobile()) {
-            if (CommonJS.FormatValid.isCellPhoneNumber(telNo)) {
-                var _mobileOs = CommonJS.BrowserInfo.isMobileOs().iOS ? 'ios' : 'android';
+            const mobileOs = CommonJS.BrowserInfo.isMobileOs().iOS ? 'ios' : 'android';
 
-                location.href = 'sms:' + telNo + (_mobileOs == 'ios' ? '&' : '?') + 'body=' + encodeURIComponent(content);
+            if (CommonJS.FormatValid.isCellPhoneNumber(telNo)) {
+                location.href = 'sms:' + telNo + (mobileOs == 'ios' ? '&' : '?') + 'body=' + encodeURIComponent(content);
             } else {
-                location.href = 'sms:' + (_mobileOs == 'ios' ? '&' : '?') + 'body=' + encodeURIComponent(content);
+                location.href = 'sms:' + (mobileOs == 'ios' ? '&' : '?') + 'body=' + encodeURIComponent(content);
             }
         } else {
             console.log('모바일 플랫폼에서만 사용 가능합니다.');
@@ -2896,9 +2882,9 @@ CommonJS.Mobile = {
 
         fileElement.addEventListener('change', function (e) {
             if (CommonJS.BrowserInfo.isMobile()) {
-                var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
+                const fileUrl = window.URL.createObjectURL(e.target.files[0]);
 
-                imgElement.setAttribute("src", _fileUrl);
+                imgElement.setAttribute("src", fileUrl);
                 this.removeAttribute('capture');
             } else {
                 // 카메라 실행이 목적이므로 실행 가능하더라도 실행 시키지 않음
@@ -2927,9 +2913,9 @@ CommonJS.Mobile = {
 
         fileElement.addEventListener('change', function (e) {
             if (CommonJS.BrowserInfo.isMobile()) {
-                var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
+                const fileUrl = window.URL.createObjectURL(e.target.files[0]);
 
-                imgElement.setAttribute("src", _fileUrl);
+                imgElement.setAttribute("src", fileUrl);
                 this.removeAttribute('camcorder');
             } else {
                 // 카메라 실행이 목적이므로 실행 가능하더라도 실행 시키지 않음
@@ -2958,9 +2944,9 @@ CommonJS.Mobile = {
 
         fileElement.addEventListener('change', function (e) {
             if (CommonJS.BrowserInfo.isMobile()) {
-                var _fileUrl = window.URL.createObjectURL(e.target.files[0]);
+                const fileUrl = window.URL.createObjectURL(e.target.files[0]);
 
-                audioElement.setAttribute("src", _fileUrl);
+                audioElement.setAttribute("src", fileUrl);
                 this.removeAttribute('capture');
 
             } else {
@@ -2973,7 +2959,7 @@ CommonJS.Mobile = {
      * 안드로이드 앱링크 or 딥링크 URL 생성
      * @param {string} host
      * @param {string} scheme
-     * @param {string} package
+     * @param {string} packageName
      * @param {undefined|screen} screen
      * @returns
      * @example
@@ -2989,11 +2975,11 @@ CommonJS.Mobile = {
      *      <data android:host="호스트" android:scheme="스키마" />
      *  </intent-filter>
      */
-    makeAndroidAppLinkUrl: function (host, scheme, package, screen) {
+    makeAndroidAppLinkUrl: function (host, scheme, packageName, screen) {
         if ( !screen ) {
-            return 'intent://' + host + '/#Intent;package=' + package + ';scheme=' + scheme + ';end';
+            return 'intent://' + host + '/#Intent;package=' + packageName + ';scheme=' + scheme + ';end';
         } else {
-            return 'intent://' + host + '/#Intent;package=' + package + ';scheme=' + scheme + ';S.screen=' + screen + ';end';
+            return 'intent://' + host + '/#Intent;package=' + packageName + ';scheme=' + scheme + ';S.screen=' + screen + ';end';
         }
     },
     /**
@@ -3068,26 +3054,26 @@ CommonJS.Map = {
      * @link https://apis.map.kakao.com/web/sample/addr2coord/
      */
     searchKakaoMap: function (mapElement, addr) {
-        var container = mapElement;
-        var options = {
+        const container = mapElement;
+        const options = {
             center: new kakao.maps.LatLng(33.450701, 126.570667),
             level: 3
         };
 
         // 지도를 생성합니다
-        var map = new kakao.maps.Map(container, options);
+        const map = new kakao.maps.Map(container, options);
 
         // 주소-좌표 변환 객체를 생성합니다
-        var geocoder = new kakao.maps.services.Geocoder();
+        const geocoder = new kakao.maps.services.Geocoder();
 
         // 주소로 좌표를 검색합니다
         geocoder.addressSearch(addr, function (result, status) {
             // 정상적으로 검색이 완료됐으면
             if (status === kakao.maps.services.Status.OK) {
-                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
                 // 결과값으로 받은 위치를 마커로 표시합니다
-                var marker = new kakao.maps.Marker({
+                new kakao.maps.Marker({
                     map: map,
                     position: coords
                 });
@@ -3110,12 +3096,12 @@ CommonJS.Map = {
      * @link https://navermaps.github.io/maps.js.ncp/docs/tutorial-2-Marker.html
      */
     searchNaverMap: function (mapElementId, addr) {
-        var mapOptions = {
+        const mapOptions = {
             center: new naver.maps.LatLng(37.3595704, 127.105399),
             zoom: 15
         };
 
-        var map = new naver.maps.Map(mapElementId, mapOptions);
+        const map = new naver.maps.Map(mapElementId, mapOptions);
 
         // Geocoder를 활용한 주소와 좌표 검색 API 호출하기
         naver.maps.Service.geocode({
@@ -3126,13 +3112,13 @@ CommonJS.Map = {
             }
 
             // 성공 시의 response 처리
-            var item = response.v2.addresses[0],
+            const item = response.v2.addresses[0],
                 point = new naver.maps.Point(item.x, item.y);
 
             map.setCenter(point);
 
             // 원하는 위치에 마커 올리기
-            var marker = new naver.maps.Marker({
+            new naver.maps.Marker({
                 position: new naver.maps.LatLng(item.y, item.x),
                 map: map
             });
@@ -3212,7 +3198,7 @@ CommonJS.Editor = {
                 cache: false,
                 traditional: true,
                 contentType: false,
-			    processData : false,
+                processData : false,
                 enctype: 'multipart/form-data',
                 type: 'post',
                 url: 'http://127.0.0.1:8080/summernote/img_upload',
@@ -3323,10 +3309,10 @@ CommonJS.Http = {
      *      IE 7 시절부터 XMLHttpRequest 사용했다는 것도 놀라울 일... Ajax 라는 걸 jQuery 에서 처음 알아서...
      */
     commonAjax: function (isAsync, method, url, header, param, callback) {
-        var _retData = {};
+        let retData = {};
 
-        var _contentType = "application/x-www-form-urlencoded; charset=utf-8";
-        var _params = (param == undefined) ? {} : param;
+        let contentType = "application/x-www-form-urlencoded; charset=utf-8";
+        let params = (param == undefined) ? {} : param;
 
         if (!CommonJS.Valid.isEmptyObject(param)) {
             if (method.toLowerCase() === 'get') {
@@ -3335,76 +3321,79 @@ CommonJS.Http = {
         }
 
         if (typeof param == 'object') {
-            var _classType = CommonJS.getClassType(param);
+            const classType = CommonJS.getClassType(param);
 
-            if (_classType === 'Object') {
+            if (classType === 'Object') {
                 // serialize() 는 jQuery 만 지원
-                _params = CommonJS.Object.makeFormBody(param);
+                params = CommonJS.Object.makeFormBody(param);
             }
 
-            if (_classType === 'Array') {
-                _contentType = "application/json; charset=utf-8";
-                _params = CommonJS.JSON.objectToJsonString(param);
+            if (classType === 'Array') {
+                contentType = "application/json; charset=utf-8";
+                params = CommonJS.JSON.objectToJsonString(param);
             }
         }
 
-        var _xmlHttp = new XMLHttpRequest();
-        _xmlHttp.open(method, url, isAsync);
+        const xmlHttp = new XMLHttpRequest();
+        xmlHttp.open(method, url, isAsync);
 
-        for (key in header) {
-            _xmlHttp.setRequestHeader(key, header[key]);
+        for (let key in header) {
+            xmlHttp.setRequestHeader(key, header[key]);
         }
 
         if ('FORM' === param.nodeName) {
-            var _formData = new FormData(param);
-            _xmlHttp.send(_formData);
+            const formData = new FormData(param);
+            xmlHttp.send(formData);
         } else {
-            _xmlHttp.setRequestHeader('Content-type', _contentType);
+            xmlHttp.setRequestHeader('Content-type', contentType);
 
-            if (!CommonJS.Valid.isEmptyObject(_params)) {
-                _xmlHttp.send(_params);
+            if (!CommonJS.Valid.isEmptyObject(params)) {
+                xmlHttp.send(params);
             } else {
-                _xmlHttp.send(null);
+                xmlHttp.send(null);
             }
         }
 
         if (isAsync) {
-            _xmlHttp.onreadystatechange = function () {
-                if (_xmlHttp.readyState === _xmlHttp.DONE) {
-                    if (_xmlHttp.status === 200 || _xmlHttp.status === 201) {
+            xmlHttp.onreadystatechange = function () {
+                if (xmlHttp.readyState === xmlHttp.DONE) {
+                    if (xmlHttp.status === 200 || xmlHttp.status === 201) {
                         try {
-                            callback(CommonJS.JSON.jsonToObject(_xmlHttp.response));
+                            callback(CommonJS.JSON.jsonToObject(xmlHttp.response));
                         } catch (error) {
-                            callback(_xmlHttp.response);
+                            console.error(error);
+                            callback(xmlHttp.response);
                         }
                     } else {
-                        alert(_xmlHttp.statusText);
+                        alert(xmlHttp.statusText);
                     }
                 }
             }
         } else {
-            if (_xmlHttp.status !== 200) {
-                alert(_xmlHttp.statusText);
+            if (xmlHttp.status !== 200) {
+                alert(xmlHttp.statusText);
                 return false;
             }
 
             if ((CommonJS.Valid.isUndefined(callback)) || (typeof callback != 'function')) {
                 try {
-                    _retData = CommonJS.JSON.jsonToObject(_xmlHttp.response);
+                    retData = CommonJS.JSON.jsonToObject(xmlHttp.response);
                 } catch (error) {
-                    _retData = _xmlHttp.response;
+                    console.error(error);
+                    retData = xmlHttp.response;
                 }
 
             } else {
                 try {
-                    callback(CommonJS.JSON.jsonToObject(_xmlHttp.response));
+                    callback(CommonJS.JSON.jsonToObject(xmlHttp.response));
                 } catch (error) {
-                    callback(_xmlHttp.response);
+                    console.error(error);
+                    callback(xmlHttp.response);
                 }
             }
         }
 
-        return _retData;
+        return retData;
     },
     /**
      * 공통 Fetch 처리
@@ -3424,8 +3413,6 @@ CommonJS.Http = {
      * CommonJS.Http.commonFetch(method, url, header, param, callback);
      *
      * @example
-     * 나름 신기술이라 var 대신 const, let 사용 / 화살표 함수 사용
-     *
      * [화살표 함수]
      * (response) =>
      *      console.log(response)
@@ -3435,8 +3422,8 @@ CommonJS.Http = {
      * }
      */
     commonFetch: function (method, url, header, param, callback) {
-        let _contentType = "application/x-www-form-urlencoded; charset=utf-8";
-        let _params;
+        let contentType = "application/x-www-form-urlencoded; charset=utf-8";
+        let params;
 
         if (!CommonJS.Valid.isEmptyObject(param)) {
             if (method.toLowerCase() === 'get') {
@@ -3445,55 +3432,55 @@ CommonJS.Http = {
         }
 
         if (method.toLowerCase() === 'get') {
-            _params = null;
+            params = null;
         }
 
         if (typeof param == 'object') {
             if (method.toLowerCase() === 'post') {
-                const _classType = CommonJS.getClassType(param);
+                const classType = CommonJS.getClassType(param);
 
-                if (_classType === 'Object') {
-                    _params = CommonJS.Object.makeFormBody(param);
+                if (classType === 'Object') {
+                    params = CommonJS.Object.makeFormBody(param);
                 }
 
-                if (_classType === 'Array') {
-                    _contentType = "application/json; charset=utf-8";
-                    _params = CommonJS.JSON.objectToJsonString(param);
+                if (classType === 'Array') {
+                    contentType = "application/json; charset=utf-8";
+                    params = CommonJS.JSON.objectToJsonString(param);
                 }
             }
         }
 
-        let _myHeaders = new Headers();
+        let myHeaders = new Headers();
         if (header == null) {
-            _myHeaders.append('Content-Type', _contentType);
+            myHeaders.append('Content-Type', contentType);
         } else {
-            _myHeaders = header;
+            myHeaders = header;
         }
 
-        if (_myHeaders.get('Content-Type') == null) {
-            _myHeaders.append('Content-Type', _contentType);
+        if (myHeaders.get('Content-Type') == null) {
+            myHeaders.append('Content-Type', contentType);
         }
 
         if ('FORM' === param.nodeName) {
-            _params = new FormData(param);
-            _myHeaders = new Headers();
+            params = new FormData(param);
+            myHeaders = new Headers();
         }
 
         fetch(url, {
-                method: method,
-                headers: _myHeaders,
-                body: _params
-            })
-            .then((response) =>
-                //console.log(response)
-                response.json()
-            )
-            .then((data) =>
-                callback(data)
-            )
-            .catch((error) =>
-                alert('Error: ' + error)
-            )
+            method: method,
+            headers: myHeaders,
+            body: params
+        })
+        .then((response) =>
+            //console.log(response)
+            response.json()
+        )
+        .then((data) =>
+            callback(data)
+        )
+        .catch((error) =>
+            alert('Error: ' + error)
+        )
     }
 }
 
@@ -3531,21 +3518,21 @@ CommonJS.Code = {
      * CommonJS.Code.makeQrCode($( ID or Class ), '대한민국', 128, 128);
      */
     makeQrCode: function (qrCodeDivElement, text, width, height) {
-        var _el = null;
+        let el = null;
 
         if (CommonJS.Valid.isUndefined(qrCodeDivElement.length)) {
-            _el = qrCodeDivElement;
+            el = qrCodeDivElement;
         } else {
             if (CommonJS.Valid.isUndefined(qrCodeDivElement.attr('id'))) {
-                _el = document.querySelector('.' + qrCodeDivElement.attr('class'));
+                el = document.querySelector('.' + qrCodeDivElement.attr('class'));
             }
 
             if (CommonJS.Valid.isUndefined(qrCodeDivElement.attr('class'))) {
-                _el = document.querySelector('#' + qrCodeDivElement.attr('id'));
+                el = document.querySelector('#' + qrCodeDivElement.attr('id'));
             }
         }
 
-        new QRCode(_el, {
+        new QRCode(el, {
             text: text,
             width: CommonJS.Valid.isUndefined(width) ? 128 : width,
             height: CommonJS.Valid.isUndefined(width) ? 128 : height
@@ -3641,10 +3628,10 @@ CommonJS.SocialLogin = {
             success: function (response) {
                 // console.log('login response : ', response);
 
-                const _accessToken = response.access_token;
+                const accessToken = response.access_token;
 
                 // 토큰 할당
-                Kakao.Auth.setAccessToken(_accessToken);
+                Kakao.Auth.setAccessToken(accessToken);
 
                 // 사용자 정보 가져오기
                 Kakao.API.request({
@@ -3978,26 +3965,26 @@ CommonJS.Addr = {
     daumPostcode: function(zipcodeEl, roadAddrEl, jibunAddrEl) {
         new daum.Postcode({
             oncomplete: function(data) {
-                var _zipcode = data.zonecode;
-                var _roadAddr = data.roadAddress;
-                var _jibunAddr = data.jibunAddress;
+                const zipcode = data.zonecode;
+                const roadAddr = data.roadAddress;
+                const jibunAddr = data.jibunAddress;
 
                 if ( CommonJS.Valid.isUndefined(zipcodeEl.length) ) {
-                    zipcodeEl.value = _zipcode;
+                    zipcodeEl.value = zipcode;
                 } else {
-                    zipcodeEl.val(_zipcode);
+                    zipcodeEl.val(zipcode);
                 }
 
                 if ( CommonJS.Valid.isUndefined(roadAddrEl.length) ) {
-                    roadAddrEl.value = _roadAddr;
+                    roadAddrEl.value = roadAddr;
                 } else {
-                    roadAddrEl.val(_roadAddr);
+                    roadAddrEl.val(roadAddr);
                 }
 
                 if ( CommonJS.Valid.isUndefined(jibunAddrEl.length) ) {
-                    jibunAddrEl.value = _jibunAddr;
+                    jibunAddrEl.value = jibunAddr;
                 } else {
-                    jibunAddrEl.val(_jibunAddr);
+                    jibunAddrEl.val(jibunAddr);
                 }
             }
         }).open();
@@ -4036,8 +4023,8 @@ CommonJS.Discount = {
      * @returns
      */
     clacSalePrice: function(originPrice, rate) {
-        var _savePrice = originPrice * (rate / 100);
-        return originPrice - _savePrice;
+        const savePrice = originPrice * (rate / 100);
+        return originPrice - savePrice;
     }
 }
 
@@ -4054,21 +4041,20 @@ CommonJS.Print = {
      * [jQuery]
      * CommonJS.Print.printTheArea( $(셀렉터) );
      */
-     printTheArea: function (Element) {
-        var _win = null;
-        _win = window.open();
+    printTheArea: function (Element) {
+        const win = window.open();
         self.focus();
-        _win.document.open();
+        win.document.open();
 
         if (Element.length === undefined) {
-            _win.document.write(Element.innerHTML);
+            win.document.write(Element.innerHTML);
         } else {
-            _win.document.write(Element.html());
+            win.document.write(Element.html());
         }
 
-        _win.document.close;
-        _win.print();
-        _win.close();
+        win.document.close;
+        win.print();
+        win.close();
     },
     /**
      * 해당 영역안의 내용만 프린트 출력 (주로 div, textarea)
@@ -4086,16 +4072,16 @@ CommonJS.Print = {
      * @link http://lemon421.cafe24.com/blog/textyle/23385
      */
     printAsItIs: function (Element) {
-        var _printBeforeBody;
+        let printBeforeBody;
 
         if (Element.length === undefined) {
-            _printBeforeBody = Element.innerHTML;
+            printBeforeBody = Element.innerHTML;
         } else {
-            _printBeforeBody = Element.html();
+            printBeforeBody = Element.html();
         }
 
         window.onbeforeprint = function () {
-            document.body.innerHTML = _printBeforeBody;
+            document.body.innerHTML = printBeforeBody;
         }
 
         window.print();
@@ -4122,10 +4108,10 @@ CommonJS.Scroll = {
      */
     scrollPagingDiv: function(divElement, pageNum, callback) {
         divElement.addEventListener('scroll', function() {
-            var _scroll = this.scrollTop + this.clientHeight;
-            var _height = this.scrollHeight;
+            const scroll = this.scrollTop + this.clientHeight;
+            const height = this.scrollHeight;
 
-            if ( _scroll >= _height ) {
+            if ( scroll >= height ) {
                 pageNum ++;
                 callback(pageNum);
             }
@@ -4291,6 +4277,7 @@ CommonJS.Masking = {
      * CommonJS.Masking.name(str);
      */
     name: function(str) {
+        const userName = str;
         let frsName = userName.substring(0, 1);
 
         let midName = userName.substring(1, userName.length -1);
