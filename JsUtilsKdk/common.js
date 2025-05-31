@@ -4324,31 +4324,35 @@ CommonJS.Masking = {
 
         // '-'가 없는 경우
         if ( originStr.toString().split('-').length != 3 ) {
-            phoneStr = originStr.length < 11 ? originStr.match(/\d{10}/) : originStr.match(/\d{11}/);
-            if ( CommonJS.Valid.isBlank(phoneStr) || CommonJS.Valid.isBlank(phoneStr[0]) ) {
+            const regex = originStr.length < 11 ? /\d{10}/ : /\d{11}/;
+            phoneMatchResult = regex.exec(originStr);
+
+            if ( CommonJS.Valid.isBlank(phoneMatchResult) || CommonJS.Valid.isBlank(phoneMatchResult[0]) ) {
                 return originStr;
             }
 
             if ( originStr.length < 11 ) {
                 // 1.1) 0110000000
-                maskingStr = originStr.toString().replace(phoneStr[0], phoneStr[0].toString().replace(/(\d{3})(\d{3})(\d{4})/,'$1***$3'));
+                maskingStr = originStr.toString().replace(phoneMatchResult[0], phoneMatchResult[0].toString().replace(/(\d{3})(\d{3})(\d{4})/,'$1***$3'));
             } else {
                 // 1.2) 01000000000
-                maskingStr = originStr.toString().replace(phoneStr[0], phoneStr[0].toString().replace(/(\d{3})(\d{4})(\d{4})/,'$1****$3'));
+                maskingStr = originStr.toString().replace(phoneMatchResult[0], phoneMatchResult[0].toString().replace(/(\d{3})(\d{4})(\d{4})/,'$1****$3'));
             }
         } else {
             // '-'가 있는 경우
-            phoneStr = originStr.match(/\d{2,3}-\d{3,4}-\d{4}/);
-            if ( CommonJS.Valid.isBlank(phoneStr) || CommonJS.Valid.isBlank(phoneStr[0]) ) {
+            const regex = /\d{2,3}-\d{3,4}-\d{4}/;
+            phoneMatchResult = regex.exec(originStr);
+
+            if ( CommonJS.Valid.isBlank(phoneMatchResult) || CommonJS.Valid.isBlank(phoneMatchResult[0]) ) {
                 return originStr;
             }
 
-            if ( /-\d{3}-/.test(phoneStr) ) {
+            if ( /-\d{3}-/.test(phoneMatchResult[0]) ) {
                 // 2.1) 00-000-0000
-                maskingStr = originStr.toString().replace(phoneStr[0], phoneStr[0].toString().replace(/-\d{3}-/g, "-***-"));
+                maskingStr = originStr.toString().replace(phoneMatchResult[0], phoneMatchResult[0].toString().replace(/-\d{3}-/g, "-***-"));
             } else {
                 // 2.2) 00-0000-0000
-                maskingStr = originStr.toString().replace(phoneStr[0], phoneStr[0].toString().replace(/-\d{4}-/g, "-****-"));
+                maskingStr = originStr.toString().replace(phoneMatchResult[0], phoneMatchResult[0].toString().replace(/-\d{4}-/g, "-****-"));
             }
         }
 
