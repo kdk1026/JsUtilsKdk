@@ -39,7 +39,7 @@
  * @property {object} CommonJS.Url - 2025.02.19 추가
  * @property {method} prototype
  */
-var CommonJS = {
+const CommonJS = {
     /**
      * 팝업창 띄우기
      * @param {string} url
@@ -402,13 +402,17 @@ CommonJS.Valid = {
      * CommonJS.Valid.isNumber(val);
      */
     isNumber: function (val) {
-        if ( !val ) {
-            console.error('val is not defined.');
-        } else if (typeof val !== 'number') {
-            console.error('val is not a number.');
+        if (val === null || typeof val === 'undefined') {
+            return false;
         }
-    
-        return /^[0-9]+$/.test(val);
+
+        if (typeof val === 'number') {
+            return !isNaN(val) && isFinite(val);
+        } else if (typeof val === 'string') {
+            return /^\d+$/.test(val);
+        } else {
+            return false;
+        }
     },
     /**
      * 영문 체크
@@ -418,7 +422,7 @@ CommonJS.Valid = {
      * CommonJS.Valid.isEnglish(val);
      */
     isEnglish: function (val) {
-        if ( !val || !val.trim() ) {
+        if ( !val?.trim() ) {
             console.error('val is empty or null.');
             return false;
         } else if (typeof val !== 'string') {
@@ -436,7 +440,7 @@ CommonJS.Valid = {
      * CommonJS.Valid.isEngBlank(val);
      */
     isEngBlank: function (val) {
-        if ( !val || !val.trim() ) {
+        if ( !val?.trim() ) {
             console.error('val is empty or null.');
             return false;
         } else if (typeof val !== 'string') {
@@ -454,7 +458,7 @@ CommonJS.Valid = {
      * CommonJS.Valid.isEngNum(val);
      */
     isEngNum: function (val) {
-        if ( !val || !val.trim() ) {
+        if ( !val?.trim() ) {
             console.error('val is empty or null.');
             return false;
         } else if (typeof val !== 'string') {
@@ -472,7 +476,7 @@ CommonJS.Valid = {
      * CommonJS.Valid.isHangul(val);
      */
     isHangul: function (val) {
-        if ( !val || !val.trim() ) {
+        if ( !val?.trim() ) {
             console.error('val is empty or null.');
             return false;
         } else if (typeof val !== 'string') {
@@ -490,7 +494,7 @@ CommonJS.Valid = {
      * CommonJS.Valid.isHanBlank(val);
      */
     isHanBlank: function (val) {
-        if ( !val || !val.trim() ) {
+        if ( !val?.trim() ) {
             console.error('val is empty or null.');
             return false;
         } else if (typeof val !== 'string') {
@@ -508,7 +512,7 @@ CommonJS.Valid = {
      * CommonJS.Valid.isHanEng(val);
      */
     isHanEng: function (val) {
-        if ( !val || !val.trim() ) {
+        if ( !val?.trim() ) {
             console.error('val is empty or null.');
             return false;
         } else if (typeof val !== 'string') {
@@ -526,7 +530,7 @@ CommonJS.Valid = {
      * CommonJS.Valid.isSpecial(val);
      */
     isSpecial: function (val) {
-        if ( !val || !val.trim() ) {
+        if ( !val?.trim() ) {
             console.error('val is empty or null.');
             return false;
         } else if (typeof val !== 'string') {
@@ -534,7 +538,7 @@ CommonJS.Valid = {
             return false;
         }
     
-        return /[\W]+$/.test(val);
+        return /\W+$/.test(val);
     },
     /**
      * 공백 체크
@@ -544,7 +548,7 @@ CommonJS.Valid = {
      * CommonJS.Valid.checkSpace(val);
      */
     checkSpace: function (val) {
-        if ( !val || !val.trim() ) {
+        if ( !val?.trim() ) {
             console.error('val is empty or null.');
             return false;
         } else if (typeof val !== 'string') {
@@ -562,7 +566,7 @@ CommonJS.Valid = {
      * CommonJS.Valid.isNotHangul(val);
      */
     isNotHangul: function (val) {
-        if ( !val || !val.trim() ) {
+        if ( !val?.trim() ) {
             console.error('val is empty or null.');
             return false;
         } else if (typeof val !== 'string') {
@@ -580,7 +584,7 @@ CommonJS.Valid = {
      * @returns 
      */
     isLengthOver: function (val, minLen, maxLen) {
-        if ( !val || !val.trim() ) {
+        if ( !val?.trim() ) {
             console.error('val is empty or null.');
             return false;
         } else if (typeof val !== 'string') {
@@ -615,8 +619,7 @@ CommonJS.Valid = {
      * CommonJS.Valid.isEmptyObject(val);
      */
     isEmptyObject: function (param) {
-        //return Object.keys(param).length === 0 && param.constructor === Object;
-        return Object.keys(param).length === 0;
+        return Object.keys(param).length === 0 && param.constructor === Object;
     },
     /**
      * Array가 비어있는지 체크
@@ -626,8 +629,7 @@ CommonJS.Valid = {
      * CommonJS.Valid.isEmptyArray(val);
      */
     isEmptyArray: function (param) {
-        //return Object.keys(param).length === 0 && param.constructor === Array;
-        return Array.isArray(param) && param.length === 0;
+        return Object.keys(param).length === 0 && param.constructor === Array;
     }
 }
 
@@ -686,7 +688,7 @@ CommonJS.DateTime = {
         const date = new Date();
         val = val.replace(/-|\s|:/gi, '');
 
-        if (!/^[\d]+$/.test(val)) {
+        if (!/^\d+$/.test(val)) {
             return false;
         }
 
@@ -839,7 +841,22 @@ CommonJS.Format = {
      * CommonJS.Format.addHyphenPhoneNumber(num);
      */
     addHyphenPhoneNumber: function (num) {
-        return (num + '').replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/, '$1-$2-$3');
+        const cleanNum = String(num).replace(/-/g, '');
+
+        const phoneRegex = /^(?:(02)|(01\d)|(\d{3}))(\d+)(\d{4})$/;
+
+        return cleanNum.replace(phoneRegex, (match, p1, p2, p3, p4, p5) => {
+            let areaCode = '';
+            if (p1) { // 02
+                areaCode = p1;
+            } else if (p2) { // 01x
+                areaCode = p2;
+            } else { // 3자리 지역번호 또는 휴대폰 앞 3자리
+                areaCode = p3;
+            }
+    
+            return `${areaCode}-${p4}-${p5}`;
+        });
     },
     /**
      * 날짜 형식 변환
@@ -849,7 +866,7 @@ CommonJS.Format = {
      * CommonJS.Format.addHyphenDate(num);
      */
     addHyphenDate: function (num) {
-        return (num + '').replace(/([0-9]{4})(0[1-9]|1[012])(0[1-9]|1[0-9]|2[0-9]|3[01])/, '$1-$2-$3');
+        return (num + '').replace(/(\d{4})(0[1-9]|1[012])(0[1-9]|1\d|2\d|3[01])/, '$1-$2-$3');
     },
     /**
      * 특수 문자 제거
@@ -978,7 +995,7 @@ CommonJS.FormatValid = {
             val = val1 + '-' + val2 + '-' + val3;
         }
     
-        const regExp = /^[(\d{3})-?(\d{2})-?(\d{5})+$]/;
+        const regExp = /^\d{3}-?\d{2}-?\d{5}$/;
         return regExp.test(val);
     },
     /**
@@ -1051,7 +1068,7 @@ CommonJS.FormatValid = {
      * CommonJS.FormatValid.isSafeUrl(val);
      */
     isSafeUrl: function (val) {
-        const regExp = /^(\/[\w-]+(\/[\w-]*)*|https?:\/\/[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?)$/;
+        const regExp = /^(?:\/|https?:\/\/(?:[\w-]+\.)+[\w-]+(?::\d+)?)\S*$/;
         return regExp.test(val);
     }
 }
@@ -1261,108 +1278,101 @@ CommonJS.File = {
      * CommonJS.File.downloadFile( $(셀렉터) );
      * CommonJS.File.downloadFile( $(셀렉터), 파일명 );
      */
-    downloadFile: function (Element, fileName) {
+    downloadFile: function (element, fileName) {
         const a = document.createElement("a");
-        let downFileNm;
-        let tagNmae = Element.nodeName;
-
-        if (Element.nodeName === undefined) {
-            tagNmae = Element.prop('tagName');
-        }
-
-        const srcArr = ['VIDEO', 'AUDIO', 'IMG'];
-        if (srcArr.includes(tagNmae)) {
-            let src;
-            if (Element.length === undefined) {
-                src = Element.getAttribute('src');
-            } else {
-                src = Element.attr('src');
-            }
-
-            downFileNm = fileName;
-            if (fileName == undefined) {
-                const fileExt = src.substring(src.lastIndexOf(".") + 1);
-                const temp = src.substring(0, src.lastIndexOf("."));
-                const fileName = temp.substring(src.lastIndexOf("/") + 1);
-                downFileNm = fileName + '.' + fileExt;
-            }
-
-            a.href = src;
-        } else {
-            let alertMsg = '';
-            alertMsg += '파일 다운로드는\n(' + 'video, audio, img, textarea, input[type="text"]' + ')';
-            alertMsg += '\n만 가능합니다.';
-
-            const srcArr = ['TEXTAREA', 'INPUT', 'DIV'];
-            if (!srcArr.includes(tagNmae)) {
-                alert(alertMsg);
+        let downFileNm = fileName;
+    
+        // 헬퍼 함수: 요소의 태그 이름을 가져옵니다.
+        const getTagName = (el) => {
+            return el.prop ? el.prop('tagName') : el.nodeName;
+        };
+    
+        // 헬퍼 함수: 속성 값을 가져옵니다. (jQuery 또는 바닐라 JS)
+        const getAttr = (el, attrName) => {
+            return el.attr ? el.attr(attrName) : el.getAttribute(attrName);
+        };
+    
+        // 헬퍼 함수: 요소의 값을 가져옵니다. (jQuery 또는 바닐라 JS)
+        const getValue = (el) => {
+            return el.val ? el.val() : el.value;
+        };
+    
+        // 헬퍼 함수: 요소의 HTML을 가져옵니다. (jQuery 또는 바닐라 JS)
+        const getHtml = (el) => {
+            return el.html ? el.html() : el.innerHTML;
+        };
+    
+        // 헬퍼 함수: 파일 다운로드를 실행합니다.
+        const executeDownload = (url, downloadName) => {
+            a.href = url;
+            a.download = downloadName;
+            a.target = '_blank'; // 새 탭에서 다운로드
+            a.click();
+            a.remove();
+        };
+    
+        const tagName = getTagName(element);
+    
+        const mediaTags = ['VIDEO', 'AUDIO', 'IMG'];
+        const textBasedTags = ['TEXTAREA', 'INPUT', 'DIV'];
+    
+        if (mediaTags.includes(tagName)) {
+            const src = getAttr(element, 'src');
+    
+            if (!src) {
+                console.error('Download error: Media element has no src attribute.');
                 return false;
-            } else {
-                if ('INPUT' === tagNmae) {
-                    let type;
-                    if (Element.length === undefined) {
-                        type = Element.getAttribute('type');
-                    } else {
-                        type = Element.attr('type');
-                    }
-
-                    if ('text' !== type) {
-                        alert(alertMsg);
-                        return false;
-                    }
-                }
             }
-
-            downFileNm = fileName;
-            if (fileName == undefined) {
-                downFileNm = 'output.html';
-
-                if ('INPUT' === tagNmae) {
-                    downFileNm = 'output.text';
-                }
-            }
-
-            if ('DIV' !== tagNmae) {
-                let mimeType = 'text/html';
-                if ('INPUT' === tagNmae) {
-                    mimeType = 'text/plain';
-                }
-
-                let blob;
-                if (Element.length === undefined) {
-                    blob = new Blob([Element.value], {
-                        type: mimeType
-                    });
+    
+            if (downFileNm === undefined) {
+                const lastDotIndex = src.lastIndexOf(".");
+                const lastSlashIndex = src.lastIndexOf("/");
+    
+                if (lastDotIndex > -1 && lastSlashIndex > -1 && lastDotIndex > lastSlashIndex) {
+                    const fileExt = src.substring(lastDotIndex + 1);
+                    const tempFileName = src.substring(lastSlashIndex + 1, lastDotIndex);
+                    downFileNm = `${tempFileName}.${fileExt}`;
                 } else {
-                    blob = new Blob([Element.val()], {
-                        type: mimeType
-                    });
+                    downFileNm = 'download'; // 확장자나 파일 이름 유추가 어려운 경우 기본값
                 }
-
-                const url = window.URL.createObjectURL(blob);
-                a.href = url;
-            } else {
-                let blob;
-                if (Element.length === undefined) {
-                    blob = new Blob([Element.innerHTML], {
-                        type: 'text/html'
-                    });
-                } else {
-                    blob = new Blob([Element.html()], {
-                        type: 'text/html'
-                    });
-                }
-
-                const url = window.URL.createObjectURL(blob);
-                a.href = url;
             }
+            executeDownload(src, downFileNm);
+        } else if (textBasedTags.includes(tagName)) {
+            let content = '';
+            let mimeType = '';
+    
+            if (tagName === 'INPUT') {
+                const inputType = getAttr(element, 'type');
+                if (inputType !== 'text') {
+                    alert('파일 다운로드는\n(video, audio, img, textarea, input[type="text"], div)\n만 가능합니다.');
+                    return false;
+                }
+                content = getValue(element);
+                mimeType = 'text/plain';
+                downFileNm = downFileNm === undefined ? 'output.txt' : downFileNm;
+            } else if (tagName === 'TEXTAREA') {
+                content = getValue(element);
+                mimeType = 'text/plain';
+                downFileNm = downFileNm === undefined ? 'output.txt' : downFileNm;
+            } else if (tagName === 'DIV') {
+                content = getHtml(element);
+                mimeType = 'text/html';
+                downFileNm = downFileNm === undefined ? 'output.html' : downFileNm;
+            }
+    
+            if (content) {
+                const blob = new Blob([content], { type: mimeType });
+                const url = window.URL.createObjectURL(blob);
+                executeDownload(url, downFileNm);
+                window.URL.revokeObjectURL(url); // 메모리 해제
+            } else {
+                console.warn('Download error: No content to download from the element.');
+            }
+    
+        } else {
+            alert('파일 다운로드는\n(video, audio, img, textarea, input[type="text"], div)\n만 가능합니다.');
+            return false;
         }
-
-        a.download = downFileNm;
-        a.target = '_blank';
-
-        a.click();
-        a.remove();
     },
     /**
      * 엑셀 파일 다운로드
@@ -1460,10 +1470,6 @@ CommonJS.File = {
             alert('xls, xlsx, ods 만 가능합니다.');
             return false;
         }
-
-        // let type = 'xlsx';
-        // if ('ods' === fileExt) type = 'ods';
-        // if ('xls' === fileExt) type = 'biff8';
 
         const wb = XLSX.utils.table_to_book(sheetElement, {
             sheet: sheetName
@@ -1576,9 +1582,14 @@ CommonJS.FileValid = {
      * CommonJS.FileValid.ifRunableFile(fileObj);
      */
     ifRunableFile: function (fileObj) {
-        const ext = CommonJS.File.getFileExt(fileObj);
-        const extReg = /(bat|bin|cmd|com|cpl|dll|exe|gadget|inf1|ins|isu|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|scr|sct|sh|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf|wsh)$/i;
-        return extReg.test(ext);
+        const ext = CommonJS.File.getFileExt(fileObj).toLowerCase();
+        const runnableExtensions = [
+            "bat", "bin", "cmd", "com", "cpl", "dll", "exe", "gadget", "inf1",
+            "ins", "isu", "jse", "lnk", "msc", "msi", "msp", "mst", "paf",
+            "pif", "ps1", "reg", "rgs", "scr", "sct", "sh", "shb", "shs",
+            "u3p", "vb", "vbe", "vbs", "vbscript", "ws", "wsf", "wsh"
+        ];
+        return runnableExtensions.includes(ext);
     },
     /**
      * 지원 파일 체크 (커스텀)
@@ -1671,8 +1682,10 @@ CommonJS.Cookie = {
      * CommonJS.Cookie.getCookie(name);
      */
     getCookie: function (name) {
-        const value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-        return value ? decodeURIComponent(value[2]) : null;
+        const regex = new RegExp('(^|;)\\s*' + name + '=([^;]*)');
+        const match = regex.exec(document.cookie);
+
+        return match ? decodeURIComponent(match[2]) : null;
     },
     /**
      * 쿠키 삭제
@@ -1897,23 +1910,29 @@ CommonJS.Byte = {
         }
 
         if ( totalByte > maxByte ) {
+            // obj의 값을 rleng 길이만큼 잘라서 업데이트
             if ( obj.length === undefined ) {
                 obj.value = textVal.substr(0, rleng);
             } else {
                 obj.val( textVal.substr(0, rleng) );
             }
 
-            if ( nowByteEle.length === undefined ) {
-                nowByteEle.innerText = totalByte;
-            } else {
-                nowByteEle.text( totalByte );
+            const updatedTextVal = (obj.length === undefined) ? obj.value : obj.val();
+            totalByte = 0;
+            for (let i = 0; i < updatedTextVal.length; i++) {
+                const eachChar = updatedTextVal.charCodeAt(i);
+                if (eachChar > 127) {
+                    totalByte += isEucKr ? 2 : 3;
+                } else {
+                    totalByte += 1;
+                }
             }
+        }
+        
+        if ( nowByteEle.length === undefined ) {
+            nowByteEle.innerText = totalByte;
         } else {
-            if ( nowByteEle.length === undefined ) {
-                nowByteEle.innerText = totalByte;
-            } else {
-                nowByteEle.text( totalByte );
-            }
+            nowByteEle.text( totalByte );
         }
     }
 }
@@ -1977,60 +1996,51 @@ CommonJS.BrowserInfo = {
      */
     checkTypeVersion: function () {
         const agent = navigator.userAgent.toLowerCase();
-        let re = '';
 
         let browser = {
             name: null,
             version: null
         };
 
-        // IE 체크
-        // - IE 12에 해당하는 초장기 Edge 체크 의미 없어져서 제외시킴
-        if (agent.match(/msie/) || agent.match(/trident/)) {
-            browser.name = "IE";
-
-            if (agent.match(/msie/)) {
-                // IE 10 이하
-                re = /msie (\S+)/;
-                browser.version = re.exec(agent)[1];
-                browser.version = browser.version.replace(";", "");
-            } else {
-                // IE 11
-                if (agent.match(/trident/)) {
-                    re = /rv:(\S+)/;
-                    browser.version = re.exec(agent)[1];
-                }
+        // 브라우저 감지 및 버전 추출을 위한 헬퍼 함수
+        const getBrowserInfo = (regex, name) => {
+            const match = regex.exec(agent);
+            if (match?.[1]) {   // match가 null이 아니고, match[1]이 존재하면
+                browser.name = name;
+                browser.version = match[1].replace(';', ''); // 버전 문자열에서 ';' 제거
+                return true; // 매치 성공 시 true 반환
             }
+            return false; // 매치 실패 시 false 반환
+        };
+
+        // 1. IE 체크 (MSIE 또는 Trident)
+        // IE 10 이하 (msie), IE 11 (rv:xxx), Edge Legacy (edge)
+        if (getBrowserInfo(/msie (\S+)/, "IE") || getBrowserInfo(/rv:(\S+).*trident/, "IE")) {
+            // IE11의 경우 rv: 뒤에 버전이 오고 trident가 함께 나타납니다.
+            // IE10 이하의 경우 msie 뒤에 버전이 옵니다.
+            // 이미 getBrowserInfo에서 version을 설정했으므로 추가 작업 불필요.
+        }
+        // 2. Chromium 기반 브라우저 및 기타 브라우저 체크
+        // 순서 중요: 좁은 범위부터 넓은 범위로 체크해야 정확합니다.
+        // (예: Whale, Edge, Opera는 Chrome 기반이므로 먼저 체크)
+        else if (getBrowserInfo(/whale\/(\S+)/, 'Whale')) {
+            // 네이버 웨일 브라우저
+        } else if (getBrowserInfo(/edg\/(\S+)/, 'Edge')) {
+            // Chromium 기반 마이크로소프트 엣지
+        } else if (getBrowserInfo(/opr\/(\S+)/, 'Opera')) {
+            // Opera (Chromium 기반)
+        } else if (getBrowserInfo(/chrome\/(\S+)/, 'Chrome')) {
+            // 구글 크롬 (가장 마지막에 체크)
+        } else if (getBrowserInfo(/firefox\/(\S+)/, 'Firefox')) {
+            // 모질라 파이어폭스
+        } else if (getBrowserInfo(/safari\/(\S+)/, 'Safari')) {
+            // 사파리
+            // Safari는 Chrome UA에 포함될 수 있으므로, Chrome 뒤에 위치
+            // Safari 버전을 정확히 파악하려면 추가 로직 필요 (예: 'Version/X.Y Safari/Z')
+            // 여기서는 간단히 safari/(\S+) 패턴만 사용합니다.
         } else {
-            // Chromium 기반이면 Chrome 체크 위에 선언, 아래에 있으면 Chrome 으로 체크됨
-
-            if (agent.match(/whale/)) {
-                re = /whale\/(\S+)/;
-                browser.name = 'Whale'; // Chromium 기반
-            } else if (agent.match(/edg/)) {
-                // edge 에서 edg 로 변경됨....
-                re = /edg\/(\S+)/;
-                browser.name = 'Edge'; // Chromium 기반
-            } else if (agent.match(/opr/)) {
-                // opera 에서 opr 로 변경됨....
-                re = /opr\/(\S+)/;
-                browser.name = 'Opera'; // Chromium 기반
-            } else if (agent.match(/chrome/)) {
-                re = /chrome\/(\S+)/;
-                browser.name = 'Chrome'; // Chromium 기반
-            } else if (agent.match(/firefox/)) {
-                re = /firefox\/(\S+)/;
-                browser.name = 'Firefox';
-            } else if (agent.match(/safari/)) {
-                re = /safari\/(\S+)/;
-                browser.name = 'Safari';
-            } else {
-                console.log(agent);
-            }
-
-            if (browser.name != null) {
-                browser.version = re.exec(agent)[1];
-            }
+            // 알려지지 않은 브라우저
+            console.log("Unknown browser user agent:", agent);
         }
 
         return browser;
@@ -2042,15 +2052,15 @@ CommonJS.BrowserInfo = {
      * CommonJS.BrowserInfo.isMobile();
      */
     isMobile: function () {
-        const filter = 'windows|macos|win16|win32|win64|macintel';
-        // XXX navigator?.platform
-        const platform = navigator.userAgentData?.platform || navigator?.platform;
-
-        if( filter.indexOf(platform.toLowerCase()) < 0 ) {
-            return true;
-        } else {
-            return false;
+        if (navigator.userAgentData) {
+            return navigator.userAgentData.mobile;
         }
+
+        // userAgentData를 사용할 수 없는 경우 user agent 문자열을 분석합니다.
+        const userAgent = navigator.userAgent;
+
+        // 복잡도를 줄인 정규식 (정확도 저하 가능성 있음)
+        return /(mobile|android|iphone|ipod|ipad|windows phone)/i.test(userAgent);
     },
     /**
      * 모바일 브라우저 여부 체크 (브라우저 모바일 모드도 모바일로 인식)
@@ -2061,27 +2071,13 @@ CommonJS.BrowserInfo = {
     isUserAgentMobile: function () {
         const userAgent = navigator.userAgent || window.opera;
     
-        if (/android/i.test(userAgent)) {
-            return true;
-        }
-    
-        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-            return true;
-        }
-    
-        if (/blackberry|bb10|playbook/i.test(userAgent)) {
-            return true;
-        }
-    
-        if (/windows phone/i.test(userAgent)) {
-            return true;
-        }
-    
-        if (/webos|touchpad|hpwos/i.test(userAgent)) {
-            return true;
-        }
-    
-        return false;
+        return (
+            /android/i.test(userAgent) ||
+            (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) ||
+            /blackberry|bb10|playbook/i.test(userAgent) ||
+            /windows phone/i.test(userAgent) ||
+            /webos|touchpad|hpwos/i.test(userAgent)
+        );
     },
     /**
      * Android, iOS 여부 체크
@@ -2090,11 +2086,18 @@ CommonJS.BrowserInfo = {
      * CommonJS.BrowserInfo.isMobileOs();
      */
     isMobileOs: function () {
-        const ret = {
-            Android: navigator.userAgent.match(/Android/i) == null ? false : true,
-            iOS: navigator.userAgent.match(/iPhone|iPad|iPod/i) == null ? false : true
+        const userAgent = navigator.userAgent;
+
+        const androidRegex = /Android/i;
+        const androidMatch = androidRegex.exec(userAgent);
+
+        const iOSRegex = /iPhone|iPad|iPod/i;
+        const iOSMatch = iOSRegex.exec(userAgent);
+
+        return {
+            Android: !!androidMatch,
+            iOS: !!iOSMatch
         };
-        return ret;
     },
     /**
      * UserAgent 에서 특정 문자열 유무 체크
@@ -2174,11 +2177,11 @@ CommonJS.Input = {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
-                    this.value = e.target.value.replace(/[^0-9]/gi, '');
+                    this.value = e.target.value.replace(/[^\d]/gi, '');
                 });
             } else {
                 inputElement.keyup(function(e) {
-                    $(this).val(e.target.value.replace(/[^0-9]/gi, ''));
+                    $(this).val(e.target.value.replace(/[^\d]/gi, ''));
                 });
             }
         }
@@ -2207,7 +2210,7 @@ CommonJS.Input = {
         }
 
         function fnTemp(e) {
-            let val = e.target.value.replace(/,/g, '').replace(/[^0-9]/gi, '');
+            let val = e.target.value.replace(/,/g, '').replace(/[^\d]/gi, '');
             const regExp = /(^[+-]?\d+)(\d{3})/;
 
             while (regExp.test(val)) {
@@ -2231,11 +2234,11 @@ CommonJS.Input = {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
-                    this.value = e.target.value.replace(/[^a-zA-Z]/gi, '');
+                    this.value = e.target.value.replace(/[^a-zA-Z]/g, '');
                 });
             } else {
                 inputElement.keyup(function(e) {
-                    $(this).val(e.target.value.replace(/[^a-zA-Z]/gi, ''));
+                    $(this).val(e.target.value.replace(/[^a-zA-Z]/g, ''));
                 });
             }
         }
@@ -2254,11 +2257,11 @@ CommonJS.Input = {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
-                    this.value = e.target.value.replace(/[^a-zA-Z_]/gi, '');
+                    this.value = e.target.value.replace(/[^a-zA-Z_]/g, '');
                 });
             } else {
                 inputElement.keyup(function(e) {
-                    $(this).val(e.target.value.replace(/[^a-zA-Z_]/gi, ''));
+                    $(this).val(e.target.value.replace(/[^a-zA-Z_]/g, ''));
                 });
             }
         }
@@ -2277,11 +2280,11 @@ CommonJS.Input = {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
-                    this.value = e.target.value.replace(/[^a-zA-Z0-9]/gi, '');
+                    this.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
                 });
             } else {
                 inputElement.keyup(function(e) {
-                    $(this).val(e.target.value.replace(/[^a-zA-Z0-9]/gi, ''));
+                    $(this).val(e.target.value.replace(/[^a-zA-Z0-9]/g, ''));
                 });
             }
         }
@@ -2300,11 +2303,11 @@ CommonJS.Input = {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
-                    this.value = e.target.value.replace(/[^a-zA-Z\s]/gi, '');
+                    this.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
                 });
             } else {
                 inputElement.keyup(function(e) {
-                    $(this).val(e.target.value.replace(/[^a-zA-Z\s]/gi, ''));
+                    $(this).val(e.target.value.replace(/[^a-zA-Z\s]/g, ''));
                 });
             }
         }
@@ -2323,11 +2326,11 @@ CommonJS.Input = {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
-                    this.value = e.target.value.replace(/[^a-zA-Z0-9\s]/gi, '');
+                    this.value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
                 });
             } else {
                 inputElement.keyup(function(e) {
-                    $(this).val(e.target.value.replace(/[^a-zA-Z0-9\s]/gi, ''));
+                    $(this).val(e.target.value.replace(/[^a-zA-Z0-9\s]/g, ''));
                 });
             }
         }
@@ -2392,11 +2395,11 @@ CommonJS.Input = {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
-                    this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/gi, '');
+                    this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/g, '');
                 });
             } else {
                 inputElement.keyup(function(e) {
-                    $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/gi, ''));
+                    $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/g, ''));
                 });
             }
         }
@@ -2415,11 +2418,11 @@ CommonJS.Input = {
         if (inputElement !== null) {
             if (inputElement.length === undefined) {
                 inputElement.addEventListener('keyup', function (e) {
-                    this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/gi, '');
+                    this.value = e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/g, '');
                 });
             } else {
                 inputElement.keyup(function(e) {
-                    $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/gi, ''));
+                    $(this).val(e.target.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\s]/g, ''));
                 });
             }
         }
@@ -2602,41 +2605,70 @@ CommonJS.FormatValue = {
      * });
      */
     formatPhoneNumber: function (value) {
-        if (!value) return value;
-        const phoneNumber = value.replace(/[^\d]/g, '');
-        const phoneNumberLength = phoneNumber.length;
+        if (!value) {
+            return value;
+        }
 
-        if (phoneNumber.startsWith('02')) {
-            if (phoneNumberLength > 2 && phoneNumberLength <= 6) {
-                return `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2)}`;
-            } else if (phoneNumberLength > 6 && phoneNumberLength <= 9) {
-                return `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 5)}-${phoneNumber.slice(5, 9)}`;
-            } else if (phoneNumberLength > 9) {
-                return `${phoneNumber.slice(0, 2)}-${phoneNumber.slice(2, 6)}-${phoneNumber.slice(6, 10)}`;
+        const patterns = [
+            {
+                regex: /^(\d{2})(\d{3,4})(\d{4})$/,
+                replacer: (match, p1, p2, p3) => `${p1}-${p2}-${p3}`,
+                minLen: 9,
+                maxLen: 10
+            },
+            {
+                regex: /^(\d{2})(\d{3,6})$/,
+                replacer: (match, p1, p2) => `${p1}-${p2}`,
+                minLen: 3,
+                maxLen: 8
+            },
+            {
+                regex: /^(050[2-7])(\d{3,4})(\d{4})$/,
+                replacer: (match, p1, p2, p3) => `${p1}-${p2}-${p3}`,
+                minLen: 11,
+                maxLen: 11
+            },
+            {
+                regex: /^(050[2-7])(\d{3,7})$/,
+                replacer: (match, p1, p2) => `${p1}-${p2}`,
+                minLen: 5,
+                maxLen: 11
+            },
+            {
+                regex: /^(070)(\d{3,4})(\d{4})$/,
+                replacer: (match, p1, p2, p3) => `${p1}-${p2}-${p3}`,
+                minLen: 10,
+                maxLen: 11
+            },
+            {
+                regex: /^(070)(\d{3,7})$/,
+                replacer: (match, p1, p2) => `${p1}-${p2}`,
+                minLen: 4,
+                maxLen: 10
+            },
+            {
+                regex: /^(\d{3})(\d{3,4})(\d{4})$/,
+                replacer: (match, p1, p2, p3) => `${p1}-${p2}-${p3}`,
+                minLen: 10,
+                maxLen: 11
+            },
+            {
+                regex: /^(\d{3})(\d{3,7})$/,
+                replacer: (match, p1, p2) => `${p1}-${p2}`,
+                minLen: 4,
+                maxLen: 9
             }
-        } else if (phoneNumber.startsWith('050') && phoneNumber.charAt(3) >= '2' && phoneNumber.charAt(3) <= '7') {
-            if (phoneNumberLength > 4 && phoneNumberLength <= 7) {
-                return `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4)}`;
-            } else {
-                return `${phoneNumber.slice(0, 4)}-${phoneNumber.slice(4, 7)}-${phoneNumber.slice(7, 11)}`;
-            }
-        }  else if (phoneNumber.startsWith('070')) {
-            if (phoneNumberLength > 3 && phoneNumberLength <= 7) {
-                return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
-            } else {
-                return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`;
-            }
-        } else {
-            if (phoneNumberLength > 3 && phoneNumberLength <= 7) {
-                return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
-            } else if (phoneNumberLength > 7 && phoneNumberLength <= 11) {
-                if (phoneNumberLength === 10) {
-                    return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
-                } else {
-                    return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`;
+        ];
+
+        for (const pattern of patterns) {
+            if (phoneNumberLength >= pattern.minLen && phoneNumberLength <= pattern.maxLen) {
+                const match = phoneNumber.match(pattern.regex);
+                if (match) {
+                    return pattern.replacer(...match);
                 }
             }
         }
+
         return phoneNumber;
     }
 }
@@ -2960,7 +2992,7 @@ CommonJS.Mobile = {
      * @param {string} host
      * @param {string} scheme
      * @param {string} packageName
-     * @param {undefined|screen} screen
+     * @param {undefined|string} screen
      * @returns
      * @example
      * CommonJS.Mobile.makeAndroidAppLinkUrl('instagram.com', 'https', 'com.instagram.android');
@@ -2989,7 +3021,7 @@ CommonJS.Mobile = {
      *      2. Identifier와 URL Schemes에 적절한 값을 입력
      * @param {string} host 
      * @param {string} scheme 
-     * @param {undefined|screen} screen
+     * @param {undefined|string} screen
      * @returns
      * @example
      * CommonJS.Mobile.makeURLSchemeIOSAppLinkUrl('instagram.com', 'https');
@@ -3073,10 +3105,11 @@ CommonJS.Map = {
                 const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
                 // 결과값으로 받은 위치를 마커로 표시합니다
-                new kakao.maps.Marker({
+                const marker = new kakao.maps.Marker({
                     map: map,
                     position: coords
                 });
+                marker.setMap(map);
 
                 // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
                 map.setCenter(coords);
@@ -3118,7 +3151,8 @@ CommonJS.Map = {
             map.setCenter(point);
 
             // 원하는 위치에 마커 올리기
-            new naver.maps.Marker({
+            // eslint-disable-next-line
+            const marker = new naver.maps.Marker({
                 position: new naver.maps.LatLng(item.y, item.x),
                 map: map
             });
@@ -3240,8 +3274,6 @@ CommonJS.Editor = {
      * [이미지 업로드 Backend 처리]
      * https://github.com/kdk1026/EditUpload/blob/main/src/main/java/kr/co/test/controller/EditorUploadController.java
      *
-     * @description
-     * jQuery 필수 아니라서 사용 안할려고 구글링 하면서 아주 발악을... fetch 아직은 너무도 어색한 그대...
      */
     toastEditor: function () {
         /*
@@ -3532,6 +3564,7 @@ CommonJS.Code = {
             }
         }
 
+        // eslint-disable-next-line
         new QRCode(el, {
             text: text,
             width: CommonJS.Valid.isUndefined(width) ? 128 : width,
@@ -3626,8 +3659,6 @@ CommonJS.SocialLogin = {
     loginWithKakao: function (userMeSucCallBack, userMeFailCallBak, loginFailCallBack) {
         Kakao.Auth.login({
             success: function (response) {
-                // console.log('login response : ', response);
-
                 const accessToken = response.access_token;
 
                 // 토큰 할당
@@ -3637,17 +3668,14 @@ CommonJS.SocialLogin = {
                 Kakao.API.request({
                     url: '/v2/user/me',
                     success: function (response) {
-                        // console.log('/v2/user/me : ', response);
                         userMeSucCallBack(response);
                     },
                     fail: function (error) {
-                        // console.log('/v2/user/me :', error);
                         userMeFailCallBak(error);
                     }
                 });
             },
             fail: function (error) {
-                // console.log('login fail : ', error);
                 loginFailCallBack(error);
             }
         });
@@ -3666,10 +3694,7 @@ CommonJS.SocialLogin = {
             return;
         }
 
-        // console.log('before logout : ', Kakao.Auth.getAccessToken());
-
         Kakao.Auth.logout(function() {
-            // console.log('after logout : ', Kakao.Auth.getAccessToken());
             logoutCallBack( Kakao.Auth.getAccessToken() );
         });
     },
@@ -4044,15 +4069,20 @@ CommonJS.Print = {
     printTheArea: function (Element) {
         const win = window.open();
         self.focus();
-        win.document.open();
+        
+        const printDoc = win.document;
+        printDoc.open();
 
+        let contentToPrint = '';
         if (Element.length === undefined) {
-            win.document.write(Element.innerHTML);
+            contentToPrint = Element.innerHTML;
         } else {
-            win.document.write(Element.html());
+            contentToPrint = Element.html();
         }
 
-        win.document.close;
+        printDoc.body.innerHTML = contentToPrint;
+
+        printDoc.close();
         win.print();
         win.close();
     },
@@ -4131,15 +4161,22 @@ CommonJS.Masking = {
      */
     email1: function(str) {
         let originStr = str;
-        let emailStr = originStr.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
-        let strLength;
 
-        if ( CommonJS.Valid.isBlank(originStr) || CommonJS.Valid.isBlank(emailStr[0]) ) {
+        const emailMatch = originStr.match(/^([a-z0-9._-]+)@([a-z0-9._-]+\.[a-z0-9._-]+)$/i);
+
+        if (!emailMatch || emailMatch.length < 3) {
             return originStr;
-        } else {
-            strLength = emailStr.toString().split('@')[0].length - 3;
-            return originStr.toString().replace(new RegExp('.(?=.{0,' + strLength + '}@)', 'g'), '*');
         }
+
+        const username = emailMatch[1];
+        const domain = emailMatch[2];
+
+        let maskedUsername = username;
+        if (username.length > 2) {
+            maskedUsername = username.substring(0, 2) + '*'.repeat(username.length - 2);
+        }
+
+        return `${maskedUsername}@${domain}`;
     },
     /**
      * 이메일 마스킹
@@ -4152,15 +4189,38 @@ CommonJS.Masking = {
      */
     email2: function(str) {
         let originStr = str;
-        let emailStr = originStr.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
-        let strLength;
 
-        if ( CommonJS.Valid.isBlank(originStr) || CommonJS.Valid.isBlank(emailStr[0]) ) {
+        const emailRegex = /^([a-z0-9._-]+)@([^.]+\..+)$/i;
+        const emailParts = emailRegex.exec(originStr);
+
+        if (!emailParts) {
             return originStr;
-        } else {
-            strLength = emailStr.toString().split('@')[0].length - 3;
-            return originStr.toString().replace(new RegExp('.(?=.{0,' + strLength + '}@)', 'g'), '*').replace(/.{6}$/, "******");
         }
+
+        const username = emailParts[1]; 
+        const domain = emailParts[2];
+
+        let maskedUsername = username;
+        if (username.length > 2) {
+            maskedUsername = username.substring(0, 2) + '*'.repeat(username.length - 2);
+        }
+
+        let maskedDomain = domain;
+        const lastDotIndex = domain.lastIndexOf('.');
+        if (lastDotIndex > -1) {
+            const domainName = domain.substring(0, lastDotIndex);
+            const tld = domain.substring(lastDotIndex);
+    
+            if (domainName.length > 3) {
+                maskedDomain = domainName.substring(0, 3) + '*'.repeat(domainName.length - 3) + tld;
+            } else {
+                maskedDomain = domainName + tld;
+            }
+        } else if (domain.length > 3) {
+            maskedDomain = domain.substring(0, 3) + '*'.repeat(domain.length - 3);
+        }
+    
+        return `${maskedUsername}@${maskedDomain}`;
     },
     /**
      * 이메일 마스킹
@@ -4173,16 +4233,22 @@ CommonJS.Masking = {
      */
     email3: function(str) {
         let originStr = str;
-        let emailStr = originStr.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
-        let strLength;
 
-        if ( CommonJS.Valid.isBlank(originStr) || CommonJS.Valid.isBlank(emailStr[0]) ) {
+        const emailMatch = originStr.match(/^([a-z0-9._-]+)@([a-z0-9._-]+\.[a-z0-9._-]+)$/i);
+
+        if (!emailMatch || emailMatch.length < 3) {
             return originStr;
-        } else {
-            strLength = emailStr.toString().split('@')[0].length - 5;
-            let emailPrefix = originStr.toString().replace(new RegExp('.(?=.{0,' + strLength + '}@)', 'g'), '*').split('@')[0];
-            return emailPrefix + '@' + '******';
         }
+
+        const username = emailMatch[1];
+
+        let maskedUsername = username;
+        if (username.length > 4) {
+            maskedUsername = username.substring(0, 4) + '*'.repeat(username.length - 4);
+        }
+
+        const maskedDomain = '******';
+        return `${maskedUsername}@${maskedDomain}`;
     },
     /**
      * 휴대폰 번호 마스킹
@@ -4224,12 +4290,12 @@ CommonJS.Masking = {
                 return originStr;
             }
 
-            if ( /-[0-9]{3}-/.test(phoneStr) ) {
+            if ( /-\d{3}-/.test(phoneStr) ) {
                 // 2.1) 00-000-0000
-                maskingStr = originStr.toString().replace(phoneStr, phoneStr.toString().replace(/-[0-9]{3}-/g, "-***-"));
+                maskingStr = originStr.toString().replace(phoneStr, phoneStr.toString().replace(/-\d{3}-/g, "-***-"));
             } else {
                 // 2.2) 00-0000-0000
-                maskingStr = originStr.toString().replace(phoneStr, phoneStr.toString().replace(/-[0-9]{4}-/g, "-****-"));
+                maskingStr = originStr.toString().replace(phoneStr, phoneStr.toString().replace(/-\d{4}-/g, "-****-"));
             }
         }
 
@@ -4245,27 +4311,24 @@ CommonJS.Masking = {
      */
     rrn: function(str) {
         let originStr = str;
-        let rrnStr;
-        let maskingStr;
 
         if ( CommonJS.Valid.isBlank(originStr) ) {
             return originStr;
         }
 
-        rrnStr = originStr.match(/(?:[0-9]{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[1,2][0-9]|3[0,1]))-[1-4]{1}[0-9]{6}\b/gi);
+        const rrnRegex = /^(\d{6})-?([1-4]\d{6})$/;
 
-        if ( !CommonJS.Valid.isNull(rrnStr) ) {
-            maskingStr = originStr.toString().replace(rrnStr,rrnStr.toString().replace(/(-?)([1-4]{1})([0-9]{6})\b/gi,"$1$2******"));
+        const match = rrnRegex.exec(originStr);
+        if (match) {
+            const frontPart = match[1];
+            const backPart = match[2];
+
+            const maskedBackPart = backPart.charAt(0) + '******'; // '1' + '******' = '1******'
+
+            return `${frontPart}${originStr.includes('-') ? '-' : ''}${maskedBackPart}`;
         } else {
-            rrnStr = originStr.match(/\d{13}/gi);
-            if ( !CommonJS.Valid.isBlank(rrnStr[0]) ) {
-                maskingStr = originStr.toString().replace(rrnStr,rrnStr.toString().replace(/([0-9]{6})$/gi,"******"));
-            } else {
-                return originStr;
-            }
+            return originStr;
         }
-
-        return maskingStr;
     },
     /**
      * 이름 마스킹
@@ -4277,21 +4340,23 @@ CommonJS.Masking = {
      * CommonJS.Masking.name(str);
      */
     name: function(str) {
-        const userName = str;
-        let frsName = userName.substring(0, 1);
+        const userName = String(str); 
 
-        let midName = userName.substring(1, userName.length -1);
-
-        let cnvMidName = '';
-        for (let i=0; i < midName.length; i++) {
-            cnvMidName += '*';
+        if (userName.length <= 1) {
+            return userName;
         }
 
-        let lstName = userName.substring(userName.length -1, userName.length);
+        let frsName = userName.substring(0, 1);
+        let lstName = userName.substring(userName.length - 1);
 
-        let maskingName = frsName + cnvMidName + lstName;
-        if ( userName.length == 2 ) {
+        let maskingName;
+
+        if ( userName.length === 2 ) {
             maskingName = frsName + '*';
+        } else {
+            const midLength = userName.length - 2;
+            const cnvMidName = '*'.repeat(midLength);
+            maskingName = frsName + cnvMidName + lstName;
         }
 
         return maskingName;
@@ -4367,46 +4432,3 @@ CommonJS.Url = {
         }
     }
 }
-
-//--------------------------------------------------------------------
-// prototype
-// - 지원 함수 보다는 성능이 떨어지지 않을까? 하여 Default는 주석 처리해놓음
-// - 제한된 인트라넷 환경에서 브라우저 버전 때문에 지원 안하는 경우, 주석 해제 후 사용
-//--------------------------------------------------------------------
-/**
- * IE 12(Edge) / Chrome 41 이하에서 startsWith 사용
- * @param {string} val
- * @returns {boolean}
- */
-// String.prototype.startsWith = function(val) {
-// 	return this.substring(0, val.length) === val;
-// }
-/**
- * IE 12(Edge) / Chrome 41 이하에서 endsWith 사용
- * @param {string} val
- * @returns {boolean}
- */
-// String.prototype.endsWith = function(val) {
-// 	return this.substring(this.length - val.length, this.length) === val;
-// }
-/**
- * IE 12(Edge) / Chrome 41 이하에서 includes 사용
- * @param {string} val
- */
-// String.prototype.includes = function(val) {
-// 	return this.indexOf(val) != -1;
-// }
-/**
- * IE 14(Edge) / Chrome 47 이하에서 includes 사용 (start는 제외)
- * @param {*} element
- * @returns {boolean}
- */
-// Array.prototype.includes = function(element) {
-// 	var i = this.length;
-// 	while (i--) {
-// 		if (this[i] === element) {
-// 			return true;
-// 		}
-// 	}
-// 	return false;
-// }

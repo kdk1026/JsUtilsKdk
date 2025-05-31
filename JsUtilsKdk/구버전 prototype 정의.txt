@@ -1,0 +1,42 @@
+//--------------------------------------------------------------------
+// prototype
+// - 지원 함수 보다는 성능이 떨어지지 않을까? 하여 Default는 주석 처리해놓음
+// - 제한된 인트라넷 환경에서 브라우저 버전 때문에 지원 안하는 경우, 주석 해제 후 사용
+//--------------------------------------------------------------------
+/**
+ * IE 12(Edge) / Chrome 41 이하에서 startsWith 사용
+ * @param {string} val
+ * @returns {boolean}
+ */
+// String.prototype.startsWith = function(val) {
+// 	return this.substring(0, val.length) === val;
+// }
+/**
+ * IE 12(Edge) / Chrome 41 이하에서 endsWith 사용
+ * @param {string} val
+ * @returns {boolean}
+ */
+// String.prototype.endsWith = function(val) {
+// 	return this.substring(this.length - val.length, this.length) === val;
+// }
+/**
+ * IE 12(Edge) / Chrome 41 이하에서 includes 사용
+ * @param {string} val
+ */
+// String.prototype.includes = function(val) {
+// 	return this.indexOf(val) != -1;
+// }
+/**
+ * IE 14(Edge) / Chrome 47 이하에서 includes 사용 (start는 제외)
+ * @param {*} element
+ * @returns {boolean}
+ */
+// Array.prototype.includes = function(element) {
+// 	var i = this.length;
+// 	while (i--) {
+// 		if (this[i] === element) {
+// 			return true;
+// 		}
+// 	}
+// 	return false;
+// }

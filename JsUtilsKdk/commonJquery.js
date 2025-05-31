@@ -1,32 +1,3 @@
-/*
-$.ajaxSetup({
-	beforeSend: function(xhr, settings) {
-		// JWT, oAuth 등 인증
-		xhr.setRequestHeader('Authorization', authorization);
-		
-		if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {			
-			// Spring Security의 CSRF 사용 시
-			xhr.setRequestHeader(csrfHeader, csrfToken);
-        }
-
-		// Spring Security의 AccessDeniedHandler 인터페이스 구현 시, Ajax 호출 여부 판단
-		xhr.setRequestHeader("X-Ajax-Call", "TRUE");
-		
-		// 로딩 이미지 Show (ajaxStart 에서도 가능)
-    }, complete: function() {
-		// 로딩 이미지 Hide (ajaxStop 에서도 가능)
-	}
-});
-
-$(document).ajaxStart(function() {
-	// 로딩 이미지 Show
-});
-
-$(document).ajaxStop(function() {
-	// 로딩 이미지 Hide
-});
-*/
-
 /**
  * @author 김대광 <daekwang1026&#64;gmail.com>
  * @since 2018.12.02
@@ -43,7 +14,7 @@ $.extend({
 	enterEventFocus: function($element) {
 		$element.keypress(function(e) {
 			if (e.keyCode == 13) {
-				var inputs = $(this).parents("form").eq(0).find(':input:visible');
+				const inputs = $(this).parents("form").eq(0).find(':input:visible');
 				inputs.eq( inputs.index(this)+ 1 ).focus();
 			}
 		});
