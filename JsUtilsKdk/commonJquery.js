@@ -4,13 +4,13 @@ $.ajaxSetup({
 		// JWT, oAuth 등 인증
 		xhr.setRequestHeader('Authorization', authorization);
 		
-    	if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {			
+		if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {			
 			// Spring Security의 CSRF 사용 시
 			xhr.setRequestHeader(csrfHeader, csrfToken);
         }
 
 		// Spring Security의 AccessDeniedHandler 인터페이스 구현 시, Ajax 호출 여부 판단
-    	xhr.setRequestHeader("X-Ajax-Call", "TRUE");
+		xhr.setRequestHeader("X-Ajax-Call", "TRUE");
 		
 		// 로딩 이미지 Show (ajaxStart 에서도 가능)
     }, complete: function() {
@@ -33,7 +33,7 @@ $(document).ajaxStop(function() {
  * @version 2.1
  * @description 특정 프로젝트가 아닌, 범용적으로 사용하기 위한 jQuery 확장
  */
- $.extend({
+$.extend({
 	/**
 	 * 엔터키 이벤트 발생 시, 다음 포커스로 이동
      * @param {Element} $element 
@@ -63,19 +63,20 @@ $(document).ajaxStop(function() {
 	 * $.commonAjax(isAsync, method, url, header, param, callback);
      */
 	commonAjax: function(isAsync, method, url, header, param, callback) {
-		let _retData = {};
+		let retData = {};
 
-		let _contentType = "application/x-www-form-urlencoded; charset=utf-8";
-		let _params = (param == undefined) ? {} : param;
+		let contentType = "application/x-www-form-urlencoded; charset=utf-8";
+		let params = (param == undefined) ? {} : param;
 
 		if (typeof param == 'object') {
 			try {
-				_params = param.serialize();
+				params = param.serialize();
 
 			} catch (e) {
+				console.error("param is not a jQuery object: " + e.message);
 				if (Array.isArray(param)) {
-					_contentType = "application/json; charset=utf-8";
-					_params = JSON.stringify(param);
+					contentType = "application/json; charset=utf-8";
+					params = JSON.stringify(param);
 				}
 			}
 		}
@@ -84,29 +85,30 @@ $(document).ajaxStop(function() {
 			async: isAsync,
 			cache: false,
 			traditional: true,
-			contentType: _contentType,
+			contentType: contentType,
 			dataType: "json",
 			type: method,
 			url: url,
             headers: (header == undefined) ? {} : header,
-			data: _params,
+			data: params,
 			success: function(result) {
 				if (isAsync) {
 					callback(result);
 				} else {
 					if ( (callback == undefined) || (typeof callback != 'function') ) {
-						_retData = result;
+						retData = result;
 					} else {
 						callback(result);
 					}
 				}
 			},
 			error: function(xhr, status, err) {
+				console.log(status);
 				alert("code = "+ xhr.status + " message = " + xhr.responseText + " error = " + err);
 			}
 		});
 
-		return _retData;
+		return retData;
 	},
     /**
      * 공통 Ajax 처리 (JSON)
@@ -121,39 +123,40 @@ $(document).ajaxStop(function() {
 	 * @example
 	 * $.commonAjax(isAsync, method, url, header, param, callback);
      */
-	 commonAjaxJson: function(isAsync, method, url, header, param, callback) {
-		let _retData = {};
+	commonAjaxJson: function(isAsync, method, url, header, param, callback) {
+		let retData = {};
 
-		let _contentType = "application/json; charset=utf-8";
-		let _params = (param == undefined) ? {} : param;
+		const contentType = "application/json; charset=utf-8";
+		const params = (param == undefined) ? {} : param;
 
 		$.ajax({
 			async: isAsync,
 			cache: false,
 			traditional: true,
-			contentType: _contentType,
+			contentType: contentType,
 			dataType: "json",
 			type: method,
 			url: url,
             headers: (header == undefined) ? {} : header,
-			data: _params,
+			data: params,
 			success: function(result) {
 				if (isAsync) {
 					callback(result);
 				} else {
 					if ( (callback == undefined) || (typeof callback != 'function') ) {
-						_retData = result;
+						retData = result;
 					} else {
 						callback(result);
 					}
 				}
 			},
 			error: function(xhr, status, err) {
+				console.log(status);
 				alert("code = "+ xhr.status + " message = " + xhr.responseText + " error = " + err);
 			}
 		});
 
-		return _retData;
+		return retData;
 	},
     /**
      * 공통 Ajax 파일 처리
@@ -169,9 +172,9 @@ $(document).ajaxStop(function() {
 	 * $.commonAjaxFile(isAsync, method, url, header, $formElement, callback);
      */
 	commonAjaxFile: function(isAsync, method, url, header, $formElement, callback) {
-		let _retData = {};
+		let retData = {};
 
-		let _param = new FormData($formElement[0]);
+		const param = new FormData($formElement[0]);
 
 		$.ajax({
 			async: isAsync,
@@ -183,24 +186,25 @@ $(document).ajaxStop(function() {
 			type: method,
 			url: url,
 			headers: (header == undefined) ? {} : header,
-			data: _param,
+			data: param,
 			success: function(result) {
 				if (isAsync) {
 					callback(result);
 				} else {
 					if ( (callback == undefined) || (typeof callback != 'function') ) {
-						_retData = result;
+						retData = result;
 					} else {
 						callback(result);
 					}
 				}
 			},
 			error: function(xhr, status, err) {
+				console.log(status);
 				alert("code = "+ xhr.status + " message = " + xhr.responseText + " error = " + err);
 			}
 		});
 
-		return _retData;
+		return retData;
 	},
     
     /**
@@ -213,16 +217,16 @@ $(document).ajaxStop(function() {
 	 * $.formSerializeObject($formElement);
      */
 	formSerializeObject: function($formElement) {
-		var _disabled = $formElement.find(':disabled').removeAttr('disabled');
-    	var _obj;
-    	var _arr = $formElement.serializeArray();
-    	if (_arr) {
-    		_obj = {};
-    		$.each(_arr, function() {
-    			_obj[this.name] = this.value;
-    		});
-    	}
-    	_disabled.attr('disabled', 'disabled');
-    	return _obj;
+		const disabled = $formElement.find(':disabled').removeAttr('disabled');
+		let obj;
+		const arr = $formElement.serializeArray();
+		if (arr) {
+			obj = {};
+			$.each(arr, function() {
+				obj[this.name] = this.value;
+			});
+		}
+		disabled.attr('disabled', 'disabled');
+		return obj;
 	}
 })
