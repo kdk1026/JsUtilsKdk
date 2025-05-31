@@ -4421,6 +4421,8 @@ CommonJS.Time = {
      * 해당 시간 기준으로 방금 전 ~ 년 전
      * @param {Date} createdAt
      * @returns
+     * @example
+     * CommonJS.Time.displayedAt(createdAt);
      */
     displayedAt: function(createdAt) {
         const milliSeconds = new Date() - createdAt;
@@ -4491,6 +4493,8 @@ CommonJS.Base64 = {
      * 순수 아스키 문자열 Base64 인코딩
      * @param {string} str 
      * @returns 
+     * @example
+     * CommonJS.Base64.encodeBase64(str);
      */
     encodeBase64: function(str) {
         if ( typeof str !== 'string' || !str?.trim() ) {
@@ -4503,6 +4507,8 @@ CommonJS.Base64 = {
      * 순수 아스키 문자열 Base64 디코딩
      * @param {string} str 
      * @returns 
+     * @example
+     * CommonJS.Base64.decodeBase64(str);
      */
     decodeBase64: function(str) {
         if ( typeof str !== 'string' || !str?.trim() ) {
@@ -4515,6 +4521,8 @@ CommonJS.Base64 = {
      * 유니코드 (한글 포함) Base64 인코딩
      * @param {string} str 
      * @returns 
+     * @example
+     * CommonJS.Base64.encodeUnicodeBase64(str);
      */
     encodeUnicodeBase64: function(str) {
         if ( typeof str !== 'string' || !str?.trim() ) {
@@ -4531,6 +4539,8 @@ CommonJS.Base64 = {
      * 유니코드 (한글 포함) Base64 디코딩
      * @param {string} str 
      * @returns 
+     * @example
+     * CommonJS.Base64.decodeUnicodeBase64(str);
      */
     decodeUnicodeBase64: function(str) {
         if ( typeof str !== 'string' || !str?.trim() ) {
