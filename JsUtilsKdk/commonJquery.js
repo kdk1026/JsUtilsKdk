@@ -40,7 +40,7 @@ $.extend({
 	commonAjax: function(method, url, header, param) {
 		return new Promise((resolve, reject) => {
 			const contentType = "application/x-www-form-urlencoded; charset=utf-8";
-			const params = (param == undefined) ? {} : param;
+			let params = (param == undefined) ? {} : param;
 
 			if (typeof param == 'object') {
 				try {
