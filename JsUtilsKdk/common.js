@@ -2111,6 +2111,14 @@ CommonJS.BrowserInfo = {
      * - 커스터마이징 하지 않는 이상 모바일 웹, WebView 의 UserAgent는 동일
      */
     isCheckUserAgent: function(chkStr) {
+        if ( !checkString?.trim() ) {
+            console.error('checkString is required.');
+            return false;
+        } else if (typeof checkString !== 'string') {
+            console.error('checkString must be a string.');
+            return false;
+        }
+
         const agent = navigator.userAgent;
 		return agent.indexOf(chkStr) > -1;
     },
@@ -3008,6 +3016,11 @@ CommonJS.Mobile = {
      *  </intent-filter>
      */
     makeAndroidAppLinkUrl: function (host, scheme, packageName, screen) {
+        if ( !host || !scheme || !packageName ) {
+            console.error('host, scheme, packageName are required.');
+            return '';
+        }
+
         if ( !screen ) {
             return 'intent://' + host + '/#Intent;package=' + packageName + ';scheme=' + scheme + ';end';
         } else {
@@ -3027,6 +3040,11 @@ CommonJS.Mobile = {
      * CommonJS.Mobile.makeURLSchemeIOSAppLinkUrl('instagram.com', 'https');
      */
     makeURLSchemeIOSAppLinkUrl: function (host, scheme, screen) {
+        if ( !host || !scheme ) {
+            console.error('host, scheme are required.');
+            return '';
+        }
+
         if ( !screen ) {
             return scheme + '://' + host;
         } else {
@@ -3048,6 +3066,11 @@ CommonJS.Mobile = {
      * @link https://gomest.tistory.com/7
      */
     runAppLinkUrl: function (androidUrl, iosUrl, iosAppStoreUrl) {
+        if ( !androidUrl || !iosUrl || !iosAppStoreUrl ) {
+            console.error('androidUrl, iosUrl, iosAppStoreUrl are required.');
+            return;
+        }
+
         if (CommonJS.BrowserInfo.isMobile()) {
             if (CommonJS.BrowserInfo.isMobileOs().iOS) {
                 // 1초 이후 반응이 없으면 앱스토어로 이동
