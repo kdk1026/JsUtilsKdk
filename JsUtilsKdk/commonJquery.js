@@ -22,160 +22,153 @@ $.extend({
 
     /**
      * 공통 Ajax 처리
-     * @param {boolean} isAsync 
      * @param {string} method 
      * @param {string} url 
      * @param {(undefined|Object)} header 
-     *   - param, callback 없는 경우만 생략 가능 / 없으면 {} 로 넘길 것
+	 * - param 없는 경우만 생략 가능 / 없으면 {} 로 넘길 것
      * @param {(undefined|Object)} param 
-     * @param {(undefined|Function)} callback 
      * @returns 
 	 * @example
-	 * $.commonAjax(isAsync, method, url, header, param, callback);
+	 * $.commonAjax('GET', '/api/data', {}, {id: 1})
+	 *  	.then(data => {
+	 * 			console.log("데이터 성공:", data);
+	 * 		})
+	 * 		.catch(error => {
+	 * 			console.error("에러 발생:", error);
+	 * 		});
      */
-	commonAjax: function(isAsync, method, url, header, param, callback) {
-		let retData = {};
+	commonAjax: function(method, url, header, param) {
+		return new Promise((resolve, reject) => {
+			const contentType = "application/x-www-form-urlencoded; charset=utf-8";
+			const params = (param == undefined) ? {} : param;
 
-		let contentType = "application/x-www-form-urlencoded; charset=utf-8";
-		let params = (param == undefined) ? {} : param;
-
-		if (typeof param == 'object') {
-			try {
-				params = param.serialize();
-
-			} catch (e) {
-				console.error("param is not a jQuery object: " + e.message);
-				if (Array.isArray(param)) {
-					contentType = "application/json; charset=utf-8";
-					params = JSON.stringify(param);
-				}
-			}
-		}
-
-		$.ajax({
-			async: isAsync,
-			cache: false,
-			traditional: true,
-			contentType: contentType,
-			dataType: "json",
-			type: method,
-			url: url,
-            headers: (header == undefined) ? {} : header,
-			data: params,
-			success: function(result) {
-				if (isAsync) {
-					callback(result);
-				} else {
-					if ( (callback == undefined) || (typeof callback != 'function') ) {
-						retData = result;
-					} else {
-						callback(result);
+			if (typeof param == 'object') {
+				try {
+					params = param.serialize();
+				} catch (e) {
+					console.error("param is not a jQuery object: " + e.message);
+					if (Array.isArray(param)) {
+						contentType = "application/json; charset=utf-8";
+						params = JSON.stringify(param);
 					}
 				}
-			},
-			error: function(xhr, status, err) {
-				console.log(status);
-				alert("code = "+ xhr.status + " message = " + xhr.responseText + " error = " + err);
 			}
-		});
 
-		return retData;
+			$.ajax({
+				async: true,
+				cache: false,
+				traditional: true,
+				contentType: contentType,
+				dataType: "json",
+				type: method,
+				url: url,
+				headers: (header == undefined) ? {} : header,
+				data: params,
+				success: function(result) {
+					resolve(result);
+				},
+				error: function(xhr, status, err) {
+					console.error("Ajax Error:", status, err, xhr);
+					alert(`code = ${xhr.status}\nmessage = ${xhr.responseText}\nerror = ${err}`);
+					reject(err);
+				}
+			});
+		});
 	},
     /**
      * 공통 Ajax 처리 (JSON)
-     * @param {boolean} isAsync 
      * @param {string} method 
      * @param {string} url 
      * @param {(undefined|Object)} header 
-     *   - param, callback 없는 경우만 생략 가능 / 없으면 {} 로 넘길 것
+     *   - param 없는 경우만 생략 가능 / 없으면 {} 로 넘길 것
      * @param {(undefined|Object)} param 
-     * @param {(undefined|Function)} callback 
      * @returns 
 	 * @example
-	 * $.commonAjax(isAsync, method, url, header, param, callback);
-     */
-	commonAjaxJson: function(isAsync, method, url, header, param, callback) {
-		let retData = {};
+	 * $.commonAjaxJson('GET', '/api/users', { 'Auth-Token': 'your_token' }, { id: 123 })
+	 * 		.then(data => {
+	 * 			console.log("JSON 데이터 성공:", data);
+	 * 		})
+	 * 		.catch(error => {
+	 * 			console.error("JSON 에러 발생:", error);
+	 * 		});
+     */	
+	commonAjaxJson: function(method, url, header, param) {
+		return new Promise((resolve, reject) => {
+			const contentType = "application/json; charset=utf-8";
+			const requestData = (param == undefined) ? {} : param;
 
-		const contentType = "application/json; charset=utf-8";
-		const params = (param == undefined) ? {} : param;
-
-		$.ajax({
-			async: isAsync,
-			cache: false,
-			traditional: true,
-			contentType: contentType,
-			dataType: "json",
-			type: method,
-			url: url,
-            headers: (header == undefined) ? {} : header,
-			data: params,
-			success: function(result) {
-				if (isAsync) {
-					callback(result);
-				} else {
-					if ( (callback == undefined) || (typeof callback != 'function') ) {
-						retData = result;
-					} else {
-						callback(result);
-					}
+			$.ajax({
+				async: true,
+				cache: false,
+				traditional: true,
+				contentType: contentType,
+				dataType: "json",
+				type: method,
+				url: url,
+				headers: (header == undefined) ? {} : header,
+				data: JSON.stringify(requestData),
+				success: function(result) {
+					resolve(result);
+				},
+				error: function(xhr, status, err) {
+					console.error("Ajax Error:", status, err, xhr);
+					alert(`code = ${xhr.status}\nmessage = ${xhr.responseText}\nerror = ${err}`);
+					reject({
+						status: xhr.status,
+						message: xhr.responseText,
+						error: err
+					});
 				}
-			},
-			error: function(xhr, status, err) {
-				console.log(status);
-				alert("code = "+ xhr.status + " message = " + xhr.responseText + " error = " + err);
-			}
+			});
 		});
-
-		return retData;
 	},
     /**
      * 공통 Ajax 파일 처리
-     * @param {boolean} isAsync 
      * @param {string} method 
      * @param {string} url 
      * @param {(undefined|Object)} header  
-     *   - param, callback 없는 경우만 생략 가능 / 없으면 {} 로 넘길 것
+     *   - param 없는 경우만 생략 가능 / 없으면 {} 로 넘길 것
      * @param {Element} $formElement 
-     * @param {(undefined|Function)} callback 
      * @returns 
 	 * @example
-	 * $.commonAjaxFile(isAsync, method, url, header, $formElement, callback);
+	 * const $myUploadForm = $('#uploadForm');
+	 * 
+	 * $.commonAjaxFile('POST', '/upload/file', { 'Auth-Token': 'your_upload_token' }, $myUploadForm)
+	 * 		.then(data => {
+	 * 			console.log("파일 업로드 성공:", data);
+	 * 		})
+	 * 		.catch(error => {
+	 * 			console.error("파일 업로드 에러 발생:", error);
+	 * 		});
      */
-	commonAjaxFile: function(isAsync, method, url, header, $formElement, callback) {
-		let retData = {};
-
+	commonAjaxFile: function(method, url, header, $formElement) {
 		const param = new FormData($formElement[0]);
 
-		$.ajax({
-			async: isAsync,
-			cache: false,
-			traditional: true,
-			contentType: false,
-			processData : false,
-			enctype: 'multipart/form-data',
-			type: method,
-			url: url,
-			headers: (header == undefined) ? {} : header,
-			data: param,
-			success: function(result) {
-				if (isAsync) {
-					callback(result);
-				} else {
-					if ( (callback == undefined) || (typeof callback != 'function') ) {
-						retData = result;
-					} else {
-						callback(result);
-					}
+		return new Promise((resolve, reject) => {
+			$.ajax({
+				async: true,
+				cache: false,
+				contentType: false,
+				processData: false,
+				type: method,
+				url: url,
+				headers: (header == undefined) ? {} : header,
+				data: param,
+				success: function(result) {
+					resolve(result);
+				},
+				error: function(xhr, status, err) {
+					console.error("Ajax Error:", status, err, xhr);
+					alert(`code = ${xhr.status}\nmessage = ${xhr.responseText}\nerror = ${err}`);
+					reject({
+						status: xhr.status,
+						message: xhr.responseText,
+						error: err,
+						xhr: xhr
+					});
 				}
-			},
-			error: function(xhr, status, err) {
-				console.log(status);
-				alert("code = "+ xhr.status + " message = " + xhr.responseText + " error = " + err);
-			}
+			});
 		});
-
-		return retData;
 	},
     
     /**
