@@ -37,7 +37,7 @@
  * @property {object} CommonJS.Masking - 2022.08.12 추가
  * @property {object} CommonJS.Time - 2022.08.23 추가
  * @property {object} CommonJS.Url - 2025.02.19 추가
- * @property {method} prototype
+ * @property {object} CommonJS.Base64 - 2025.05.31 추가
  */
 const CommonJS = {
     /**
@@ -1529,8 +1529,14 @@ CommonJS.FileValid = {
      */
     isAllowFile: function (fileObj) {
         const ext = CommonJS.File.getFileExt(fileObj);
-        const arrAllowExt = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'hwp', 'odt', 'odp', 'ods', 'jpg', 'jpeg', 'gif', 'png'];
-        return arrAllowExt.includes(ext);
+        
+        const allowedExtensions = [
+            'jpg', 'jpeg', 'png', 'gif', 'bmp',
+            'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx',   
+            'hwp', 'txt', 'zip'
+        ];
+
+        return allowedExtensions.includes(ext);
     },
     /**
      * 지원 파일 체크 (문서)
@@ -1541,8 +1547,8 @@ CommonJS.FileValid = {
      */
     isAllowDoc: function (fileObj) {
         const ext = CommonJS.File.getFileExt(fileObj);
-        const arrAllowExt = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'hwp', 'odt', 'odp', 'ods'];
-        return arrAllowExt.includes(ext);
+        const documentExtensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'hwp', 'txt'];
+        return documentExtensions.includes(ext);
     },
     /**
      * 지원 파일 체크 (이미지)
@@ -1553,8 +1559,44 @@ CommonJS.FileValid = {
      */
     isAllowImg: function (fileObj) {
         const ext = CommonJS.File.getFileExt(fileObj);
-        const arrAllowExt = ['jpg', 'jpeg', 'gif', 'png'];
-        return arrAllowExt.includes(ext);
+        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
+        return imageExtensions.includes(ext);
+    },
+    /**
+     * 지원 파일 체크 (오디오)
+     * @param {Object}
+     * @returns {boolean}
+     * @example
+     * CommonJS.FileValid.isAllowAudio(fileObj);
+     */
+    isAllowAudio: function (fileObj) {
+        const ext = CommonJS.File.getFileExt(fileObj);
+        const audioExtensions = ['mp3', 'wav'];
+        return audioExtensions.includes(ext);
+    },
+    /**
+     * 지원 파일 체크 (비비디오)
+     * @param {Object}
+     * @returns {boolean}
+     * @example
+     * CommonJS.FileValid.isAllowVideo(fileObj);
+     */
+    isAllowVideo: function (fileObj) {
+        const ext = CommonJS.File.getFileExt(fileObj);
+        const videoExtensions = ['mp4', 'avi', 'mov', 'mkv'];
+        return videoExtensions.includes(ext);
+    },
+    /**
+     * 지원 파일 체크 (압축 파일)
+     * @param {Object}
+     * @returns {boolean}
+     * @example
+     * CommonJS.FileValid.isAllowArchive(fileObj);
+     */
+    isAllowArchive: function (fileObj) {
+        const ext = CommonJS.File.getFileExt(fileObj);
+        const archiveExtensions = ['zip', 'rar', '7z'];
+        return archiveExtensions.includes(ext);
     },
     /**
      * 지원 파일 체크 (실행 파일)
@@ -2522,7 +2564,7 @@ CommonJS.Input = {
     /**
      * 전화번호 하이픈(-) 자동입력
      * @param {Element} inputElement 
-    * @example
+     * @example
      * [JavaScript]
      * CommonJS.Input.formatPhoneNumber( document.querySelector(셀렉터) );
      *
@@ -2985,7 +3027,9 @@ CommonJS.Mobile = {
      * @example
      * CommonJS.Mobile.makeAndroidAppLinkUrl('instagram.com', 'https', 'com.instagram.android');
      *
-     * 링크 생성 하더라도 작동하려면 다음 설정 필수
+     * INTENT 방식 (Intent URI)
+     *  
+     * 이 링크가 작동하려면 다음 설정이 필수입니다.
      * AndroidManifest.xml
      *  <intent-filter>
      *      <action android:name="android.intent.action.VIEW" />
@@ -3009,9 +3053,15 @@ CommonJS.Mobile = {
     },
     /**
      * IOS 앱링크 or 딥링크 URL 생성
-     *   - URL 스킴 방식
-     *      1. info.plist 에 URL Types 항목 추가
-     *      2. Identifier와 URL Schemes에 적절한 값을 입력
+     * 
+     * URL 스킴 방식
+     * 
+     * 이 링크가 작동하려면 다음 설정이 필수입니다.
+     * 1. Xcode 프로젝트에서 'Info' 탭을 엽니다.
+     * 2. 'URL Types' 섹션으로 스크롤하여 새 항목을 추가합니다 ( '+' 버튼 클릭).
+     * 3. 'Identifier' 필드에 고유한 식별자를 입력합니다 (예: 'com.yourcompany.yourapp').
+     * 4. 'URL Schemes' 필드에 사용할 스키마를 입력합니다 (예: 'your-app-scheme').
+     * 여기에 입력된 스키마가 makeURLSchemeIOSAppLinkUrl 함수의 'scheme' 매개변수와 일치해야 합니다.
      * @param {string} host 
      * @param {string} scheme 
      * @param {undefined|string} screen
@@ -4434,4 +4484,62 @@ CommonJS.Url = {
             alert('공유 API가 지원되지 않는 브라우저입니다.');
         }
     }
+}
+
+CommonJS.Base64 = {
+    /**
+     * 순수 아스키 문자열 Base64 인코딩
+     * @param {string} str 
+     * @returns 
+     */
+    encodeBase64: function(str) {
+        if ( typeof str !== 'string' || !str?.trim() ) {
+            return '';
+        }
+    
+        return btoa(str);
+    },
+    /**
+     * 순수 아스키 문자열 Base64 디코딩
+     * @param {string} str 
+     * @returns 
+     */
+    decodeBase64: function(str) {
+        if ( typeof str !== 'string' || !str?.trim() ) {
+            return '';
+        }
+    
+        return atob(str);  
+    },
+    /**
+     * 유니코드 (한글 포함) Base64 인코딩
+     * @param {string} str 
+     * @returns 
+     */
+    encodeUnicodeBase64: function(str) {
+        if ( typeof str !== 'string' || !str?.trim() ) {
+            return '';
+        }
+    
+        // 유니코드를 UTF-8 URL 인코딩 (퍼센트 인코딩) -> 이스케이프 시퀀스 -> 이진 문자열 -> Base64
+        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+            function toSolidBytes(p1) {
+                return String.fromCharCode('0x' + p1);
+            })); 
+    },
+    /**
+     * 유니코드 (한글 포함) Base64 디코딩
+     * @param {string} str 
+     * @returns 
+     */
+    decodeUnicodeBase64: function(str) {
+        if ( typeof str !== 'string' || !str?.trim() ) {
+            return '';
+        }
+    
+        // Base64 -> 이진 문자열 -> 이스케이프 시퀀스 -> UTF-8 URL 디코딩 -> 유니코드
+        return decodeURIComponent(atob(str).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+    },
 }
