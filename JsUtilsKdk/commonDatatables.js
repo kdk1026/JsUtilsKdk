@@ -4,7 +4,7 @@
  * @version 1.0
  * @description 범용적으로 사용하고자 했으나 참고용일듯...참고가 될려나?
  */
-var lang_kor = {
+const lang_kor = {
 	"decimal" : "",
 	"emptyTable" : "데이터가 없습니다.",
 	"info" : "_START_ - _END_ (총 _TOTAL_ 건)",
@@ -50,7 +50,7 @@ $.extend($.fn.dataTable.defaults, {
  * @returns
  */
 function initDataTable($tableElement, url, type, headers, params, columns, columnDefs) {
-	var oTable = $tableElement.DataTable({
+	const oTable = $tableElement.DataTable({
 		ordering : true,
 		serverSide : false,
 		ajax : {
@@ -84,7 +84,7 @@ function initDataTable($tableElement, url, type, headers, params, columns, colum
  * @returns
  */
 function initDataTableServerSide($tableElement, url, type, headers, params, columns, columnDefs) {
-	var oTable = $tableElement.DataTable({
+	const oTable = $tableElement.DataTable({
 		ordering : false,
 		serverSide : true,
 		ajax : {
