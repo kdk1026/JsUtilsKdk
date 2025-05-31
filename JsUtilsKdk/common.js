@@ -2094,11 +2094,8 @@ CommonJS.BrowserInfo = {
      * - 커스터마이징 하지 않는 이상 모바일 웹, WebView 의 UserAgent는 동일
      */
     isCheckUserAgent: function(chkStr) {
-        if ( !checkString?.trim() ) {
-            console.error('checkString is required.');
-            return false;
-        } else if (typeof checkString !== 'string') {
-            console.error('checkString must be a string.');
+        if ( typeof chkStr !== 'string' || !chkStr?.trim() ) {
+            console.error('chkStr은 문자열이어야 하며, 빈 문자열이 아니어야 합니다.');
             return false;
         }
 
