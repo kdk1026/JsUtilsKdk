@@ -1025,8 +1025,14 @@ CommonJS.FormatValid = {
      * CommonJS.FormatValid.isUrl(val);
      */
     isUrl: function (val) {
-        const regExp = /^(https?:\/\/)([\w-]+(\.[\w-]+)+)(:\d+)?(\/\S*)?$/;
-        return regExp.test(val);
+        try {
+            // 절대 URL 검사
+            const url = new URL(val);
+            return url.protocol === 'http:' || url.protocol === 'https:';
+        } catch (e) {
+            console.error('Invalid URL format for absolute check:', e);
+            return false;
+        }
     },
     /**
      * 안전한 URL인지 체크 (상대 경로, https://, http:// 만 허용)
@@ -1036,8 +1042,15 @@ CommonJS.FormatValid = {
      * CommonJS.FormatValid.isSafeUrl(val);
      */
     isSafeUrl: function (val) {
-        const regExp = /^(?:\/|https?:\/\/(?:[\w-]+\.)+[\w-]+(?::\d+)?)\S*$/;
-        return regExp.test(val);
+        try {
+            // 절대 URL 검사
+            const url = new URL(val);
+            return url.protocol === 'http:' || url.protocol === 'https:';
+        } catch (e) {
+            console.error('Not an absolute URL, checking for relative path.', e);
+            // 상대 경로 검사
+            return val === '/' || val.startsWith('/');
+        }
     }
 };
 
