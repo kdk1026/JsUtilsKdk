@@ -4535,7 +4535,7 @@ CommonJS.Url = {
                 }
             });
         } else {
-            alert('공유 API가 지원되지 않는 브라우저입니다.');
+            alert('이 브라우저는 Web Share API를 지원하지 않습니다.');
         }
     }
 };
